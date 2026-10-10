@@ -41,6 +41,13 @@ final class Settings {
 	public const IMAGE_FORMATS = array( 'png', 'jpg' );
 
 	/**
+	 * How the form offers the download: a button that recommends Copy HTML
+	 * once used, the same inside a collapsed "More options", or a plain
+	 * button with no recommendation.
+	 */
+	public const DOWNLOAD_STYLES = array( 'notice', 'more', 'plain' );
+
+	/**
 	 * Fields whose value cannot be locked: they identify the person, so a
 	 * fixed value would give everyone the same signature.
 	 */
@@ -49,7 +56,7 @@ final class Settings {
 	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, uppercase_name: bool, logo_id: int, logo_width: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<string>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<string>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -64,6 +71,8 @@ final class Settings {
 	public static function defaults(): array {
 		return array(
 			'models'         => self::modelIds(),
+			'offer_download' => true,
+			'download_style' => 'notice',
 			'uppercase_name' => true,
 			'logo_id'        => 0,
 			'logo_width'     => Config::LOGO_WIDTH,
@@ -83,7 +92,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, uppercase_name: bool, logo_id: int, logo_width: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<string>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<string>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -97,6 +106,7 @@ final class Settings {
 
 		$width   = (int) ( $input['logo_width'] ?? Config::LOGO_WIDTH );
 		$quality = (int) ( $input['image_quality'] ?? Config::IMAGE_QUALITY );
+		$style   = is_string( $input['download_style'] ?? null ) ? $input['download_style'] : 'notice';
 		$format  = is_string( $input['image_format'] ?? null ) ? $input['image_format'] : Config::IMAGE_FORMAT;
 		$scale   = (int) ( $input['image_scale'] ?? Config::IMAGE_SCALE );
 
@@ -125,6 +135,8 @@ final class Settings {
 			'models'         => $models,
 			// Absent means "never saved": keep the default. The form posts a
 			// hidden 0 before the checkbox, so unticking it is never absent.
+			'offer_download' => array_key_exists( 'offer_download', $input ) ? ! empty( $input['offer_download'] ) : true,
+			'download_style' => in_array( $style, self::DOWNLOAD_STYLES, true ) ? $style : 'notice',
 			'uppercase_name' => array_key_exists( 'uppercase_name', $input ) ? ! empty( $input['uppercase_name'] ) : true,
 			'logo_id'        => max( 0, (int) ( $input['logo_id'] ?? 0 ) ),
 			'logo_width'     => min( self::LOGO_WIDTH_MAX, max( self::LOGO_WIDTH_MIN, $width ) ),
@@ -152,6 +164,8 @@ final class Settings {
 			array_filter( $config['models'], static fn( array $m ): bool => in_array( $m['id'], $enabled, true ) )
 		);
 
+		$config['offerDownload'] = (bool) $settings['offer_download'];
+		$config['downloadStyle'] = (string) $settings['download_style'];
 		$config['uppercaseName'] = (bool) $settings['uppercase_name'];
 		$config['emailDomain']   = (string) $settings['email_domain'];
 		$config['logo']['width'] = (int) $settings['logo_width'];

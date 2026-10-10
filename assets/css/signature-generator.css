@@ -8,6 +8,7 @@
 
 .esg-generator {
 	--esg-border: #8c8f94;
+	--esg-muted: #50575e;
 	--esg-accent: #2271b1;
 	--esg-accent-text: #ffffff;
 	--esg-error: #b32d2e;
@@ -77,10 +78,41 @@
 	color: var(--esg-accent-text);
 }
 
-/* Copying the HTML is the recommended way: its button is bold, and the
-   note under the buttons says why. The image keeps a full button too. */
+/* Copying the HTML is the recommended way: its button is filled like the
+   main action, and the note under the buttons says why. The image keeps a
+   full button, in grey. */
 .esg-generator .esg-copy {
+	background: var(--esg-accent);
+	color: var(--esg-accent-text);
 	font-weight: 600;
+}
+
+.esg-generator .esg-download {
+	border-color: var(--esg-border);
+	color: var(--esg-muted);
+}
+
+/* A theme's display rule must not reveal the buttons before a signature
+   exists. */
+.esg-generator .esg-output[hidden] {
+	display: none;
+}
+
+.esg-generator .esg-output .esg-actions {
+	margin-top: 0;
+}
+
+.esg-generator .esg-more {
+	margin: 8px 0 0;
+}
+
+.esg-generator .esg-more summary {
+	color: var(--esg-muted);
+	cursor: pointer;
+}
+
+.esg-generator .esg-more .esg-actions {
+	margin: 8px 0 0;
 }
 
 .esg-generator .esg-hint {

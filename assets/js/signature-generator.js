@@ -413,8 +413,27 @@
 		var generateBtn = el( doc, 'button', { type: 'submit', class: 'esg-button esg-generate', text: strings.generate } );
 		var copyBtn = el( doc, 'button', { type: 'button', class: 'esg-button esg-copy', text: strings.copy } );
 		var downloadBtn = el( doc, 'button', { type: 'button', class: 'esg-button esg-download', text: strings.download } );
-		form.appendChild( el( doc, 'p', { class: 'esg-actions' }, [ generateBtn, copyBtn, downloadBtn ] ) );
-		form.appendChild( el( doc, 'p', { class: 'esg-hint', text: strings.copyHint } ) );
+		// The site chooses whether the image is offered at all, and how: a
+		// button (the default), the same inside a collapsed "More options",
+		// or a button with no note recommending Copy HTML afterwards.
+		var offerDownload = false !== config.offerDownload;
+		var downloadStyle = config.downloadStyle || 'notice';
+		var inline = offerDownload && 'more' !== downloadStyle;
+		form.appendChild( el( doc, 'p', { class: 'esg-actions' }, [ generateBtn ] ) );
+
+		// Copying and downloading appear only once a signature is generated,
+		// and hide again when a field changes, so neither can deliver a
+		// signature that no longer matches the form.
+		var output = el( doc, 'div', { class: 'esg-output', hidden: true } );
+		output.appendChild( el( doc, 'p', { class: 'esg-actions' }, inline ? [ copyBtn, downloadBtn ] : [ copyBtn ] ) );
+		if ( offerDownload && 'more' === downloadStyle ) {
+			output.appendChild( el( doc, 'details', { class: 'esg-more' }, [
+				el( doc, 'summary', { text: strings.moreOptions } ),
+				el( doc, 'p', { class: 'esg-actions' }, [ downloadBtn ] ),
+			] ) );
+		}
+		form.appendChild( output );
+		output.appendChild( el( doc, 'p', { class: 'esg-hint', text: strings.copyHint } ) );
 
 		var status = el( doc, 'p', { class: 'esg-status', role: 'status' } );
 		var previewHost = el( doc, 'div', { class: 'esg-preview' } );
@@ -490,17 +509,29 @@
 			if ( errors.length ) {
 				html = '';
 				previewRoot.innerHTML = '';
+				output.hidden = true;
 				return false;
 			}
 			html = render( current, values, config );
 			previewRoot.innerHTML = html;
+			output.hidden = false;
 			return true;
 		}
+
+		// A changed field makes the generated signature stale.
+		fieldsBox.addEventListener( 'input', function () {
+			if ( html ) {
+				html = '';
+				output.hidden = true;
+				setStatus( '' );
+			}
+		} );
 
 		modelSelect.addEventListener( 'change', function () {
 			current = findModel( config, modelSelect.value );
 			html = '';
 			previewRoot.innerHTML = '';
+			output.hidden = true;
 			showErrors( [] );
 			drawFields();
 		} );
@@ -562,6 +593,9 @@
 					doc.body.appendChild( link );
 					link.click();
 					doc.body.removeChild( link );
+					if ( 'plain' !== downloadStyle ) {
+						setStatus( strings.downloaded );
+					}
 				} )
 				.catch( function () {
 					setStatus( strings.downloadFailed );

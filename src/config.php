@@ -78,6 +78,8 @@ final class Config {
 				'quality' => self::IMAGE_QUALITY,
 				'scale'   => self::IMAGE_SCALE,
 			),
+			'offerDownload' => true,
+			'downloadStyle' => 'notice',
 			'uppercaseName' => true,
 			'emailDomain'   => '',
 			'phonePattern'  => self::PHONE_PATTERN,
@@ -265,6 +267,8 @@ final class Config {
 			'copied'             => __( 'Signature copied. Paste it into your email signature settings.', 'email-signature-generator' ),
 			'copyFailed'         => __( 'The signature could not be copied. Select it in the preview and copy it by hand.', 'email-signature-generator' ),
 			'downloadFailed'     => __( 'The image could not be created. Try again.', 'email-signature-generator' ),
+			'moreOptions'        => __( 'More options', 'email-signature-generator' ),
+			'downloaded'         => __( 'Image downloaded. Links in an image cannot be clicked and small text loses sharpness: if your email program accepts it, prefer Copy HTML.', 'email-signature-generator' ),
 			'copyHint'           => __( 'Recommended: copy the HTML and paste it into your email program\'s signature settings. The text stays sharp at any size and the links work. Use the image only where a signature cannot be HTML.', 'email-signature-generator' ),
 			/* translators: %s: a field's label. */
 			'required'           => __( '%s is required.', 'email-signature-generator' ),

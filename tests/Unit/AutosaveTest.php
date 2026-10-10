@@ -38,6 +38,13 @@ final class AutosaveTest extends TestCase {
 		self::assertTrue( Autosave::apply( $off, 'uppercase_name', '1' )['uppercase_name'] );
 	}
 
+	public function test_the_download_turns_off_and_on(): void {
+		$off = Autosave::apply( Settings::defaults(), 'offer_download', '0' );
+		self::assertFalse( $off['offer_download'] );
+		self::assertFalse( Autosave::read( $off, 'offer_download' ) );
+		self::assertTrue( Autosave::apply( $off, 'offer_download', '1' )['offer_download'] );
+	}
+
 	public function test_models_take_the_ticked_list_and_never_end_empty(): void {
 		self::assertSame( array( 'department' ), Autosave::apply( Settings::defaults(), 'models', array( 'department' ) )['models'] );
 		self::assertSame( Settings::modelIds(), Autosave::apply( Settings::defaults(), 'models', array() )['models'] );

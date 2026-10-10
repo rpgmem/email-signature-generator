@@ -232,6 +232,35 @@ final class SettingsPage {
 		self::openCard( __( 'Downloaded image', 'email-signature-generator' ), 'download' );
 		echo '<p class="description">' . esc_html__( 'Copying the HTML is the recommended way to use a signature: the text stays sharp at any size. The image is for email programs that do not accept an HTML signature.', 'email-signature-generator' ) . '</p>';
 		echo '<table class="form-table" role="presentation"><tbody>';
+		printf(
+			'<tr><th scope="row">%1$s</th><td><input type="hidden" name="%2$s[offer_download]" value="0">',
+			esc_html__( 'Offer the download', 'email-signature-generator' ),
+			esc_attr( $name )
+		);
+		self::toggle(
+			array(
+				'name'    => $name . '[offer_download]',
+				'checked' => $settings['offer_download'],
+				'label'   => __( 'Show the "Download image" button on the form', 'email-signature-generator' ),
+				'key'     => 'offer_download',
+			)
+		);
+		echo '<p class="description">' . esc_html__( 'Turn it off to offer only Copy HTML. The options below apply while it is on.', 'email-signature-generator' ) . '</p></td></tr>';
+		echo '<tr><th scope="row">' . esc_html__( 'How to offer it', 'email-signature-generator' ) . '</th><td><fieldset>';
+		foreach ( array(
+			'notice' => __( 'A button, and a note recommending Copy HTML after each download (recommended)', 'email-signature-generator' ),
+			'more'   => __( 'Inside a collapsed "More options", with the same note', 'email-signature-generator' ),
+			'plain'  => __( 'A button, with no note', 'email-signature-generator' ),
+		) as $value => $label ) {
+			printf(
+				'<label><input type="radio" name="%1$s[download_style]" value="%2$s"%3$s> %4$s</label><br>',
+				esc_attr( $name ),
+				esc_attr( $value ),
+				checked( $settings['download_style'], $value, false ),
+				esc_html( $label )
+			);
+		}
+		echo '</fieldset></td></tr>';
 		echo '<tr><th scope="row"><label for="esg-image-format">' . esc_html__( 'Format', 'email-signature-generator' ) . '</label></th><td>';
 		printf( '<select id="esg-image-format" name="%s[image_format]">', esc_attr( $name ) );
 		foreach ( array(
