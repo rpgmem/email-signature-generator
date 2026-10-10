@@ -18,7 +18,7 @@ final class Plugin {
 	 * Plugin version. Kept in step with the `Version:` header and the
 	 * `Stable tag` in readme.txt.
 	 */
-	public const VERSION = '0.1.0';
+	public const VERSION = '1.0.0';
 
 	/**
 	 * Minimum PHP version, as declared by the `Requires PHP:` header.

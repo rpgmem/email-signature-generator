@@ -3,7 +3,7 @@
  * Plugin Name:       Email Signature Generator
  * Plugin URI:        https://github.com/rpgmem/email-signature-generator
  * Description:       A form, placed with a shortcode, that builds a consistent HTML email signature for your organisation and copies it to Outlook or downloads it as an image.
- * Version:           0.1.0
+ * Version:           1.0.0
  * Requires at least: 6.8
  * Requires PHP:      8.3
  * Author:            Alex Meusburger
