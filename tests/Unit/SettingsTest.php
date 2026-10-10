@@ -73,9 +73,16 @@ final class SettingsTest extends TestCase {
 		);
 	}
 
-	public function test_regions_come_from_lines_trimmed_and_unique(): void {
-		$regions = Settings::sanitize( array( 'regions' => " A / X \r\n\nB / Y\nA / X\n<b>C</b>" ) )['regions'];
-		self::assertSame( array( 'A / X', 'B / Y', 'C' ), $regions );
+	public function test_regions_from_the_old_text_become_name_and_acronym(): void {
+		$regions = Settings::sanitize( array( 'regions' => " A / x1 \r\n\nB / Y\nA / X1\n<b>C</b>" ) )['regions'];
+		self::assertSame(
+			array(
+				array( 'name' => 'A', 'acronym' => 'X1' ),
+				array( 'name' => 'B', 'acronym' => 'Y' ),
+			),
+			$regions,
+			'A repeated acronym and a line without one are left out.'
+		);
 	}
 
 	public function test_access_accepts_only_the_two_modes(): void {
@@ -191,7 +198,10 @@ final class SettingsTest extends TestCase {
 				'image_quality'  => '80',
 				'image_scale'    => '3',
 				'email_domain'   => 'example.org',
-				'regions'        => "North\nSouth",
+				'regions'        => array(
+					array( 'name' => 'North', 'acronym' => 'N' ),
+					array( 'name' => 'South', 'acronym' => 'S' ),
+				),
 				'fields'         => array(
 					'staff_school' => array( 'address' => array( 'default' => 'Rua A, 1', 'locked' => '1' ) ),
 				),
@@ -204,14 +214,14 @@ final class SettingsTest extends TestCase {
 		self::assertSame( array( 'format' => 'jpg', 'quality' => 80, 'scale' => 3 ), $config['image'] );
 		self::assertSame( 'example.org', $config['emailDomain'] );
 		self::assertSame( array( 'url' => 'https://example.org/chosen.png', 'width' => 90, 'alt' => 'Logo' ), $config['logo'] );
-		self::assertSame( array( 'North', 'South' ), $config['regions'] );
+		self::assertSame( array( 'North / N', 'South / S' ), $config['regions'] );
 
 		$address = $this->field( $config, 'staff_school', 'address' );
 		self::assertSame( 'Rua A, 1', $address['default'] );
 		self::assertTrue( $address['locked'] );
 
 		// The region default left the list, so the select starts on its first option.
-		self::assertSame( 'North', $this->field( $config, 'department', 'region' )['default'] );
+		self::assertSame( 'North / N', $this->field( $config, 'department', 'region' )['default'] );
 	}
 
 	/**
