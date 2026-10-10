@@ -25,7 +25,7 @@ xgettext --language=PHP --from-code=UTF-8 --sort-by-file --no-wrap \
 	--add-comments=translators: \
 	--package-name="Email Signature Generator" --package-version="$version" \
 	--msgid-bugs-address="https://github.com/rpgmem/email-signature-generator/issues" \
-	-o "$pot" email-signature-generator.php src/*.php bin/build-standalone.php
+	-o "$pot" email-signature-generator.php $(find src -name "*.php" | sort) bin/build-standalone.php
 
 # xgettext leaves the charset as a placeholder; the sources are UTF-8.
 sed -i 's/charset=CHARSET/charset=UTF-8/' "$pot"

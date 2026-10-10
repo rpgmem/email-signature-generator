@@ -44,8 +44,8 @@ final class Shortcode {
 	 * Render the shortcode.
 	 *
 	 * Attribute `models`: a comma-separated list of model ids to offer, in
-	 * that order. Unknown ids are ignored; when none is known, every model is
-	 * offered.
+	 * that order, among those the settings enable. Unknown ids are ignored;
+	 * when none is known, every enabled model is offered.
 	 *
 	 * @param array<string, string>|string $atts Shortcode attributes.
 	 * @return string The container markup.
@@ -53,7 +53,16 @@ final class Shortcode {
 	public static function render( $atts = array() ): string {
 		$atts = shortcode_atts( array( 'models' => '' ), is_array( $atts ) ? $atts : array(), self::TAG );
 
-		$config = self::restrictModels( Config::defaults( Config::bundledLogoUrl() ), (string) $atts['models'] );
+		if ( Settings::ACCESS_LOGGED_IN === Settings::get()['access'] && ! is_user_logged_in() ) {
+			return sprintf(
+				'<p class="esg-login-required">%1$s <a href="%2$s">%3$s</a></p>',
+				esc_html__( 'Log in to create your email signature.', 'email-signature-generator' ),
+				esc_url( wp_login_url( (string) get_permalink() ) ),
+				esc_html__( 'Log in', 'email-signature-generator' )
+			);
+		}
+
+		$config = self::restrictModels( Settings::siteConfig(), (string) $atts['models'] );
 
 		self::enqueue();
 

@@ -182,3 +182,43 @@ describe( 'mount', () => {
 		expect( document.querySelectorAll( '.esg-form' ) ).toHaveLength( 1 );
 	} );
 } );
+
+describe( 'settings in the configuration', () => {
+	it( 'refuses an address outside the allowed domain', () => {
+		const cfg = { ...config, emailDomain: 'sme.prefeitura.sp.gov.br' };
+		expect( gen.validate( model( 'staff_regional' ), valid, cfg ) ).toEqual( [] );
+
+		const errors = gen.validate( model( 'staff_regional' ), { ...valid, email: 'maria@gmail.com' }, cfg );
+		expect( errors.map( ( e ) => e.key ) ).toEqual( [ 'email' ] );
+		expect( errors[ 0 ].message ).toContain( 'sme.prefeitura.sp.gov.br' );
+	} );
+
+	it( 'does not accept a domain that merely ends the same way', () => {
+		const cfg = { ...config, emailDomain: 'example.org' };
+		const errors = gen.validate( model( 'staff_regional' ), { ...valid, email: 'a@evilexample.org' }, cfg );
+		expect( errors.map( ( e ) => e.key ) ).toEqual( [ 'email' ] );
+	} );
+
+	it( 'shows a locked field read-only and always uses its default', () => {
+		const locked = JSON.parse( JSON.stringify( config ) );
+		const field = locked.models[ 0 ].fields.find( ( f ) => 'address' === f.key );
+		field.default = 'Rua A, 1';
+		field.locked = true;
+
+		document.body.innerHTML = '<div id="c"></div>';
+		const ui = gen.mount( document.getElementById( 'c' ), locked );
+		const input = document.querySelector( '[name="address"]' );
+		expect( input.hasAttribute( 'readonly' ) ).toBe( true );
+
+		input.value = 'Changed in the inspector';
+		Object.entries( valid ).forEach( ( [ key, value ] ) => {
+			const el = document.querySelector( `[name="${ key }"]` );
+			if ( el && 'address' !== key ) {
+				el.value = value;
+			}
+		} );
+		expect( ui.generate() ).toBe( true );
+		expect( ui.html() ).toContain( 'Rua A, 1' );
+		expect( ui.html() ).not.toContain( 'Changed in the inspector' );
+	} );
+} );

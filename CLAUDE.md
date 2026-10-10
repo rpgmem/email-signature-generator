@@ -142,6 +142,20 @@ Every string the browser shows travels in `Config::strings()`, so the JavaScript
 
 The signature links its logo by URL, because email clients drop embedded images. The standalone build points at the bundled logo **at the release tag** on `raw.githubusercontent.com`, which stays valid as long as the tag exists; the plugin points at its own copy.
 
+## Settings
+
+`Settings` owns the one option, `email_signature_generator_settings`. Its rules:
+
+- **It saves through the Settings API.** `options.php` checks the nonce and `manage_options` before `Settings::sanitize()` runs.
+- **Sanitizing never fails a save, it repairs it.**
+  - Unknown models and fields are dropped.
+  - Widths are clamped, and an invalid domain becomes empty.
+  - With no model ticked, all of them are offered.
+  - The name stays required, and the name and the email never lock.
+  - A field can only be locked with a default.
+- **Absent is not off.** A key missing from the stored option means "never saved", so it keeps the default. That is why the capitals checkbox posts a hidden `0` before itself.
+- **`Settings::apply()` is the only place a setting reaches the generator.** The standalone build never calls it, so the standalone HTML always carries the plain defaults.
+
 ## Code
 
 - Namespace `EmailSignatureGenerator`; no global functions. A class maps to a kebab-case file under `src/`, and `AutoloaderTest` fails when one does not.

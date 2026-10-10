@@ -116,6 +116,8 @@
 				case 'email':
 					if ( ! /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test( value ) ) {
 						errors.push( { key: field.key, message: strings.invalidEmail } );
+					} else if ( config.emailDomain && value.toLowerCase().slice( -( config.emailDomain.length + 1 ) ) !== '@' + config.emailDomain ) {
+						errors.push( { key: field.key, message: format( strings.invalidEmailDomain, config.emailDomain ) } );
 					}
 					break;
 				case 'phone':
@@ -190,7 +192,7 @@
 		var lines = [];
 
 		if ( name ) {
-			lines.push( '<div style="margin: 0; padding: 0; font-size: 16px; text-transform: uppercase; line-height: 1.2;"><strong style="font-size: inherit;">' + escapeHtml( name ) + '</strong></div>' );
+			lines.push( '<div style="margin: 0; padding: 0; font-size: 16px; text-transform: uppercase; line-height: 1.2;"><strong style="font-size: inherit; font-weight: bold;">' + escapeHtml( name ) + '</strong></div>' );
 		}
 		if ( get( 'role' ) ) {
 			lines.push( '<div style="margin: 0; padding: 0; font-size: 7px; text-transform: uppercase; line-height: 1.2;">' + escapeHtml( get( 'role' ) ) + '</div>' );
