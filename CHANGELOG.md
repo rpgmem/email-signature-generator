@@ -17,6 +17,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Brazilian Portuguese translation** (#3, #4, #5). Every string the form, the signature, the settings screen and the updater show.
 - **Release packaging, CI and a testes deploy** (#2). Each tag publishes the zip, the standalone HTML and the notes. Every PR runs PHPUnit (also against a real WordPress), Vitest, PHPStan, PHPCS, ESLint, Stylelint and a composer audit. `develop` deploys to the testes site, followed by a smoke check.
 - **The site decides how the image is offered** (#15). The download can be turned off, leaving only Copy HTML, or offered as a button that recommends Copy HTML after each download (the default), the same inside a collapsed "More options", or a plain button.
+- **Space above the signature** (#16). A configurable gap, 4 px by default and up to 20, keeps the signature apart from the text above it in both the copied HTML and the image; it adds to the height, never the width.
 
 ### Changed
 

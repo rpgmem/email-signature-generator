@@ -230,7 +230,15 @@
 				+ '</td></tr></table>'
 			: '';
 
+		// A spacer row rather than a margin or padding: email programs, Outlook
+		// above all, keep a cell's height and drop the other two.
+		var space = Math.min( 20, Math.max( 0, parseInt( config.topSpace, 10 ) || 0 ) );
+		var spacer = space
+			? '<tr><td' + ( hasLogo ? ' colspan="2"' : '' ) + ' height="' + space + '" style="height: ' + space + 'px; padding: 0; font-size: 0; line-height: 0;">&nbsp;</td></tr>'
+			: '';
+
 		return '<table cellpadding="0" cellspacing="0" border="0" style="background: #ffffff; width: 100%; max-width: ' + SIGNATURE_WIDTH + 'px; font-family: Arial, sans-serif;">'
+			+ spacer
 			+ '<tr>'
 			+ ( hasLogo ? '<td valign="middle" style="padding: 10px 0 10px 10px; width: ' + ( logoWidth + 13 ) + 'px; vertical-align: middle;">' + logo + '</td>' : '' )
 			+ '<td valign="middle" style="padding-left: ' + ( hasLogo ? 7 : 10 ) + 'px; vertical-align: middle; line-height: 1; font-family: Arial, sans-serif; color: #000000;">'
