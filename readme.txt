@@ -39,7 +39,7 @@ Settings → Email Signature sets, for every form on the site:
 * which models are offered, and whether only logged-in users may use the form;
 * whether the name is printed in capitals, and an email domain every address must use;
 * the logo, from the media library (the bundled one is the default), and its width;
-* the JPG download's quality (50–100%) and resolution (1×, 2× or 3×);
+* the downloaded image's format (PNG by default, or JPG with its quality) and resolution (1×, 2× or 3×);
 * the list of regional offices;
 * per field: a default value, whether it is required, and whether it is locked to that default.
 

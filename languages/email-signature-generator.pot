@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Email Signature Generator 1.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
-"POT-Creation-Date: 2026-10-10 23:05+0000\n"
+"POT-Creation-Date: 2026-10-10 23:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -128,8 +128,8 @@ msgstr ""
 msgid "Only addresses at this domain are accepted. Leave it empty to accept any address."
 msgstr ""
 
-#: src/admin/settings-page.php:208 src/admin/settings-page.php:353
-#: src/config.php:67
+#: src/admin/settings-page.php:208 src/admin/settings-page.php:363
+#: src/config.php:74
 msgid "Logo"
 msgstr ""
 
@@ -153,215 +153,239 @@ msgstr ""
 msgid "Width"
 msgstr ""
 
-#: src/admin/settings-page.php:232 src/admin/settings-page.php:357
+#: src/admin/settings-page.php:232 src/admin/settings-page.php:367
 msgid "Downloaded image"
 msgstr ""
 
-#: src/admin/settings-page.php:236
-msgid "JPG quality"
+#: src/admin/settings-page.php:233
+msgid "Copying the HTML is the recommended way to use a signature: the text stays sharp at any size. The image is for email programs that do not accept an HTML signature."
 msgstr ""
 
-#: src/admin/settings-page.php:241
-msgid "Higher keeps the text sharper and makes the file larger. 90 suits most signatures."
+#: src/admin/settings-page.php:235
+msgid "Format"
+msgstr ""
+
+#: src/admin/settings-page.php:238
+msgid "PNG (recommended)"
+msgstr ""
+
+#: src/admin/settings-page.php:239
+msgid "JPG"
 msgstr ""
 
 #: src/admin/settings-page.php:243
+msgid "PNG keeps small letters clean. JPG makes a smaller file but leaves compression noise around the text."
+msgstr ""
+
+#: src/admin/settings-page.php:246
+msgid "JPG quality"
+msgstr ""
+
+#: src/admin/settings-page.php:251
+msgid "Only for JPG. Higher keeps the text sharper and makes the file larger."
+msgstr ""
+
+#: src/admin/settings-page.php:253
 msgid "Resolution"
 msgstr ""
 
 #. translators: 1: pixel density, such as 2; 2: image width in pixels.
-#: src/admin/settings-page.php:253
+#: src/admin/settings-page.php:263
 #, php-format
 msgid "%1$d× (%2$d px wide)"
 msgstr ""
 
-#: src/admin/settings-page.php:260
+#: src/admin/settings-page.php:270
 msgid "1× is the size of the signature in an email. 2× and 3× are sharper, but an email client may show them larger unless the image is resized."
 msgstr ""
 
-#: src/admin/settings-page.php:265 src/admin/settings-page.php:361
+#: src/admin/settings-page.php:275 src/admin/settings-page.php:371
 msgid "Regional offices"
 msgstr ""
 
-#: src/admin/settings-page.php:268
+#: src/admin/settings-page.php:278
 msgid "The choices of the \"Regional office or central\" field, one per line, exactly as the signature prints them."
 msgstr ""
 
-#: src/admin/settings-page.php:276 src/admin/settings-page.php:365
+#: src/admin/settings-page.php:286 src/admin/settings-page.php:375
 msgid "Fields"
 msgstr ""
 
-#: src/admin/settings-page.php:277
+#: src/admin/settings-page.php:287
 msgid "A default pre-fills the field. A locked field shows its default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked."
 msgstr ""
 
-#: src/admin/settings-page.php:281
+#: src/admin/settings-page.php:291
 msgid "Field"
 msgstr ""
 
-#: src/admin/settings-page.php:282
+#: src/admin/settings-page.php:292
 msgid "Default"
 msgstr ""
 
-#: src/admin/settings-page.php:283
+#: src/admin/settings-page.php:293
 msgid "Required"
 msgstr ""
 
-#: src/admin/settings-page.php:284
+#: src/admin/settings-page.php:294
 msgid "Locked"
 msgstr ""
 
 #. translators: %s: field label.
-#: src/admin/settings-page.php:310
+#: src/admin/settings-page.php:320
 #, php-format
 msgid "%s is required"
 msgstr ""
 
 #. translators: %s: field label.
-#: src/admin/settings-page.php:325
+#: src/admin/settings-page.php:335
 #, php-format
 msgid "%s is locked"
 msgstr ""
 
-#: src/admin/settings-page.php:349
+#: src/admin/settings-page.php:359
 msgid "General"
 msgstr ""
 
-#: src/config.php:102
+#: src/config.php:110
 msgid "Full name"
 msgstr ""
 
-#: src/config.php:104
+#: src/config.php:112
 msgid "Type your full name"
 msgstr ""
 
-#: src/config.php:108
+#: src/config.php:116
 msgid "Email"
 msgstr ""
 
-#: src/config.php:116
+#: src/config.php:124
 msgid "Phone number(s)"
 msgstr ""
 
-#: src/config.php:122
+#: src/config.php:130
 msgid "Address | Floor | Room"
 msgstr ""
 
-#: src/config.php:127
+#: src/config.php:135
 msgid "Postal code | City | State"
 msgstr ""
 
-#: src/config.php:132
+#: src/config.php:140
 msgid "Link 1"
 msgstr ""
 
-#: src/config.php:139
+#: src/config.php:147
 msgid "Link 2"
 msgstr ""
 
-#: src/config.php:142
+#: src/config.php:150
 msgid "Type a second link, if needed"
 msgstr ""
 
-#: src/config.php:148
+#: src/config.php:156
 msgid "Staff - Regional office"
 msgstr ""
 
-#: src/config.php:153
+#: src/config.php:161
 msgid "Role / Department"
 msgstr ""
 
-#: src/config.php:168
+#: src/config.php:176
 msgid "Staff - School"
 msgstr ""
 
-#: src/config.php:173
+#: src/config.php:181
 msgid "Role"
 msgstr ""
 
-#: src/config.php:182
+#: src/config.php:190
 msgid "School / Regional office"
 msgstr ""
 
-#: src/config.php:193
+#: src/config.php:201
 msgid "Department or school building"
 msgstr ""
 
-#: src/config.php:197
+#: src/config.php:205
 msgid "Department or school"
 msgstr ""
 
-#: src/config.php:205
+#: src/config.php:213
 msgid "Regional office or central"
 msgstr ""
 
-#: src/config.php:251
+#: src/config.php:259
 msgid "Signature model"
 msgstr ""
 
-#: src/config.php:252
+#: src/config.php:260
 msgid "Generate signature"
 msgstr ""
 
-#: src/config.php:253
+#: src/config.php:261
 msgid "Copy HTML"
 msgstr ""
 
-#: src/config.php:254
+#: src/config.php:262
 msgid "Download image"
 msgstr ""
 
-#: src/config.php:255
+#: src/config.php:263
 msgid "Preview"
 msgstr ""
 
-#: src/config.php:256
+#: src/config.php:264
 msgid "Tel.:"
 msgstr ""
 
-#: src/config.php:257
+#: src/config.php:265
 msgid "Signature copied. Paste it into your email signature settings."
 msgstr ""
 
-#: src/config.php:258
+#: src/config.php:266
 msgid "The signature could not be copied. Select it in the preview and copy it by hand."
 msgstr ""
 
-#: src/config.php:259
+#: src/config.php:267
 msgid "The image could not be created. Try again."
 msgstr ""
 
+#: src/config.php:268
+msgid "Recommended: copy the HTML and paste it into your email program's signature settings. The text stays sharp at any size and the links work. Use the image only where a signature cannot be HTML."
+msgstr ""
+
 #. translators: %s: a field's label.
-#: src/config.php:261
+#: src/config.php:270
 #, php-format
 msgid "%s is required."
 msgstr ""
 
-#: src/config.php:262
+#: src/config.php:271
 msgid "Enter a valid email address."
 msgstr ""
 
 #. translators: %s: an email domain, such as example.org.
-#: src/config.php:264
+#: src/config.php:273
 #, php-format
 msgid "Use an address at %s."
 msgstr ""
 
-#: src/config.php:265
+#: src/config.php:274
 msgid "Enter the phone number as 55 XX XXXX-XXXX or 55 XX XXXXX-XXXX. For two numbers, separate them with \" | \"."
 msgstr ""
 
 #. translators: %s: a field's label.
-#: src/config.php:267
+#: src/config.php:276
 #, php-format
 msgid "%s is not a valid address."
 msgstr ""
 
-#: src/config.php:268
+#: src/config.php:277
 msgid "Role / Department needs text on both sides of the slash, or a single word without spaces."
 msgstr ""
 
-#: src/config.php:269
+#: src/config.php:278
 msgid "Role takes a single role, without slashes."
 msgstr ""
 

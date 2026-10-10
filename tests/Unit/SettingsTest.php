@@ -126,6 +126,13 @@ final class SettingsTest extends TestCase {
 		self::assertSame( Config::IMAGE_QUALITY, Settings::sanitize( array() )['image_quality'] );
 	}
 
+	public function test_the_image_format_is_png_or_jpg(): void {
+		self::assertSame( 'png', Settings::sanitize( array() )['image_format'] );
+		self::assertSame( 'jpg', Settings::sanitize( array( 'image_format' => 'jpg' ) )['image_format'] );
+		self::assertSame( 'png', Settings::sanitize( array( 'image_format' => 'gif' ) )['image_format'] );
+		self::assertSame( 'png', Settings::sanitize( array( 'image_format' => array( 'jpg' ) ) )['image_format'] );
+	}
+
 	public function test_an_unknown_image_scale_falls_back_to_the_default(): void {
 		self::assertSame( 3, Settings::sanitize( array( 'image_scale' => '3' ) )['image_scale'] );
 		self::assertSame( Config::IMAGE_SCALE, Settings::sanitize( array( 'image_scale' => '7' ) )['image_scale'] );
@@ -157,6 +164,7 @@ final class SettingsTest extends TestCase {
 				'models'         => array( 'staff_school', 'department' ),
 				'uppercase_name' => '0',
 				'logo_width'     => '90',
+				'image_format'   => 'jpg',
 				'image_quality'  => '80',
 				'image_scale'    => '3',
 				'email_domain'   => 'example.org',
@@ -170,7 +178,7 @@ final class SettingsTest extends TestCase {
 
 		self::assertSame( array( 'staff_school', 'department' ), array_column( $config['models'], 'id' ) );
 		self::assertFalse( $config['uppercaseName'] );
-		self::assertSame( array( 'quality' => 80, 'scale' => 3 ), $config['image'] );
+		self::assertSame( array( 'format' => 'jpg', 'quality' => 80, 'scale' => 3 ), $config['image'] );
 		self::assertSame( 'example.org', $config['emailDomain'] );
 		self::assertSame( array( 'url' => 'https://example.org/chosen.png', 'width' => 90, 'alt' => 'Logo' ), $config['logo'] );
 		self::assertSame( array( 'North', 'South' ), $config['regions'] );
