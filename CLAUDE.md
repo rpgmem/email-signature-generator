@@ -154,6 +154,8 @@ The signature links its logo by URL, because email clients drop embedded images.
   - The name stays required, and the name and the email never lock.
   - A field can only be locked with a default.
 - **Absent is not off.** A key missing from the stored option means "never saved", so it keeps the default. That is why the capitals checkbox posts a hidden `0` before itself.
+- **On/off settings save as they are flipped** (`Admin\Autosave`, one AJAX action, nonce plus `manage_options`). Every toggle also stays a named field of the form, so "Save Changes" posts its current state and cannot undo an autosave. A new toggle needs both: the `data-esg-autosave` key and its branch in `Autosave::apply()`. The handler reads the stored settings, changes one key and runs `Settings::sanitize()` over the whole, so it can never store what the form could not.
+- **A field the autosave touches for the first time starts from its built-in values.** Otherwise locking the link would also blank its default.
 - **`Settings::apply()` is the only place a setting reaches the generator.** The standalone build never calls it, so the standalone HTML always carries the plain defaults.
 
 ## Updates

@@ -16,3 +16,117 @@
 .esg-settings .esg-fields-table td {
 	vertical-align: middle;
 }
+
+/* On/off switch: a real checkbox, hidden but focusable, drawn as a track. */
+.esg-settings .esg-toggle {
+	display: inline-flex;
+	position: relative;
+	align-items: center;
+	gap: 8px;
+	margin: 0;
+	line-height: 1.3;
+	cursor: pointer;
+	user-select: none;
+}
+
+.esg-settings .esg-toggle input[type="checkbox"] {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.esg-settings .esg-toggle-track {
+	position: relative;
+	flex: 0 0 auto;
+	width: 38px;
+	height: 22px;
+	border-radius: 11px;
+	background: #8c8f94;
+	transition: background-color 0.15s ease;
+}
+
+.esg-settings .esg-toggle-track::after {
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: #ffffff;
+	box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
+	content: "";
+	transition: transform 0.15s ease;
+}
+
+.esg-settings .esg-toggle input:checked + .esg-toggle-track {
+	background: var(--wp-admin-theme-color, #2271b1);
+}
+
+.esg-settings .esg-toggle input:checked + .esg-toggle-track::after {
+	transform: translateX(16px);
+}
+
+.esg-settings .esg-toggle input:focus-visible + .esg-toggle-track {
+	outline: 2px solid var(--wp-admin-theme-color, #2271b1);
+	outline-offset: 2px;
+}
+
+.esg-settings .esg-toggle input:disabled + .esg-toggle-track {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* Forced colors drop backgrounds; keep the track and the knob visible. */
+@media (forced-colors: active) {
+	.esg-settings .esg-toggle-track {
+		border: 1px solid CanvasText;
+	}
+
+	.esg-settings .esg-toggle-track::after {
+		background: CanvasText;
+	}
+
+	.esg-settings .esg-toggle input:checked + .esg-toggle-track {
+		background: Highlight;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.esg-settings .esg-toggle-track,
+	.esg-settings .esg-toggle-track::after {
+		transition: none;
+	}
+}
+
+/* Save state beside a toggle. */
+.esg-settings .esg-autosave-badge {
+	display: inline-block;
+	margin-left: 8px;
+	padding: 2px 8px;
+	border-radius: 10px;
+	font-size: 12px;
+	font-weight: 500;
+	vertical-align: middle;
+}
+
+.esg-settings .esg-autosave-badge[hidden] {
+	display: none;
+}
+
+.esg-settings .esg-autosave-badge--saving {
+	background: #f0f0f1;
+	color: #50575e;
+}
+
+.esg-settings .esg-autosave-badge--saved {
+	background: #edfaef;
+	color: #00632b;
+}
+
+.esg-settings .esg-autosave-badge--error {
+	background: #fcf0f1;
+	color: #a00;
+}

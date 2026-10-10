@@ -1,11 +1,130 @@
 /**
- * Settings → Email Signature: pick the logo from the media library.
+ * Settings → Email Signature.
  *
- * The chosen attachment's id goes into the hidden field; "Use the bundled
- * logo" sets it back to 0. Saving is the form's own job.
+ * Picks the logo from the media library: the chosen attachment's id goes
+ * into the hidden field, and "Use the bundled logo" sets it back to 0.
+ *
+ * Saves each on/off toggle the moment it is flipped. Every toggle is also a
+ * field of the form, so "Save Changes" posts its current state; text fields
+ * still wait for that button.
  */
 ( function () {
 	'use strict';
+
+	var settings = window.esgAdmin || {};
+	var LINGER = 1800;
+
+	/**
+	 * The value a toggle saves: '1' / '0', or every ticked model.
+	 *
+	 * @param {HTMLInputElement} input The flipped toggle.
+	 * @return {string|string[]} Value to post.
+	 */
+	function valueOf( input ) {
+		if ( 'models' !== input.getAttribute( 'data-esg-autosave' ) ) {
+			return input.checked ? '1' : '0';
+		}
+		return Array.prototype.map.call(
+			document.querySelectorAll( 'input[data-esg-autosave="models"]:checked' ),
+			function ( box ) {
+				return box.value;
+			}
+		);
+	}
+
+	/**
+	 * Show the stored value again: one box, or the whole models group.
+	 *
+	 * @param {HTMLInputElement} input The flipped toggle.
+	 * @param {boolean|string[]} value Stored value.
+	 */
+	function show( input, value ) {
+		if ( Array.isArray( value ) ) {
+			document.querySelectorAll( 'input[data-esg-autosave="models"]' ).forEach( function ( box ) {
+				box.checked = -1 !== value.indexOf( box.value );
+			} );
+			return;
+		}
+		input.checked = !! value;
+	}
+
+	/**
+	 * The status badge beside a toggle, created on first use.
+	 *
+	 * @param {HTMLInputElement} input Toggle.
+	 * @return {HTMLElement} Badge.
+	 */
+	function badgeFor( input ) {
+		var anchor = input.closest( '.esg-toggle' ) || input;
+		var badge = anchor.nextElementSibling;
+		if ( ! badge || ! badge.classList.contains( 'esg-autosave-badge' ) ) {
+			badge = document.createElement( 'span' );
+			badge.className = 'esg-autosave-badge';
+			badge.setAttribute( 'role', 'status' );
+			anchor.parentNode.insertBefore( badge, anchor.nextSibling );
+		}
+		return badge;
+	}
+
+	function setBadge( badge, state, text ) {
+		badge.className = 'esg-autosave-badge esg-autosave-badge--' + state;
+		badge.textContent = text;
+		badge.hidden = false;
+	}
+
+	/**
+	 * Post one toggle.
+	 *
+	 * @param {HTMLInputElement} input The flipped toggle.
+	 */
+	function save( input ) {
+		var key = input.getAttribute( 'data-esg-autosave' );
+		var before = ! input.checked;
+		var value = valueOf( input );
+		var badge = badgeFor( input );
+		var body = new window.FormData();
+		body.append( 'action', settings.action );
+		body.append( 'nonce', settings.nonce );
+		body.append( 'key', key );
+		if ( Array.isArray( value ) ) {
+			value.forEach( function ( v ) {
+				body.append( 'value[]', v );
+			} );
+		} else {
+			body.append( 'value', value );
+		}
+
+		window.clearTimeout( badge.esgTimer );
+		setBadge( badge, 'saving', settings.saving );
+		window.fetch( settings.ajaxUrl, { method: 'POST', credentials: 'same-origin', body: body } )
+			.then( function ( response ) {
+				return response.json().catch( function () {
+					return {};
+				} );
+			} )
+			.then( function ( json ) {
+				if ( ! json || ! json.success ) {
+					throw new Error( json && json.data && json.data.message ? json.data.message : settings.failed );
+				}
+				show( input, json.data.value );
+				setBadge( badge, 'saved', settings.saved );
+				badge.esgTimer = window.setTimeout( function () {
+					badge.hidden = true;
+				}, LINGER );
+			} )
+			.catch( function ( error ) {
+				input.checked = before;
+				setBadge( badge, 'error', error && error.message ? error.message : settings.failed );
+			} );
+	}
+
+	if ( settings.action && settings.nonce && window.fetch ) {
+		document.querySelectorAll( 'input[data-esg-autosave]' ).forEach( function ( input ) {
+			input.addEventListener( 'change', function () {
+				save( input );
+			} );
+		} );
+	}
 
 	var preview = document.querySelector( '.esg-logo-preview' );
 	var input = document.querySelector( '.esg-logo-id' );
