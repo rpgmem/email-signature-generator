@@ -218,14 +218,22 @@
 			}
 		} );
 
-		var logo = config.logo && config.logo.url
-			? '<img src="' + escapeHtml( config.logo.url ) + '" width="' + escapeHtml( config.logo.width ) + '" alt="' + escapeHtml( config.logo.alt ) + '" style="display: block; border: 0;" border="0">'
+		// The divider is the right border of a cell that holds only the logo,
+		// so it is exactly as tall as the logo whatever the text's height. A
+		// border on the text's cell would run the whole height of the row.
+		var hasLogo = !! ( config.logo && config.logo.url );
+		var logoWidth = hasLogo ? parseInt( config.logo.width, 10 ) || 0 : 0;
+		var logo = hasLogo
+			? '<table cellpadding="0" cellspacing="0" border="0"><tr>'
+				+ '<td valign="middle" style="padding: 0 10px 0 0; border-right: 3px solid #000000; vertical-align: middle;">'
+				+ '<img src="' + escapeHtml( config.logo.url ) + '" width="' + logoWidth + '" alt="' + escapeHtml( config.logo.alt ) + '" style="display: block; border: 0;" border="0">'
+				+ '</td></tr></table>'
 			: '';
 
 		return '<table cellpadding="0" cellspacing="0" border="0" style="background: #ffffff; width: 100%; max-width: ' + SIGNATURE_WIDTH + 'px; font-family: Arial, sans-serif;">'
 			+ '<tr>'
-			+ '<td valign="middle" style="padding: 10px; width: ' + escapeHtml( config.logo ? config.logo.width : 0 ) + 'px; vertical-align: middle;">' + logo + '</td>'
-			+ '<td valign="middle" style="padding-left: 7px; border-left: 3px solid #000000; vertical-align: middle; line-height: 1; font-family: Arial, sans-serif; color: #000000;">'
+			+ ( hasLogo ? '<td valign="middle" style="padding: 10px 0 10px 10px; width: ' + ( logoWidth + 13 ) + 'px; vertical-align: middle;">' + logo + '</td>' : '' )
+			+ '<td valign="middle" style="padding-left: ' + ( hasLogo ? 7 : 10 ) + 'px; vertical-align: middle; line-height: 1; font-family: Arial, sans-serif; color: #000000;">'
 			+ lines.join( '' )
 			+ '</td>'
 			+ '</tr>'
