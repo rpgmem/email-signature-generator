@@ -35,6 +35,13 @@ final class Config {
 	public const LOGO_WIDTH = 120;
 
 	/**
+	 * Empty space above the signature, in pixels, so it does not touch what
+	 * precedes it in an email. Part of the signature's height, never its
+	 * width.
+	 */
+	public const TOP_SPACE = 4;
+
+	/**
 	 * Width of the signature table, in CSS pixels. Mirrors SIGNATURE_WIDTH in
 	 * assets/js/signature-generator.js, which draws it.
 	 */
@@ -78,6 +85,7 @@ final class Config {
 				'quality' => self::IMAGE_QUALITY,
 				'scale'   => self::IMAGE_SCALE,
 			),
+			'topSpace'      => self::TOP_SPACE,
 			'offerDownload' => true,
 			'downloadStyle' => 'notice',
 			'uppercaseName' => true,

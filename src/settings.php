@@ -28,6 +28,8 @@ final class Settings {
 
 	public const LOGO_WIDTH_MAX = 240;
 
+	public const TOP_SPACE_MAX = 20;
+
 	public const IMAGE_QUALITY_MIN = 50;
 
 	public const IMAGE_QUALITY_MAX = 100;
@@ -56,7 +58,7 @@ final class Settings {
 	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<string>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<string>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -76,6 +78,7 @@ final class Settings {
 			'uppercase_name' => true,
 			'logo_id'        => 0,
 			'logo_width'     => Config::LOGO_WIDTH,
+			'top_space'      => Config::TOP_SPACE,
 			'image_format'   => Config::IMAGE_FORMAT,
 			'image_quality'  => Config::IMAGE_QUALITY,
 			'image_scale'    => Config::IMAGE_SCALE,
@@ -92,7 +95,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<string>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<string>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -106,6 +109,7 @@ final class Settings {
 
 		$width   = (int) ( $input['logo_width'] ?? Config::LOGO_WIDTH );
 		$quality = (int) ( $input['image_quality'] ?? Config::IMAGE_QUALITY );
+		$space   = (int) ( $input['top_space'] ?? Config::TOP_SPACE );
 		$style   = is_string( $input['download_style'] ?? null ) ? $input['download_style'] : 'notice';
 		$format  = is_string( $input['image_format'] ?? null ) ? $input['image_format'] : Config::IMAGE_FORMAT;
 		$scale   = (int) ( $input['image_scale'] ?? Config::IMAGE_SCALE );
@@ -140,6 +144,7 @@ final class Settings {
 			'uppercase_name' => array_key_exists( 'uppercase_name', $input ) ? ! empty( $input['uppercase_name'] ) : true,
 			'logo_id'        => max( 0, (int) ( $input['logo_id'] ?? 0 ) ),
 			'logo_width'     => min( self::LOGO_WIDTH_MAX, max( self::LOGO_WIDTH_MIN, $width ) ),
+			'top_space'      => min( self::TOP_SPACE_MAX, max( 0, $space ) ),
 			'image_format'   => in_array( $format, self::IMAGE_FORMATS, true ) ? $format : Config::IMAGE_FORMAT,
 			'image_quality'  => min( self::IMAGE_QUALITY_MAX, max( self::IMAGE_QUALITY_MIN, $quality ) ),
 			'image_scale'    => in_array( $scale, self::IMAGE_SCALES, true ) ? $scale : Config::IMAGE_SCALE,
@@ -169,6 +174,7 @@ final class Settings {
 		$config['uppercaseName'] = (bool) $settings['uppercase_name'];
 		$config['emailDomain']   = (string) $settings['email_domain'];
 		$config['logo']['width'] = (int) $settings['logo_width'];
+		$config['topSpace']      = (int) $settings['top_space'];
 		$config['image']         = array(
 			'format'  => (string) $settings['image_format'],
 			'quality' => (int) $settings['image_quality'],

@@ -145,6 +145,20 @@ describe( 'render', () => {
 		expect( bordered ).toEqual( [ cell ] );
 	} );
 
+	it( 'adds the configured space above the signature as a spacer row', () => {
+		expect( config.topSpace ).toBe( 4 );
+		document.body.innerHTML = gen.render( model( 'staff_regional' ), valid, config );
+		const first = document.querySelector( 'table > tbody > tr > td' );
+		expect( first.getAttribute( 'height' ) ).toBe( '4' );
+		expect( first.getAttribute( 'colspan' ) ).toBe( '2' );
+		expect( first.getAttribute( 'style' ) ).toContain( 'height: 4px' );
+
+		const none = gen.render( model( 'staff_regional' ), valid, { ...config, topSpace: 0 } );
+		expect( none ).not.toContain( 'height="' );
+		expect( gen.render( model( 'staff_regional' ), valid, { ...config, topSpace: 99 } ) ).toContain( 'height="20"' );
+		expect( gen.render( model( 'staff_regional' ), valid, { ...config, logo: null } ) ).not.toContain( 'colspan' );
+	} );
+
 	it( 'draws no divider without a logo', () => {
 		const html = gen.render( model( 'staff_regional' ), valid, { ...config, logo: null } );
 		expect( html ).not.toContain( 'border-right' );

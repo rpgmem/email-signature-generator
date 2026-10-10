@@ -132,6 +132,14 @@ final class SettingsTest extends TestCase {
 		self::assertFalse( Settings::apply( Config::defaults( '' ), Settings::sanitize( array( 'offer_download' => '0' ) ) )['offerDownload'] );
 	}
 
+	public function test_the_top_space_is_clamped_and_defaults_to_4(): void {
+		self::assertSame( 4, Settings::sanitize( array() )['top_space'] );
+		self::assertSame( 0, Settings::sanitize( array( 'top_space' => '-3' ) )['top_space'] );
+		self::assertSame( Settings::TOP_SPACE_MAX, Settings::sanitize( array( 'top_space' => '99' ) )['top_space'] );
+		self::assertSame( 10, Settings::sanitize( array( 'top_space' => '10' ) )['top_space'] );
+		self::assertSame( 10, Settings::apply( Config::defaults( '' ), Settings::sanitize( array( 'top_space' => '10' ) ) )['topSpace'] );
+	}
+
 	public function test_the_download_style_is_one_of_three(): void {
 		self::assertSame( 'notice', Settings::sanitize( array() )['download_style'] );
 		self::assertSame( 'more', Settings::sanitize( array( 'download_style' => 'more' ) )['download_style'] );

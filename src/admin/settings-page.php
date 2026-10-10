@@ -201,6 +201,18 @@ final class SettingsPage {
 			esc_attr( $settings['email_domain'] ),
 			esc_html__( 'Only addresses at this domain are accepted. Leave it empty to accept any address.', 'email-signature-generator' )
 		);
+		echo '</tbody></table></div>';
+
+		self::openCard( __( 'Layout', 'email-signature-generator' ), 'layout' );
+		echo '<table class="form-table" role="presentation"><tbody>';
+		printf(
+			'<tr><th scope="row"><label for="esg-top-space">%1$s</label></th><td><input type="number" id="esg-top-space" class="small-text" name="%2$s[top_space]" value="%3$d" min="0" max="%4$d" required> px<p class="description">%5$s</p></td></tr>',
+			esc_html__( 'Space above the signature', 'email-signature-generator' ),
+			esc_attr( $name ),
+			(int) $settings['top_space'],
+			(int) Settings::TOP_SPACE_MAX,
+			esc_html__( 'Keeps the signature slightly apart from the text above it, in the copied HTML and in the image. It adds to the height, never to the width.', 'email-signature-generator' )
+		);
 		echo '</tbody></table></div></div>';
 
 		// Logo.

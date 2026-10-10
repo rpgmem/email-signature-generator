@@ -116,6 +116,7 @@ final class SettingsTest extends WP_UnitTestCase {
 		self::assertStringContainsString( 'name="' . Settings::OPTION . '[image_quality]" value="90"', $html );
 		self::assertStringContainsString( 'name="' . Settings::OPTION . '[image_scale]"', $html );
 		self::assertStringContainsString( 'data-esg-autosave="offer_download"', $html );
+		self::assertStringContainsString( 'name="' . Settings::OPTION . '[top_space]" value="4"', $html );
 		self::assertMatchesRegularExpression( '/name="' . preg_quote( Settings::OPTION, '/' ) . '\[download_style\]" value="notice" checked/', $html );
 		self::assertStringContainsString( '<option value="png" selected=\'selected\'>PNG (recommended)</option>', $html );
 		self::assertStringContainsString( '<option value="1" selected=\'selected\'>1× (450 px wide)</option>', $html );
