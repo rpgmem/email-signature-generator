@@ -1,0 +1,13 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+    level: 8
+    paths:
+        - email-signature-generator.php
+        - uninstall.php
+        - src/
+    excludePaths:
+        - tests/*
+        - vendor/*
+    treatPhpDocTypesAsCertain: false
