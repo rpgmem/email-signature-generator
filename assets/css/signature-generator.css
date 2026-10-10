@@ -77,14 +77,10 @@
 	color: var(--esg-accent-text);
 }
 
-/* Copying the HTML is the recommended way; the image is the fallback. */
+/* Copying the HTML is the recommended way: its button is bold, and the
+   note under the buttons says why. The image keeps a full button too. */
 .esg-generator .esg-copy {
 	font-weight: 600;
-}
-
-.esg-generator .esg-download {
-	border-color: transparent;
-	text-decoration: underline;
 }
 
 .esg-generator .esg-hint {
