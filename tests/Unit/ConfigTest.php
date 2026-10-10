@@ -111,4 +111,17 @@ final class ConfigTest extends TestCase {
 		self::assertSame( 'https://example.org/logo.png', $config['logo']['url'] );
 		self::assertSame( Config::LOGO_WIDTH, $config['logo']['width'] );
 	}
+
+	public function test_the_image_defaults_are_quality_90_at_2x(): void {
+		$config = Config::defaults( '' );
+		self::assertSame( array( 'quality' => Config::IMAGE_QUALITY, 'scale' => Config::IMAGE_SCALE ), $config['image'] );
+		self::assertSame( 90, Config::IMAGE_QUALITY );
+		self::assertSame( 2, Config::IMAGE_SCALE );
+	}
+
+	public function test_the_signature_width_mirrors_the_script(): void {
+		$js = (string) file_get_contents( dirname( __DIR__, 2 ) . '/assets/js/signature-generator.js' );
+		self::assertSame( 1, preg_match( '/var SIGNATURE_WIDTH = (\d+);/', $js, $m ), 'The script declares no SIGNATURE_WIDTH.' );
+		self::assertSame( Config::SIGNATURE_WIDTH, (int) $m[1] );
+	}
 }
