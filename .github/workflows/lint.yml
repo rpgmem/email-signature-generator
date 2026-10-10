@@ -22,6 +22,23 @@ jobs:
       - run: npm ci
       - run: npm run lint:js
 
+  js-tests:
+    name: JS tests (Vitest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+      # The tests read the real configuration through bin/build-standalone.php.
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+      - run: npm ci
+      - run: npm test
+
   css:
     name: Stylelint (assets/css)
     runs-on: ubuntu-latest
@@ -57,6 +74,10 @@ jobs:
         with:
           # The build checks the tag out in a worktree, so it needs the tags.
           fetch-depth: 0
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
       - name: Build the latest tag's zip and notes with this branch's files
         # The same script release.yml runs, so a broken .distignore, script
         # or CHANGELOG section fails here instead of at the next release.
@@ -71,4 +92,7 @@ jobs:
           if unzip -Z1 "build/email-signature-generator-${tag#v}.zip" | grep -E '^email-signature-generator/(tests|bin|vendor|node_modules)/'; then
             echo "::error::The zip carries development files."
             exit 1
+          fi
+          if [ -f bin/build-standalone.php ] && git cat-file -e "$tag:bin/build-standalone.php" 2>/dev/null; then
+            test -s "build/email-signature-generator-${tag#v}.html"
           fi

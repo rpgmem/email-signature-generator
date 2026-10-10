@@ -105,7 +105,7 @@ The zip ships no Composer or npm dependency. The autoloader is inline in the mai
   - `TESTES_SSH_HOST`, `TESTES_SSH_USER`, `TESTES_SSH_KEY` (no passphrase) and the optional `TESTES_SSH_PORT` carry the same values as in the other two repositories;
   - `TESTES_REMOTE_PATH` is this plugin's own folder: `…/wp-content/plugins/email-signature-generator`, absolute, no trailing slash.
 - **The path is checked before anything is sent.** `--delete` empties whatever directory it is pointed at, so the workflow refuses a path that is not absolute or does not end in `/wp-content/plugins/email-signature-generator`. The check cannot tell the testes site from another site on the same account, so the secret must name the testes site.
-- **The smoke** (`.github/scripts/testes-smoke.php`) boots the real WordPress. It checks that the plugin is active and that `Plugin::VERSION` on the host equals the deployed commit. A boot that stops early fails; a timeout only warns.
+- **The smoke** (`.github/scripts/testes-smoke.php`) boots the real WordPress. It checks that the plugin is active, that `Plugin::VERSION` on the host equals the deployed commit, and that the shortcode is registered. A boot that stops early fails; a timeout only warns.
 - **It is an alarm, not a gate:** it runs after the merge. Anything that must block a merge belongs in CI.
 
 ## Quality gates
@@ -117,6 +117,8 @@ These run in CI on every PR and on pushes to `main` and `develop`:
 - `composer validate --strict` and `composer audit --locked`.
 - The release build against the newest tag.
 
+- Vitest over the generator (`tests/js`), against the real configuration that `bin/build-standalone.php - ` prints.
+
 Locally:
 
 ```bash
@@ -125,7 +127,20 @@ vendor/bin/phpunit --testsuite unit
 vendor/bin/phpstan analyse --no-progress
 vendor/bin/phpcs
 npm run lint
+npm test
 ```
+
+## Translations
+
+`languages/` holds the `.pot`, and per locale the `.po`, `.mo` and `.l10n.php`. After changing a translatable string, run `bin/i18n.sh` (needs GNU gettext): it re-extracts the `.pot`, merges it into each `.po` and recompiles. Translate the new entries in the `.po`, then run it again. `TranslationCoverageTest` fails when a source string has no translation, or when a `.po` and its `.l10n.php` disagree.
+
+Every string the browser shows travels in `Config::strings()`, so the JavaScript has no strings of its own. `ConfigTest` fails when the script reads a key the configuration lacks, or the configuration carries one the script never reads.
+
+## The standalone HTML
+
+`bin/build-standalone.php <version> <out-file> [locale] [logo-url]` writes one file with the stylesheet, html2canvas and the generator inlined, and the configuration from `Config::defaults()` translated into the locale (pt_BR by default). `bin/build-release-zip.sh` runs it from the tag's own files, so the release's `.html` and `.zip` come from the same commit.
+
+The signature links its logo by URL, because email clients drop embedded images. The standalone build points at the bundled logo **at the release tag** on `raw.githubusercontent.com`, which stays valid as long as the tag exists; the plugin points at its own copy.
 
 ## Code
 

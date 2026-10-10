@@ -18,6 +18,7 @@
 /package-lock.json
 /node_modules
 /eslint.config.mjs
+/vitest.config.mjs
 /.stylelintrc.json
 /phpcs.xml
 /phpcs.xml.dist
@@ -43,8 +44,6 @@
 /CLAUDE.md
 /.claude
 
-# The standalone HTML generator is a separate download, not part of the plugin
-/assinatura.html
 
 # Editor/OS junk
 *.swp

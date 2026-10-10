@@ -13,6 +13,9 @@ export default [
 			sourceType: 'script',
 			globals: {
 				...globals.browser,
+				// The generator exports itself for the Vitest suite when
+				// loaded as CommonJS.
+				module: 'readonly',
 			},
 		},
 		rules: {

@@ -18,6 +18,20 @@ The plugin ships with the São Paulo Municipal Department of Education (SME-SP) 
 
 A standalone HTML version, which needs no WordPress, is published next to the plugin on each GitHub release.
 
+== Usage ==
+
+Put the shortcode on any page or post:
+
+`[email_signature]`
+
+To offer only some of the models, list them in the order to show them:
+
+`[email_signature models="staff_school,department"]`
+
+The models are `staff_regional` (staff at a regional office), `staff_school` (staff at a school) and `department` (a department or a school building). With one model, the form does not ask which.
+
+The signature is built in the visitor's browser: nothing they type is sent to the site.
+
 == Installation ==
 
 1. Download `email-signature-generator-X.Y.Z.zip` from the latest GitHub release.

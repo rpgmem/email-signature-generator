@@ -53,6 +53,10 @@ final class Plugin {
 		// `init` is the earliest hook where translations may load without a
 		// "loaded too early" notice since WordPress 6.7; default priority.
 		add_action( 'init', array( self::class, 'loadTextdomain' ) );
+
+		// Shortcodes are registered on `init`, after the translations above
+		// (both at the default priority, so registration order decides).
+		add_action( 'init', array( Shortcode::class, 'register' ) );
 	}
 
 	/**
