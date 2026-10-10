@@ -134,8 +134,14 @@ final class SettingsPage {
 		echo '<form method="post" action="options.php">';
 		settings_fields( self::GROUP );
 
+		$active = self::activeTab();
+		echo '<div class="esg-tabs">';
+		self::nav( $active );
+		echo '<div class="esg-tabs__panels">';
+
 		// General.
-		echo '<h2>' . esc_html__( 'General', 'email-signature-generator' ) . '</h2>';
+		self::openPanel( 'general', $active );
+		self::openCard( __( 'Form', 'email-signature-generator' ), 'settings' );
 		echo '<table class="form-table" role="presentation"><tbody>';
 
 		echo '<tr><th scope="row">' . esc_html__( 'Models offered', 'email-signature-generator' ) . '</th><td><fieldset>';
@@ -169,7 +175,10 @@ final class SettingsPage {
 			);
 		}
 		echo '</fieldset></td></tr>';
+		echo '</tbody></table></div>';
 
+		self::openCard( __( 'Name and email', 'email-signature-generator' ), 'email' );
+		echo '<table class="form-table" role="presentation"><tbody>';
 		printf(
 			'<tr><th scope="row">%1$s</th><td><input type="hidden" name="%2$s[uppercase_name]" value="0">',
 			esc_html__( 'Name in capitals', 'email-signature-generator' ),
@@ -192,10 +201,11 @@ final class SettingsPage {
 			esc_attr( $settings['email_domain'] ),
 			esc_html__( 'Only addresses at this domain are accepted. Leave it empty to accept any address.', 'email-signature-generator' )
 		);
-		echo '</tbody></table>';
+		echo '</tbody></table></div></div>';
 
 		// Logo.
-		echo '<h2>' . esc_html__( 'Logo', 'email-signature-generator' ) . '</h2>';
+		self::openPanel( 'logo', $active );
+		self::openCard( __( 'Logo', 'email-signature-generator' ), 'image' );
 		echo '<table class="form-table" role="presentation"><tbody>';
 		printf(
 			'<tr><th scope="row">%1$s</th><td><img class="esg-logo-preview" src="%2$s" alt="" width="120"><input type="hidden" class="esg-logo-id" name="%3$s[logo_id]" value="%4$d"><p><button type="button" class="button esg-logo-choose">%5$s</button> <button type="button" class="button-link esg-logo-reset">%6$s</button></p><p class="description">%7$s</p></td></tr>',
@@ -215,10 +225,11 @@ final class SettingsPage {
 			(int) Settings::LOGO_WIDTH_MIN,
 			(int) Settings::LOGO_WIDTH_MAX
 		);
-		echo '</tbody></table>';
+		echo '</tbody></table></div></div>';
 
 		// Downloaded image.
-		echo '<h2>' . esc_html__( 'Downloaded image', 'email-signature-generator' ) . '</h2>';
+		self::openPanel( 'download', $active );
+		self::openCard( __( 'Downloaded image', 'email-signature-generator' ), 'download' );
 		echo '<table class="form-table" role="presentation"><tbody>';
 		printf(
 			'<tr><th scope="row"><label for="esg-image-quality">%1$s</label></th><td><input type="number" id="esg-image-quality" class="small-text" name="%2$s[image_quality]" value="%3$d" min="%4$d" max="%5$d" required> %%<p class="description">%6$s</p></td></tr>',
@@ -247,20 +258,23 @@ final class SettingsPage {
 			);
 		}
 		echo '</select><p class="description">' . esc_html__( 'Every visitor gets the same image, whatever their screen. 2× stays sharp on high-density screens.', 'email-signature-generator' ) . '</p></td></tr>';
-		echo '</tbody></table>';
+		echo '</tbody></table></div></div>';
 
 		// Regions.
-		echo '<h2>' . esc_html__( 'Regional offices', 'email-signature-generator' ) . '</h2>';
+		self::openPanel( 'regions', $active );
+		self::openCard( __( 'Regional offices', 'email-signature-generator' ), 'building' );
 		printf(
-			'<p><label for="esg-regions">%1$s</label></p><textarea id="esg-regions" class="large-text code" rows="8" name="%2$s[regions]">%3$s</textarea>',
+			'<p class="description"><label for="esg-regions">%1$s</label></p><textarea id="esg-regions" class="large-text code" rows="8" name="%2$s[regions]">%3$s</textarea>',
 			esc_html__( 'The choices of the "Regional office or central" field, one per line, exactly as the signature prints them.', 'email-signature-generator' ),
 			esc_attr( $name ),
 			esc_textarea( implode( "\n", $regions ) )
 		);
+		echo '</div></div>';
 
 		// Fields.
-		echo '<h2>' . esc_html__( 'Fields', 'email-signature-generator' ) . '</h2>';
-		echo '<p>' . esc_html__( 'A default pre-fills the field. A locked field shows its default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked.', 'email-signature-generator' ) . '</p>';
+		self::openPanel( 'fields', $active );
+		self::openCard( __( 'Fields', 'email-signature-generator' ), 'list' );
+		echo '<p class="description">' . esc_html__( 'A default pre-fills the field. A locked field shows its default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked.', 'email-signature-generator' ) . '</p>';
 		foreach ( $config['models'] as $model ) {
 			echo '<h3>' . esc_html( $model['label'] ) . '</h3>';
 			echo '<table class="widefat striped esg-fields-table"><thead><tr>';
@@ -317,9 +331,106 @@ final class SettingsPage {
 			}
 			echo '</tbody></table>';
 		}
+		echo '</div></div>';
 
+		echo '</div></div>';
 		submit_button();
 		echo '</form></div>';
+	}
+
+	/**
+	 * The tabs, in order: id => label and icon.
+	 *
+	 * @return array<string, array{label: string, icon: string}>
+	 */
+	public static function tabs(): array {
+		return array(
+			'general'  => array(
+				'label' => __( 'General', 'email-signature-generator' ),
+				'icon'  => 'settings',
+			),
+			'logo'     => array(
+				'label' => __( 'Logo', 'email-signature-generator' ),
+				'icon'  => 'image',
+			),
+			'download' => array(
+				'label' => __( 'Downloaded image', 'email-signature-generator' ),
+				'icon'  => 'download',
+			),
+			'regions'  => array(
+				'label' => __( 'Regional offices', 'email-signature-generator' ),
+				'icon'  => 'building',
+			),
+			'fields'   => array(
+				'label' => __( 'Fields', 'email-signature-generator' ),
+				'icon'  => 'list',
+			),
+		);
+	}
+
+	/**
+	 * The tab to open: `?tab=` when it names one, else the first.
+	 *
+	 * Every tab is in the one form, so switching tabs never loses an edit;
+	 * the parameter only chooses which panel shows first, for example after
+	 * "Save Changes" returns to the screen.
+	 */
+	private static function activeTab(): string {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only: chooses the panel shown first.
+		$tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+		return array_key_exists( $tab, self::tabs() ) ? $tab : 'general';
+	}
+
+	/**
+	 * The vertical tab menu. Each tab is a link, so it also works without
+	 * JavaScript, where every panel shows anyway.
+	 *
+	 * @param string $active Active tab id.
+	 */
+	private static function nav( string $active ): void {
+		echo '<ul class="esg-tabs__nav" role="tablist">';
+		foreach ( self::tabs() as $id => $tab ) {
+			$is = $id === $active;
+			printf(
+				'<li role="presentation"><a class="esg-tabs__tab%1$s" id="esg-tab-%2$s" href="%3$s" role="tab" aria-controls="esg-panel-%2$s" aria-selected="%4$s" data-esg-tab="%2$s">%5$s<span class="esg-tabs__label">%6$s</span></a></li>',
+				$is ? ' is-active' : '',
+				esc_attr( $id ),
+				esc_url( admin_url( 'options-general.php?page=' . self::SLUG . '&tab=' . $id ) ),
+				$is ? 'true' : 'false',
+				Icons::svg( $tab['icon'] ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed markup from the icon registry.
+				esc_html( $tab['label'] )
+			);
+		}
+		echo '</ul>';
+	}
+
+	/**
+	 * Open a tab's panel; the caller closes the `div`.
+	 *
+	 * @param string $id     Tab id.
+	 * @param string $active Active tab id.
+	 */
+	private static function openPanel( string $id, string $active ): void {
+		printf(
+			'<div class="esg-tabs__panel%1$s" id="esg-panel-%2$s" role="tabpanel" aria-labelledby="esg-tab-%2$s">',
+			$id === $active ? ' is-active' : '',
+			esc_attr( $id )
+		);
+	}
+
+	/**
+	 * Open a boxed section whose heading carries the icon of its subject;
+	 * the caller closes the `div`.
+	 *
+	 * @param string $title Heading.
+	 * @param string $icon  Icon name.
+	 */
+	private static function openCard( string $title, string $icon ): void {
+		printf(
+			'<div class="card"><h2>%1$s<span>%2$s</span></h2>',
+			Icons::svg( $icon ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed markup from the icon registry.
+			esc_html( $title )
+		);
 	}
 
 	/**

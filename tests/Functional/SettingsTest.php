@@ -135,4 +135,44 @@ final class SettingsTest extends WP_UnitTestCase {
 		self::assertSame( 1, preg_match( '/data-esg-config="([^"]+)"/', do_shortcode( $shortcode ), $m ) );
 		return json_decode( html_entity_decode( $m[1], ENT_QUOTES, 'UTF-8' ), true );
 	}
+
+	public function test_the_screen_is_vertical_tabs_of_boxed_sections(): void {
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		$html = $this->renderScreen();
+
+		foreach ( array_keys( SettingsPage::tabs() ) as $id ) {
+			self::assertStringContainsString( 'id="esg-tab-' . $id . '"', $html );
+			self::assertStringContainsString( 'id="esg-panel-' . $id . '"', $html );
+		}
+		self::assertSame( 1, substr_count( $html, 'esg-tabs__tab is-active' ) );
+		self::assertStringContainsString( 'class="esg-tabs__tab is-active" id="esg-tab-general"', $html );
+
+		// Every section heading is in a box and opens with an icon.
+		preg_match_all( '/<h2[^>]*>(.*?)<\/h2>/s', $html, $headings );
+		self::assertGreaterThanOrEqual( count( SettingsPage::tabs() ), count( $headings[1] ) );
+		foreach ( $headings[1] as $heading ) {
+			self::assertStringStartsWith( '<svg class="esg-icon"', $heading );
+		}
+		self::assertSame( count( $headings[1] ), substr_count( $html, '<div class="card"><h2>' ) );
+
+		// Every tab carries an icon.
+		self::assertSame( count( SettingsPage::tabs() ), preg_match_all( '/data-esg-tab="[a-z]+"><svg class="esg-icon"/', $html ) );
+	}
+
+	public function test_the_tab_parameter_chooses_the_first_panel(): void {
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+
+		$_GET['tab'] = 'fields';
+		self::assertStringContainsString( 'class="esg-tabs__panel is-active" id="esg-panel-fields"', $this->renderScreen() );
+
+		$_GET['tab'] = '<script>';
+		self::assertStringContainsString( 'class="esg-tabs__panel is-active" id="esg-panel-general"', $this->renderScreen() );
+		unset( $_GET['tab'] );
+	}
+
+	private function renderScreen(): string {
+		ob_start();
+		SettingsPage::render();
+		return (string) ob_get_clean();
+	}
 }

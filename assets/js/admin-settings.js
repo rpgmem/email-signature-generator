@@ -126,6 +126,60 @@
 		} );
 	}
 
+	/**
+	 * Vertical tabs. Every panel stays in the one form, so switching never
+	 * loses an edit; the tab only chooses what shows. The address and the
+	 * page "Save Changes" returns to carry it, so a save lands on the same tab.
+	 */
+	var tabs = document.querySelector( '.esg-tabs' );
+	if ( tabs ) {
+		var activate = function ( id ) {
+			var panel = document.getElementById( 'esg-panel-' + id );
+			if ( ! panel ) {
+				return;
+			}
+			tabs.querySelectorAll( '[data-esg-tab]' ).forEach( function ( tab ) {
+				var on = tab.getAttribute( 'data-esg-tab' ) === id;
+				tab.classList.toggle( 'is-active', on );
+				tab.setAttribute( 'aria-selected', on ? 'true' : 'false' );
+			} );
+			tabs.querySelectorAll( '.esg-tabs__panel' ).forEach( function ( p ) {
+				p.classList.toggle( 'is-active', p === panel );
+			} );
+			var url = new window.URL( window.location.href );
+			url.searchParams.set( 'tab', id );
+			if ( window.history && window.history.replaceState ) {
+				window.history.replaceState( null, '', url.toString() );
+			}
+			var referer = document.querySelector( 'input[name="_wp_http_referer"]' );
+			if ( referer ) {
+				var back = new window.URL( referer.value, window.location.href );
+				back.searchParams.set( 'tab', id );
+				back.searchParams.delete( 'settings-updated' );
+				referer.value = back.pathname + back.search;
+			}
+		};
+
+		tabs.querySelectorAll( '[data-esg-tab]' ).forEach( function ( tab ) {
+			tab.addEventListener( 'click', function ( event ) {
+				event.preventDefault();
+				activate( tab.getAttribute( 'data-esg-tab' ) );
+				tab.focus();
+			} );
+		} );
+
+		// A required field in a hidden panel would block "Save Changes" with
+		// no visible reason; show its panel so the browser can point at it.
+		tabs.addEventListener( 'invalid', function ( event ) {
+			var panel = event.target.closest( '.esg-tabs__panel' );
+			if ( panel && ! panel.classList.contains( 'is-active' ) ) {
+				activate( panel.id.replace( 'esg-panel-', '' ) );
+			}
+		}, true );
+
+		tabs.classList.add( 'is-ready' );
+	}
+
 	var preview = document.querySelector( '.esg-logo-preview' );
 	var input = document.querySelector( '.esg-logo-id' );
 	var choose = document.querySelector( '.esg-logo-choose' );

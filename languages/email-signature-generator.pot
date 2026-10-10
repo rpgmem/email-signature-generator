@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Email Signature Generator 1.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
-"POT-Creation-Date: 2026-10-10 22:56+0000\n"
+"POT-Creation-Date: 2026-10-10 23:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -84,138 +84,147 @@ msgstr ""
 msgid "Place the form on any page with %s. These settings apply to every form on the site."
 msgstr ""
 
-#: src/admin/settings-page.php:138
-msgid "General"
+#: src/admin/settings-page.php:144
+msgid "Form"
 msgstr ""
 
-#: src/admin/settings-page.php:141
+#: src/admin/settings-page.php:147
 msgid "Models offered"
 msgstr ""
 
-#: src/admin/settings-page.php:155
+#: src/admin/settings-page.php:161
 msgid "With one model, the form does not ask which. With none ticked, every model is offered."
 msgstr ""
 
-#: src/admin/settings-page.php:158
+#: src/admin/settings-page.php:164
 msgid "Who can use the form"
 msgstr ""
 
-#: src/admin/settings-page.php:160
+#: src/admin/settings-page.php:166
 msgid "Everyone who can see the page"
 msgstr ""
 
-#: src/admin/settings-page.php:161
+#: src/admin/settings-page.php:167
 msgid "Logged-in users only"
 msgstr ""
 
-#: src/admin/settings-page.php:175
+#: src/admin/settings-page.php:180
+msgid "Name and email"
+msgstr ""
+
+#: src/admin/settings-page.php:184
 msgid "Name in capitals"
 msgstr ""
 
-#: src/admin/settings-page.php:182
+#: src/admin/settings-page.php:191
 msgid "Print the name in capital letters, whatever was typed"
 msgstr ""
 
-#: src/admin/settings-page.php:190
+#: src/admin/settings-page.php:199
 msgid "Allowed email domain"
 msgstr ""
 
-#: src/admin/settings-page.php:193
+#: src/admin/settings-page.php:202
 msgid "Only addresses at this domain are accepted. Leave it empty to accept any address."
 msgstr ""
 
-#: src/admin/settings-page.php:198 src/config.php:66
+#: src/admin/settings-page.php:208 src/admin/settings-page.php:353
+#: src/config.php:66
 msgid "Logo"
 msgstr ""
 
-#: src/admin/settings-page.php:202
+#: src/admin/settings-page.php:212
 msgid "Image"
 msgstr ""
 
-#: src/admin/settings-page.php:206
+#: src/admin/settings-page.php:216
 msgid "Choose from the media library"
 msgstr ""
 
-#: src/admin/settings-page.php:207
+#: src/admin/settings-page.php:217
 msgid "Use the bundled logo"
 msgstr ""
 
-#: src/admin/settings-page.php:208
+#: src/admin/settings-page.php:218
 msgid "The signature links to this image, so it must stay in the media library. A square image works best."
 msgstr ""
 
-#: src/admin/settings-page.php:212
+#: src/admin/settings-page.php:222
 msgid "Width"
 msgstr ""
 
-#: src/admin/settings-page.php:221
+#: src/admin/settings-page.php:232 src/admin/settings-page.php:357
 msgid "Downloaded image"
 msgstr ""
 
-#: src/admin/settings-page.php:225
+#: src/admin/settings-page.php:236
 msgid "JPG quality"
 msgstr ""
 
-#: src/admin/settings-page.php:230
+#: src/admin/settings-page.php:241
 msgid "Higher keeps the text sharper and makes the file larger. 90 suits most signatures."
 msgstr ""
 
-#: src/admin/settings-page.php:232
+#: src/admin/settings-page.php:243
 msgid "Resolution"
 msgstr ""
 
 #. translators: 1: pixel density, such as 2; 2: image width in pixels.
-#: src/admin/settings-page.php:242
+#: src/admin/settings-page.php:253
 #, php-format
 msgid "%1$d× (%2$d px wide)"
 msgstr ""
 
-#: src/admin/settings-page.php:249
+#: src/admin/settings-page.php:260
 msgid "Every visitor gets the same image, whatever their screen. 2× stays sharp on high-density screens."
 msgstr ""
 
-#: src/admin/settings-page.php:253
+#: src/admin/settings-page.php:265 src/admin/settings-page.php:361
 msgid "Regional offices"
 msgstr ""
 
-#: src/admin/settings-page.php:256
+#: src/admin/settings-page.php:268
 msgid "The choices of the \"Regional office or central\" field, one per line, exactly as the signature prints them."
 msgstr ""
 
-#: src/admin/settings-page.php:262
+#: src/admin/settings-page.php:276 src/admin/settings-page.php:365
 msgid "Fields"
 msgstr ""
 
-#: src/admin/settings-page.php:263
+#: src/admin/settings-page.php:277
 msgid "A default pre-fills the field. A locked field shows its default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked."
 msgstr ""
 
-#: src/admin/settings-page.php:267
+#: src/admin/settings-page.php:281
 msgid "Field"
 msgstr ""
 
-#: src/admin/settings-page.php:268
+#: src/admin/settings-page.php:282
 msgid "Default"
 msgstr ""
 
-#: src/admin/settings-page.php:269
+#: src/admin/settings-page.php:283
 msgid "Required"
 msgstr ""
 
-#: src/admin/settings-page.php:270
+#: src/admin/settings-page.php:284
 msgid "Locked"
 msgstr ""
 
 #. translators: %s: field label.
-#: src/admin/settings-page.php:296
+#: src/admin/settings-page.php:310
 #, php-format
 msgid "%s is required"
 msgstr ""
 
 #. translators: %s: field label.
-#: src/admin/settings-page.php:311
+#: src/admin/settings-page.php:325
 #, php-format
 msgid "%s is locked"
+msgstr ""
+
+#: src/admin/settings-page.php:349
+msgid "General"
 msgstr ""
 
 #: src/config.php:101
