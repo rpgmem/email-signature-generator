@@ -77,6 +77,22 @@
 	color: var(--esg-accent-text);
 }
 
+/* Copying the HTML is the recommended way; the image is the fallback. */
+.esg-generator .esg-copy {
+	font-weight: 600;
+}
+
+.esg-generator .esg-download {
+	border-color: transparent;
+	text-decoration: underline;
+}
+
+.esg-generator .esg-hint {
+	margin: 8px 0 0;
+	font-size: 0.9em;
+	opacity: 0.85;
+}
+
 .esg-generator .esg-status:empty {
 	display: none;
 }

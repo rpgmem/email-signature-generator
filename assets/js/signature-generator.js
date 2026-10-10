@@ -238,13 +238,14 @@
 	 * download.
 	 *
 	 * @param {Object} config The configuration.
-	 * @return {{scale: number, quality: number}} Scale factor and quality 0–1.
+	 * @return {{format: string, scale: number, quality: number}} 'png' or 'jpg', scale factor and JPEG quality 0–1.
 	 */
 	function imageOptions( config ) {
 		var image = ( config && config.image ) || {};
 		var scale = parseInt( image.scale, 10 );
 		var quality = parseInt( image.quality, 10 );
 		return {
+			format: 'jpg' === image.format ? 'jpg' : 'png',
 			scale: scale >= 1 && scale <= 3 ? scale : 1,
 			quality: ( quality >= 50 && quality <= 100 ? quality : 90 ) / 100,
 		};
@@ -405,6 +406,7 @@
 		var copyBtn = el( doc, 'button', { type: 'button', class: 'esg-button esg-copy', text: strings.copy } );
 		var downloadBtn = el( doc, 'button', { type: 'button', class: 'esg-button esg-download', text: strings.download } );
 		form.appendChild( el( doc, 'p', { class: 'esg-actions' }, [ generateBtn, copyBtn, downloadBtn ] ) );
+		form.appendChild( el( doc, 'p', { class: 'esg-hint', text: strings.copyHint } ) );
 
 		var status = el( doc, 'p', { class: 'esg-status', role: 'status' } );
 		var previewHost = el( doc, 'div', { class: 'esg-preview' } );
@@ -547,7 +549,8 @@
 						ctx.imageSmoothingQuality = 'high';
 						ctx.drawImage( drawn, 0, 0, size.width, size.height );
 					}
-					var link = el( doc, 'a', { download: name + '.jpg', href: canvas.toDataURL( 'image/jpeg', image.quality ) } );
+					var href = 'jpg' === image.format ? canvas.toDataURL( 'image/jpeg', image.quality ) : canvas.toDataURL( 'image/png' );
+					var link = el( doc, 'a', { download: name + '.' + image.format, href: href } );
 					doc.body.appendChild( link );
 					link.click();
 					doc.body.removeChild( link );

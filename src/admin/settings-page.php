@@ -230,7 +230,17 @@ final class SettingsPage {
 		// Downloaded image.
 		self::openPanel( 'download', $active );
 		self::openCard( __( 'Downloaded image', 'email-signature-generator' ), 'download' );
+		echo '<p class="description">' . esc_html__( 'Copying the HTML is the recommended way to use a signature: the text stays sharp at any size. The image is for email programs that do not accept an HTML signature.', 'email-signature-generator' ) . '</p>';
 		echo '<table class="form-table" role="presentation"><tbody>';
+		echo '<tr><th scope="row"><label for="esg-image-format">' . esc_html__( 'Format', 'email-signature-generator' ) . '</label></th><td>';
+		printf( '<select id="esg-image-format" name="%s[image_format]">', esc_attr( $name ) );
+		foreach ( array(
+			'png' => __( 'PNG (recommended)', 'email-signature-generator' ),
+			'jpg' => __( 'JPG', 'email-signature-generator' ),
+		) as $value => $label ) {
+			printf( '<option value="%1$s"%2$s>%3$s</option>', esc_attr( $value ), selected( $settings['image_format'], $value, false ), esc_html( $label ) );
+		}
+		echo '</select><p class="description">' . esc_html__( 'PNG keeps small letters clean. JPG makes a smaller file but leaves compression noise around the text.', 'email-signature-generator' ) . '</p></td></tr>';
 		printf(
 			'<tr><th scope="row"><label for="esg-image-quality">%1$s</label></th><td><input type="number" id="esg-image-quality" class="small-text" name="%2$s[image_quality]" value="%3$d" min="%4$d" max="%5$d" required> %%<p class="description">%6$s</p></td></tr>',
 			esc_html__( 'JPG quality', 'email-signature-generator' ),
@@ -238,7 +248,7 @@ final class SettingsPage {
 			(int) $settings['image_quality'],
 			(int) Settings::IMAGE_QUALITY_MIN,
 			(int) Settings::IMAGE_QUALITY_MAX,
-			esc_html__( 'Higher keeps the text sharper and makes the file larger. 90 suits most signatures.', 'email-signature-generator' )
+			esc_html__( 'Only for JPG. Higher keeps the text sharper and makes the file larger.', 'email-signature-generator' )
 		);
 		echo '<tr><th scope="row"><label for="esg-image-scale">' . esc_html__( 'Resolution', 'email-signature-generator' ) . '</label></th><td>';
 		printf( '<select id="esg-image-scale" name="%s[image_scale]">', esc_attr( $name ) );

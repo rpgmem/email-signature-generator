@@ -46,6 +46,13 @@ final class Config {
 	public const IMAGE_QUALITY = 90;
 
 	/**
+	 * Format of the downloaded image. PNG keeps small text clean at the
+	 * signature's own size; JPG compression leaves noise around the letters
+	 * (measured at 450 px: PNG ≈ 22 KB, JPG 90% ≈ 12 KB).
+	 */
+	public const IMAGE_FORMAT = 'png';
+
+	/**
 	 * Pixel density of the downloaded image. 1 gives the signature's own size
 	 * (450 px wide), which is what the original page produced and what an
 	 * email client shows when the image is pasted in; 2 and 3 are sharper but
@@ -67,6 +74,7 @@ final class Config {
 				'alt'   => __( 'Logo', 'email-signature-generator' ),
 			),
 			'image'         => array(
+				'format'  => self::IMAGE_FORMAT,
 				'quality' => self::IMAGE_QUALITY,
 				'scale'   => self::IMAGE_SCALE,
 			),
@@ -257,6 +265,7 @@ final class Config {
 			'copied'             => __( 'Signature copied. Paste it into your email signature settings.', 'email-signature-generator' ),
 			'copyFailed'         => __( 'The signature could not be copied. Select it in the preview and copy it by hand.', 'email-signature-generator' ),
 			'downloadFailed'     => __( 'The image could not be created. Try again.', 'email-signature-generator' ),
+			'copyHint'           => __( 'Recommended: copy the HTML and paste it into your email program\'s signature settings. The text stays sharp at any size and the links work. Use the image only where a signature cannot be HTML.', 'email-signature-generator' ),
 			/* translators: %s: a field's label. */
 			'required'           => __( '%s is required.', 'email-signature-generator' ),
 			'invalidEmail'       => __( 'Enter a valid email address.', 'email-signature-generator' ),

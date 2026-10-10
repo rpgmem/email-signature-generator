@@ -225,15 +225,16 @@ describe( 'settings in the configuration', () => {
 
 describe( 'imageOptions', () => {
 	it( 'reads the configured density and quality', () => {
-		expect( gen.imageOptions( config ) ).toEqual( { scale: 1, quality: 0.9 } );
-		expect( gen.imageOptions( { image: { scale: 3, quality: 75 } } ) ).toEqual( { scale: 3, quality: 0.75 } );
+		expect( gen.imageOptions( config ) ).toEqual( { format: 'png', scale: 1, quality: 0.9 } );
+		expect( gen.imageOptions( { image: { format: 'jpg', scale: 3, quality: 75 } } ) ).toEqual( { format: 'jpg', scale: 3, quality: 0.75 } );
+		expect( gen.imageOptions( { image: { format: 'gif' } } ).format ).toBe( 'png' );
 	} );
 
 	it( 'falls back to 1× at 90% on a missing or out-of-range value', () => {
-		expect( gen.imageOptions( {} ) ).toEqual( { scale: 1, quality: 0.9 } );
-		expect( gen.imageOptions( null ) ).toEqual( { scale: 1, quality: 0.9 } );
-		expect( gen.imageOptions( { image: { scale: 9, quality: 10 } } ) ).toEqual( { scale: 1, quality: 0.9 } );
-		expect( gen.imageOptions( { image: { scale: 'x', quality: 'y' } } ) ).toEqual( { scale: 1, quality: 0.9 } );
+		expect( gen.imageOptions( {} ) ).toEqual( { format: 'png', scale: 1, quality: 0.9 } );
+		expect( gen.imageOptions( null ) ).toEqual( { format: 'png', scale: 1, quality: 0.9 } );
+		expect( gen.imageOptions( { image: { scale: 9, quality: 10 } } ) ).toEqual( { format: 'png', scale: 1, quality: 0.9 } );
+		expect( gen.imageOptions( { image: { scale: 'x', quality: 'y' } } ) ).toEqual( { format: 'png', scale: 1, quality: 0.9 } );
 	} );
 } );
 
