@@ -18,10 +18,10 @@ use PHPUnit\Framework\TestCase;
 final class ConfigTest extends TestCase {
 
 	/** Checks the generator implements (`validate()` in signature-generator.js). */
-	private const RULES = array( 'email', 'phone', 'url', 'roleSector', 'singleRole' );
+	private const RULES = array( 'email', 'phone', 'url', 'noSlash', 'singleRole' );
 
 	/** Field keys the generator prints (`render()` in signature-generator.js). */
-	private const KEYS = array( 'name', 'role', 'email', 'phone', 'unit', 'region', 'address', 'postal', 'link1', 'link2' );
+	private const KEYS = array( 'name', 'role', 'sector', 'office', 'email', 'phone', 'school', 'region', 'address', 'postal', 'link1', 'link2' );
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -61,6 +61,9 @@ final class ConfigTest extends TestCase {
 				}
 				if ( 'region' === ( $field['type'] ?? '' ) ) {
 					self::assertContains( $field['default'], $config['regions'] );
+				}
+				if ( 'office' === ( $field['type'] ?? '' ) ) {
+					self::assertContains( $field['default'], array_column( $config['offices'], 'acronym' ) );
 				}
 				if ( 'phone' === ( $field['rule'] ?? '' ) ) {
 					self::assertMatchesRegularExpression( '/' . $config['phonePattern'] . '/', $field['default'] );

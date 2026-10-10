@@ -98,6 +98,7 @@ final class AutosaveTest extends TestCase {
 	public static function refused(): array {
 		return array(
 			'name required'      => array( 'fields.staff_school.name.required', 'always_required' ),
+			'office required'    => array( 'fields.staff_school.office.required', 'always_required' ),
 			'name locked'        => array( 'fields.staff_school.name.locked', 'not_lockable' ),
 			'email locked'       => array( 'fields.staff_school.email.locked', 'not_lockable' ),
 			'unknown model'      => array( 'fields.nope.phone.required', 'unknown_key' ),

@@ -354,6 +354,12 @@ final class SettingsPage {
 						printf( '<option value="%1$s"%2$s>%1$s</option>', esc_attr( $region ), selected( $field['default'] ?? '', $region, false ) );
 					}
 					echo '</select>';
+				} elseif ( 'office' === ( $field['type'] ?? '' ) ) {
+					printf( '<select name="%s">', esc_attr( $base . '[default]' ) );
+					foreach ( $regions as $region ) {
+						printf( '<option value="%1$s"%2$s>%3$s</option>', esc_attr( $region['acronym'] ), selected( $field['default'] ?? '', $region['acronym'], false ), esc_html( Regions::label( $region ) ) );
+					}
+					echo '</select>';
 				} else {
 					printf(
 						'<input type="text" class="regular-text" name="%1$s" value="%2$s" placeholder="%3$s">',
@@ -367,14 +373,14 @@ final class SettingsPage {
 					array(
 						'name'     => $base . '[required]',
 						'checked'  => ! empty( $field['required'] ),
-						'disabled' => 'name' === $field['key'],
+						'disabled' => Settings::alwaysRequired( $field['key'] ),
 						/* translators: %s: field label. */
 						'aria'     => sprintf( __( '%s is required', 'email-signature-generator' ), $field['label'] ),
-						'key'      => 'name' === $field['key'] ? '' : 'fields.' . $model['id'] . '.' . $field['key'] . '.required',
+						'key'      => Settings::alwaysRequired( $field['key'] ) ? '' : 'fields.' . $model['id'] . '.' . $field['key'] . '.required',
 					)
 				);
-				if ( 'name' === $field['key'] ) {
-					// A disabled checkbox posts nothing; the name stays required.
+				if ( Settings::alwaysRequired( $field['key'] ) ) {
+					// A disabled checkbox posts nothing; the field stays required.
 					printf( '<input type="hidden" name="%s" value="1">', esc_attr( $base . '[required]' ) );
 				}
 				echo '</td><td>';

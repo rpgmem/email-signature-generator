@@ -6,7 +6,10 @@ let gen;
 
 const valid = {
 	name: 'Maria da Silva',
-	role: 'NTIC / DREMP',
+	sector: 'NTIC',
+	office: 'DREMP',
+	role: 'Professora',
+	school: 'EMEF Joaquim José da Silva Xavier',
 	email: 'Maria.Silva@sme.prefeitura.sp.gov.br',
 	phone: '55 11 3397-1234',
 	address: 'Av. Nordestina, 747',
@@ -57,7 +60,7 @@ describe( 'validate', () => {
 
 	it( 'names every missing required field', () => {
 		const keys = gen.validate( model( 'staff_regional' ), {}, config ).map( ( e ) => e.key );
-		expect( keys ).toEqual( [ 'name', 'role', 'email' ] );
+		expect( keys ).toEqual( [ 'name', 'sector', 'office', 'email' ] );
 	} );
 
 	it.each( [
@@ -65,8 +68,7 @@ describe( 'validate', () => {
 		[ 'phone', '11 3397-1234' ],
 		[ 'phone', '55 11 3397-XXXX' ],
 		[ 'link1', 'javascript:alert(1)' ],
-		[ 'role', 'NTIC /' ],
-		[ 'role', 'Two words' ],
+		[ 'sector', 'NTIC / DREMP' ],
 	] )( 'refuses %s = %s', ( key, value ) => {
 		const errors = gen.validate( model( 'staff_regional' ), { ...valid, [ key ]: value }, config );
 		expect( errors.map( ( e ) => e.key ) ).toEqual( [ key ] );
@@ -80,6 +82,12 @@ describe( 'validate', () => {
 	it( 'refuses a slash in a school role', () => {
 		const errors = gen.validate( model( 'staff_school' ), { ...valid, role: 'Teacher / Coordinator' }, config );
 		expect( errors.map( ( e ) => e.key ) ).toEqual( [ 'role' ] );
+	} );
+
+	it( 'refuses a slash in the school, where the office is added on its own', () => {
+		const errors = gen.validate( model( 'staff_school' ), { ...valid, school: 'EMEF X / DREMP' }, config );
+		expect( errors.map( ( e ) => e.key ) ).toEqual( [ 'school' ] );
+		expect( errors[ 0 ].message ).toContain( 'School' );
 	} );
 
 	it( 'puts the field label into the required message', () => {
@@ -113,6 +121,29 @@ describe( 'render', () => {
 		expect( html ).toContain( 'href="https://educacao.sme.prefeitura.sp.gov.br"' );
 		expect( html ).toContain( '>educacao.sme.prefeitura.sp.gov.br</a>' );
 		expect( html ).not.toContain( 'javascript:' );
+	} );
+
+	it( 'appends the chosen office acronym to the department and to the school', () => {
+		const regional = gen.render( model( 'staff_regional' ), valid, config );
+		expect( regional ).toContain( '>NTIC / DREMP</div>' );
+
+		const school = gen.render( model( 'staff_school' ), { ...valid, office: 'DREPE' }, config );
+		expect( school ).toContain( '>Professora</div>' );
+		expect( school ).toContain( 'EMEF Joaquim José da Silva Xavier / DREPE' );
+		expect( school ).not.toContain( 'NTIC' );
+
+		// Without a school there is nothing to qualify.
+		expect( gen.render( model( 'staff_school' ), { ...valid, school: '' }, config ) ).not.toContain( '/ DREMP' );
+	} );
+
+	it( 'offers every office by its full name and keeps its acronym', () => {
+		document.body.innerHTML = '<div id="c"></div>';
+		gen.mount( document.getElementById( 'c' ), config );
+		const options = [ ...document.querySelectorAll( 'select[name="office"] option' ) ];
+		expect( options ).toHaveLength( config.offices.length );
+		const miguel = options.find( ( o ) => o.value === 'DREMP' );
+		expect( miguel.textContent ).toBe( 'Diretoria Regional de Educação São Miguel / DREMP' );
+		expect( miguel.selected ).toBe( true );
 	} );
 
 	it( 'prints only the fields of the chosen model', () => {

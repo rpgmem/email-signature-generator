@@ -82,8 +82,8 @@ final class Autosave {
 		}
 		list( , $model, $name, $flag ) = $parts;
 
-		if ( 'required' === $flag && 'name' === $name ) {
-			return new WP_Error( 'always_required', __( 'The name is always required.', 'email-signature-generator' ) );
+		if ( 'required' === $flag && Settings::alwaysRequired( $name ) ) {
+			return new WP_Error( 'always_required', __( 'This field is always required.', 'email-signature-generator' ) );
 		}
 		if ( 'locked' === $flag && ! Settings::lockable( $name ) ) {
 			return new WP_Error( 'not_lockable', __( 'The name and the email cannot be locked.', 'email-signature-generator' ) );
