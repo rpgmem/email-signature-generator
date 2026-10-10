@@ -203,7 +203,9 @@ final class Settings {
 		}
 		if ( array() !== $settings['regions'] ) {
 			$config['regions'] = Regions::labels( $settings['regions'] );
+			$config['offices'] = $settings['regions'];
 		}
+		$acronyms = array_column( $config['offices'], 'acronym' );
 
 		foreach ( $config['models'] as $m => $model ) {
 			foreach ( $model['fields'] as $f => $field ) {
@@ -219,6 +221,9 @@ final class Settings {
 				// A select must start on one of its options.
 				if ( 'region' === ( $field['type'] ?? '' ) && ! in_array( $field['default'] ?? '', $config['regions'], true ) ) {
 					$field['default'] = $config['regions'][0] ?? '';
+				}
+				if ( 'office' === ( $field['type'] ?? '' ) && ! in_array( $field['default'] ?? '', $acronyms, true ) ) {
+					$field['default'] = $acronyms[0] ?? '';
 				}
 
 				$config['models'][ $m ]['fields'][ $f ] = $field;
@@ -251,7 +256,8 @@ final class Settings {
 	 * @return array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>
 	 */
 	private static function sanitizeFields( array $input ): array {
-		$out = array();
+		$input = self::splitLegacyFields( $input );
+		$out   = array();
 		foreach ( Config::defaults( '' )['models'] as $model ) {
 			foreach ( $model['fields'] as $field ) {
 				$raw = $input[ $model['id'] ][ $field['key'] ] ?? null;
@@ -263,8 +269,7 @@ final class Settings {
 					'default'  => sanitize_text_field( (string) ( $raw['default'] ?? '' ) ),
 					'required' => ! empty( $raw['required'] ),
 				);
-				// The name is what makes a signature someone's own.
-				if ( 'name' === $field['key'] ) {
+				if ( self::alwaysRequired( $field['key'] ) ) {
 					$override['required'] = true;
 				}
 				if ( ! in_array( $field['key'], self::UNLOCKABLE, true ) && ! empty( $raw['locked'] ) && '' !== $override['default'] ) {
@@ -278,12 +283,68 @@ final class Settings {
 	}
 
 	/**
+	 * Carry overrides saved before the office became its own select.
+	 *
+	 * "Role / Department" (staff at a regional office) and "School / Regional
+	 * office" (staff at a school) were one text each, "NTIC / DREMP". They
+	 * are now the department or the school plus the office's acronym, so a
+	 * stored default is split at its last slash; required and locked stay
+	 * with the text part. Runs only while the old key is there and the new
+	 * one is not, so a saved form is never rewritten.
+	 *
+	 * @param array<mixed> $input Raw overrides.
+	 * @return array<mixed>
+	 */
+	private static function splitLegacyFields( array $input ): array {
+		foreach ( array(
+			'staff_regional' => array( 'role', 'sector' ),
+			'staff_school'   => array( 'unit', 'school' ),
+		) as $model => $keys ) {
+			list( $old, $new ) = $keys;
+			$legacy            = $input[ $model ][ $old ] ?? null;
+			if ( ! is_array( $legacy ) || isset( $input[ $model ][ $new ] ) ) {
+				continue;
+			}
+
+			$default = (string) ( $legacy['default'] ?? '' );
+			$at      = strrpos( $default, '/' );
+			$acronym = false === $at ? '' : strtoupper( trim( substr( $default, $at + 1 ) ) );
+			$text    = false === $at ? $default : trim( substr( $default, 0, $at ) );
+
+			$input[ $model ][ $new ] = array(
+				'default'  => $text,
+				'required' => ! empty( $legacy['required'] ),
+				'locked'   => ! empty( $legacy['locked'] ),
+			);
+			if ( preg_match( Regions::ACRONYM_PATTERN, $acronym ) && ! isset( $input[ $model ]['office'] ) ) {
+				$input[ $model ]['office'] = array(
+					'default'  => $acronym,
+					'required' => true,
+				);
+			}
+			unset( $input[ $model ][ $old ] );
+		}
+		return $input;
+	}
+
+	/**
 	 * Ids of every model the generator knows, in display order.
 	 *
 	 * @return list<string>
 	 */
 	public static function modelIds(): array {
 		return array_column( Config::defaults( '' )['models'], 'id' );
+	}
+
+	/**
+	 * Whether a field is required whatever the settings say: the name makes a
+	 * signature someone's own, and the office is a select that always has a
+	 * value.
+	 *
+	 * @param string $key Field key.
+	 */
+	public static function alwaysRequired( string $key ): bool {
+		return in_array( $key, array( 'name', 'office' ), true );
 	}
 
 	/**

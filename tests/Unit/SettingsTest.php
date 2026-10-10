@@ -85,6 +85,49 @@ final class SettingsTest extends TestCase {
 		);
 	}
 
+	public function test_old_department_and_school_defaults_split_into_text_and_office(): void {
+		$fields = Settings::sanitize(
+			array(
+				'fields' => array(
+					'staff_regional' => array( 'role' => array( 'default' => 'NTIC / dremp', 'required' => '1', 'locked' => '1' ) ),
+					'staff_school'   => array(
+						'role' => array( 'default' => 'Professora' ),
+						'unit' => array( 'default' => 'EMEF A / DREPE' ),
+					),
+				),
+			)
+		)['fields'];
+
+		self::assertSame( array( 'default' => 'NTIC', 'required' => true, 'locked' => true ), $fields['staff_regional']['sector'] );
+		self::assertSame( array( 'default' => 'DREMP', 'required' => true ), $fields['staff_regional']['office'] );
+		self::assertArrayNotHasKey( 'role', $fields['staff_regional'] );
+		self::assertSame( 'EMEF A', $fields['staff_school']['school']['default'] );
+		self::assertSame( 'DREPE', $fields['staff_school']['office']['default'] );
+		self::assertSame( 'Professora', $fields['staff_school']['role']['default'], 'The school role is not the old combined field.' );
+	}
+
+	public function test_a_saved_new_form_is_never_rewritten_by_the_split(): void {
+		$fields = Settings::sanitize(
+			array(
+				'fields' => array(
+					'staff_regional' => array(
+						'role'   => array( 'default' => 'OLD / DREPE' ),
+						'sector' => array( 'default' => 'NTIC' ),
+						'office' => array( 'default' => 'DREMP' ),
+					),
+				),
+			)
+		)['fields'];
+		self::assertSame( 'NTIC', $fields['staff_regional']['sector']['default'] );
+		self::assertSame( 'DREMP', $fields['staff_regional']['office']['default'] );
+	}
+
+	public function test_an_unknown_office_default_falls_back_to_the_first_office(): void {
+		$settings = Settings::sanitize( array( 'fields' => array( 'staff_school' => array( 'office' => array( 'default' => 'NOPE' ) ) ) ) );
+		$config   = Settings::apply( Config::defaults( '' ), $settings );
+		self::assertSame( 'DREBT', $this->field( $config, 'staff_school', 'office' )['default'] );
+	}
+
 	public function test_access_accepts_only_the_two_modes(): void {
 		self::assertSame( Settings::ACCESS_LOGGED_IN, Settings::sanitize( array( 'access' => 'logged_in' ) )['access'] );
 		self::assertSame( Settings::ACCESS_EVERYONE, Settings::sanitize( array( 'access' => 'admins' ) )['access'] );

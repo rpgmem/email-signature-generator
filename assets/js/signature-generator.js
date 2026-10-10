@@ -130,18 +130,9 @@
 						errors.push( { key: field.key, message: format( strings.invalidUrl, field.label ) } );
 					}
 					break;
-				case 'roleSector':
+				case 'noSlash':
 					if ( value.indexOf( '/' ) !== -1 ) {
-						var parts = value.split( '/' ).map( function ( part ) {
-							return part.trim();
-						} );
-						if ( parts.some( function ( part ) {
-							return '' === part;
-						} ) ) {
-							errors.push( { key: field.key, message: strings.invalidRoleSector } );
-						}
-					} else if ( /\s/.test( value ) ) {
-						errors.push( { key: field.key, message: strings.invalidRoleSector } );
+						errors.push( { key: field.key, message: format( strings.invalidNoSlash, field.label ) } );
 					}
 					break;
 				case 'singleRole':
@@ -194,8 +185,14 @@
 		if ( name ) {
 			lines.push( '<div style="margin: 0; padding: 0; font-size: 16px; text-transform: uppercase; line-height: 1.2;"><strong style="font-size: inherit; font-weight: bold;">' + escapeHtml( name ) + '</strong></div>' );
 		}
-		if ( get( 'role' ) ) {
-			lines.push( '<div style="margin: 0; padding: 0; font-size: 7px; text-transform: uppercase; line-height: 1.2;">' + escapeHtml( get( 'role' ) ) + '</div>' );
+		// The department and the school carry the chosen office's acronym:
+		// "NTIC / DREMP". Without the text there is nothing to qualify.
+		var withOffice = function ( text ) {
+			return text && get( 'office' ) ? text + ' / ' + get( 'office' ) : text;
+		};
+		var role = has.sector ? withOffice( get( 'sector' ) ) : get( 'role' );
+		if ( role ) {
+			lines.push( '<div style="margin: 0; padding: 0; font-size: 7px; text-transform: uppercase; line-height: 1.2;">' + escapeHtml( role ) + '</div>' );
 		}
 		// A blank line in the background colour: email clients collapse an
 		// empty div, and the layout needs the gap.
@@ -206,7 +203,10 @@
 		if ( get( 'phone' ) ) {
 			lines.push( line( escapeHtml( config.strings.phonePrefix + ' ' + get( 'phone' ) ) ) );
 		}
-		[ 'unit', 'region', 'address', 'postal' ].forEach( function ( key ) {
+		if ( has.school && get( 'school' ) ) {
+			lines.push( line( escapeHtml( withOffice( get( 'school' ) ) ) ) );
+		}
+		[ 'region', 'address', 'postal' ].forEach( function ( key ) {
 			if ( get( key ) ) {
 				lines.push( line( escapeHtml( get( key ) ) ) );
 			}
@@ -462,6 +462,12 @@
 					input = el( doc, 'select', { id: id, name: field.key } );
 					config.regions.forEach( function ( region ) {
 						input.appendChild( el( doc, 'option', { value: region, text: region, selected: region === field.default } ) );
+					} );
+				} else if ( 'office' === field.type ) {
+					// Shows the office's full name, keeps only its acronym.
+					input = el( doc, 'select', { id: id, name: field.key, disabled: !! field.locked } );
+					( config.offices || [] ).forEach( function ( office ) {
+						input.appendChild( el( doc, 'option', { value: office.acronym, text: office.name + ' / ' + office.acronym, selected: office.acronym === field.default } ) );
 					} );
 				} else {
 					input = el( doc, 'input', {

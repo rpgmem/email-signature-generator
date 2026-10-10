@@ -92,6 +92,7 @@ final class Config {
 			'emailDomain'   => '',
 			'phonePattern'  => self::PHONE_PATTERN,
 			'regions'       => self::regions(),
+			'offices'       => Regions::defaults(),
 			'models'        => self::models(),
 			'strings'       => self::strings(),
 		);
@@ -108,9 +109,11 @@ final class Config {
 	 * The signature models offered in the form, in display order.
 	 *
 	 * `placeholder` shows an example; `default` pre-fills a value that most
-	 * people keep. A field's `rule` names a check the generator knows (`roleSector`,
+	 * people keep. A field's `rule` names a check the generator knows (`noSlash`,
 	 * `singleRole`, `email`, `phone`, `url`). `region` is a select over the
-	 * configured regions, and `hostnameOnly` links print their host name.
+	 * configured regions that prints the office's full label; `office` is a
+	 * select over the same offices that keeps only the acronym, which the
+	 * signature appends to the department or the school ("NTIC / DREMP").
 	 *
 	 * @return list<array<string, mixed>>
 	 */
@@ -152,6 +155,13 @@ final class Config {
 			'rule'    => 'url',
 			'default' => 'educacao.sme.prefeitura.sp.gov.br',
 		);
+		$office  = array(
+			'key'      => 'office',
+			'label'    => __( 'Regional office', 'email-signature-generator' ),
+			'type'     => 'office',
+			'required' => true,
+			'default'  => 'DREMP',
+		);
 		$link2   = array(
 			'key'         => 'link2',
 			'label'       => __( 'Link 2', 'email-signature-generator' ),
@@ -167,12 +177,13 @@ final class Config {
 				'fields' => array(
 					$name,
 					array(
-						'key'         => 'role',
-						'label'       => __( 'Role / Department', 'email-signature-generator' ),
+						'key'         => 'sector',
+						'label'       => __( 'Department', 'email-signature-generator' ),
 						'required'    => true,
-						'rule'        => 'roleSector',
-						'placeholder' => 'NTIC / DREMP',
+						'rule'        => 'noSlash',
+						'placeholder' => 'NTIC',
 					),
+					$office,
 					$email,
 					$phone,
 					$address,
@@ -196,10 +207,12 @@ final class Config {
 					$email,
 					$phone,
 					array(
-						'key'         => 'unit',
-						'label'       => __( 'School / Regional office', 'email-signature-generator' ),
-						'placeholder' => 'EMEF Joaquim José da Silva Xavier / DREMP',
+						'key'         => 'school',
+						'label'       => __( 'School', 'email-signature-generator' ),
+						'rule'        => 'noSlash',
+						'placeholder' => 'EMEF Joaquim José da Silva Xavier',
 					),
+					$office,
 					$address,
 					$postal,
 					$link1,
@@ -271,7 +284,8 @@ final class Config {
 			'invalidPhone'       => __( 'Enter the phone number as 55 XX XXXX-XXXX or 55 XX XXXXX-XXXX. For two numbers, separate them with " | ".', 'email-signature-generator' ),
 			/* translators: %s: a field's label. */
 			'invalidUrl'         => __( '%s is not a valid address.', 'email-signature-generator' ),
-			'invalidRoleSector'  => __( 'Role / Department needs text on both sides of the slash, or a single word without spaces.', 'email-signature-generator' ),
+			/* translators: %s: a field's label. */
+			'invalidNoSlash'     => __( '%s cannot contain a slash: the regional office\'s acronym is added on its own.', 'email-signature-generator' ),
 			'invalidSingleRole'  => __( 'Role takes a single role, without slashes.', 'email-signature-generator' ),
 		);
 	}
