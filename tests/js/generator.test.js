@@ -131,6 +131,25 @@ describe( 'render', () => {
 		const html = gen.render( model( 'staff_regional' ), valid, { ...config, logo: null } );
 		expect( html ).not.toContain( '<img' );
 	} );
+
+	it( 'draws the divider beside the logo only, so it is as tall as the logo', () => {
+		document.body.innerHTML = gen.render( model( 'staff_regional' ), valid, config );
+		const img = document.querySelector( 'img' );
+		const cell = img.parentElement;
+		expect( cell.tagName ).toBe( 'TD' );
+		expect( cell.getAttribute( 'style' ) ).toContain( 'border-right: 3px solid #000000' );
+		// The cell holds the logo and nothing else.
+		expect( cell.children ).toHaveLength( 1 );
+		// No other cell carries a border, so nothing spans the text's height.
+		const bordered = [ ...document.querySelectorAll( 'td' ) ].filter( ( td ) => td.getAttribute( 'style' ).includes( 'border' ) );
+		expect( bordered ).toEqual( [ cell ] );
+	} );
+
+	it( 'draws no divider without a logo', () => {
+		const html = gen.render( model( 'staff_regional' ), valid, { ...config, logo: null } );
+		expect( html ).not.toContain( 'border-right' );
+		expect( html ).not.toContain( 'border-left' );
+	} );
 } );
 
 describe( 'fileName', () => {

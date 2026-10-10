@@ -24,6 +24,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Copying uses the Clipboard API** (#3). The signature is copied as rich text and as HTML, with the old `execCommand` copy kept as the fallback.
 - **The name is bold in every email client** (#4). The weight is set inline, because a theme or an email client can reset `<strong>`.
 - **Copying the HTML is the recommended way** (#12). The form says so under its buttons, and "Download image" is a secondary link: pasted HTML keeps the text sharp at any size and the links working, while the image is for email programs that do not accept an HTML signature.
+- **The divider is as tall as the logo** (#13). It was the border of the text's cell, so it ran the whole height of the signature; it is now the border of a cell that holds only the logo, in plain table markup email programs keep.
 
 ### Removed
 
