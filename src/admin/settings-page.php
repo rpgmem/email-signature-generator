@@ -200,6 +200,38 @@ final class SettingsPage {
 		);
 		echo '</tbody></table>';
 
+		// Downloaded image.
+		echo '<h2>' . esc_html__( 'Downloaded image', 'email-signature-generator' ) . '</h2>';
+		echo '<table class="form-table" role="presentation"><tbody>';
+		printf(
+			'<tr><th scope="row"><label for="esg-image-quality">%1$s</label></th><td><input type="number" id="esg-image-quality" class="small-text" name="%2$s[image_quality]" value="%3$d" min="%4$d" max="%5$d" required> %%<p class="description">%6$s</p></td></tr>',
+			esc_html__( 'JPG quality', 'email-signature-generator' ),
+			esc_attr( $name ),
+			(int) $settings['image_quality'],
+			(int) Settings::IMAGE_QUALITY_MIN,
+			(int) Settings::IMAGE_QUALITY_MAX,
+			esc_html__( 'Higher keeps the text sharper and makes the file larger. 90 suits most signatures.', 'email-signature-generator' )
+		);
+		echo '<tr><th scope="row"><label for="esg-image-scale">' . esc_html__( 'Resolution', 'email-signature-generator' ) . '</label></th><td>';
+		printf( '<select id="esg-image-scale" name="%s[image_scale]">', esc_attr( $name ) );
+		foreach ( Settings::IMAGE_SCALES as $scale ) {
+			printf(
+				'<option value="%1$d"%2$s>%3$s</option>',
+				(int) $scale,
+				selected( $settings['image_scale'], $scale, false ),
+				esc_html(
+					sprintf(
+						/* translators: 1: pixel density, such as 2; 2: image width in pixels. */
+						__( '%1$d× (%2$d px wide)', 'email-signature-generator' ),
+						$scale,
+						Config::SIGNATURE_WIDTH * $scale
+					)
+				)
+			);
+		}
+		echo '</select><p class="description">' . esc_html__( 'Every visitor gets the same image, whatever their screen. 2× stays sharp on high-density screens.', 'email-signature-generator' ) . '</p></td></tr>';
+		echo '</tbody></table>';
+
 		// Regions.
 		echo '<h2>' . esc_html__( 'Regional offices', 'email-signature-generator' ) . '</h2>';
 		printf(

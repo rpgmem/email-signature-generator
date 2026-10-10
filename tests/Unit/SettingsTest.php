@@ -119,6 +119,20 @@ final class SettingsTest extends TestCase {
 		self::assertArrayNotHasKey( 'locked', $fields['email'] );
 	}
 
+	public function test_the_image_quality_is_clamped(): void {
+		self::assertSame( Settings::IMAGE_QUALITY_MIN, Settings::sanitize( array( 'image_quality' => '5' ) )['image_quality'] );
+		self::assertSame( Settings::IMAGE_QUALITY_MAX, Settings::sanitize( array( 'image_quality' => '250' ) )['image_quality'] );
+		self::assertSame( 75, Settings::sanitize( array( 'image_quality' => '75' ) )['image_quality'] );
+		self::assertSame( Config::IMAGE_QUALITY, Settings::sanitize( array() )['image_quality'] );
+	}
+
+	public function test_an_unknown_image_scale_falls_back_to_the_default(): void {
+		self::assertSame( 3, Settings::sanitize( array( 'image_scale' => '3' ) )['image_scale'] );
+		self::assertSame( Config::IMAGE_SCALE, Settings::sanitize( array( 'image_scale' => '7' ) )['image_scale'] );
+		self::assertSame( Config::IMAGE_SCALE, Settings::sanitize( array( 'image_scale' => 'x' ) )['image_scale'] );
+		self::assertSame( Config::IMAGE_SCALE, Settings::sanitize( array() )['image_scale'] );
+	}
+
 	public function test_a_field_cannot_be_locked_empty(): void {
 		$fields = Settings::sanitize( array( 'fields' => array( 'staff_school' => array( 'address' => array( 'default' => '', 'locked' => '1' ) ) ) ) )['fields'];
 		self::assertArrayNotHasKey( 'locked', $fields['staff_school']['address'] );
@@ -143,6 +157,8 @@ final class SettingsTest extends TestCase {
 				'models'         => array( 'staff_school', 'department' ),
 				'uppercase_name' => '0',
 				'logo_width'     => '90',
+				'image_quality'  => '80',
+				'image_scale'    => '3',
 				'email_domain'   => 'example.org',
 				'regions'        => "North\nSouth",
 				'fields'         => array(
@@ -154,6 +170,7 @@ final class SettingsTest extends TestCase {
 
 		self::assertSame( array( 'staff_school', 'department' ), array_column( $config['models'], 'id' ) );
 		self::assertFalse( $config['uppercaseName'] );
+		self::assertSame( array( 'quality' => 80, 'scale' => 3 ), $config['image'] );
 		self::assertSame( 'example.org', $config['emailDomain'] );
 		self::assertSame( array( 'url' => 'https://example.org/chosen.png', 'width' => 90, 'alt' => 'Logo' ), $config['logo'] );
 		self::assertSame( array( 'North', 'South' ), $config['regions'] );

@@ -35,6 +35,24 @@ final class Config {
 	public const LOGO_WIDTH = 120;
 
 	/**
+	 * Width of the signature table, in CSS pixels. Mirrors SIGNATURE_WIDTH in
+	 * assets/js/signature-generator.js, which draws it.
+	 */
+	public const SIGNATURE_WIDTH = 450;
+
+	/**
+	 * JPEG quality of the downloaded image, in percent.
+	 */
+	public const IMAGE_QUALITY = 90;
+
+	/**
+	 * Pixel density of the downloaded image: 2 draws each CSS pixel as 2×2,
+	 * which stays sharp on high-density screens and when an email client
+	 * scales the image.
+	 */
+	public const IMAGE_SCALE = 2;
+
+	/**
 	 * The default configuration.
 	 *
 	 * @param string $logo_url Absolute URL of the logo the signature links to.
@@ -46,6 +64,10 @@ final class Config {
 				'url'   => $logo_url,
 				'width' => self::LOGO_WIDTH,
 				'alt'   => __( 'Logo', 'email-signature-generator' ),
+			),
+			'image'         => array(
+				'quality' => self::IMAGE_QUALITY,
+				'scale'   => self::IMAGE_SCALE,
 			),
 			'uppercaseName' => true,
 			'emailDomain'   => '',

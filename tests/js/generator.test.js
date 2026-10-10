@@ -222,3 +222,17 @@ describe( 'settings in the configuration', () => {
 		expect( ui.html() ).not.toContain( 'Changed in the inspector' );
 	} );
 } );
+
+describe( 'imageOptions', () => {
+	it( 'reads the configured density and quality', () => {
+		expect( gen.imageOptions( config ) ).toEqual( { scale: 2, quality: 0.9 } );
+		expect( gen.imageOptions( { image: { scale: 3, quality: 75 } } ) ).toEqual( { scale: 3, quality: 0.75 } );
+	} );
+
+	it( 'falls back to 2× at 90% on a missing or out-of-range value', () => {
+		expect( gen.imageOptions( {} ) ).toEqual( { scale: 2, quality: 0.9 } );
+		expect( gen.imageOptions( null ) ).toEqual( { scale: 2, quality: 0.9 } );
+		expect( gen.imageOptions( { image: { scale: 9, quality: 10 } } ) ).toEqual( { scale: 2, quality: 0.9 } );
+		expect( gen.imageOptions( { image: { scale: 'x', quality: 'y' } } ) ).toEqual( { scale: 2, quality: 0.9 } );
+	} );
+} );

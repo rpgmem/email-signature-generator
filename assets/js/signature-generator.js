@@ -233,6 +233,24 @@
 	}
 
 	/**
+	 * The downloaded image's density and JPEG quality. The server clamps both
+	 * already; this keeps a hand-edited configuration from breaking the
+	 * download.
+	 *
+	 * @param {Object} config The configuration.
+	 * @return {{scale: number, quality: number}} Scale factor and quality 0–1.
+	 */
+	function imageOptions( config ) {
+		var image = ( config && config.image ) || {};
+		var scale = parseInt( image.scale, 10 );
+		var quality = parseInt( image.quality, 10 );
+		return {
+			scale: scale >= 1 && scale <= 3 ? scale : 2,
+			quality: ( quality >= 50 && quality <= 100 ? quality : 90 ) / 100,
+		};
+	}
+
+	/**
 	 * A safe file name for the downloaded image.
 	 *
 	 * @param {Object} model  The model.
@@ -497,9 +515,10 @@
 			// toDataURL throws when the logo was served without CORS headers
 			// (the canvas is tainted), so the catch covers both the drawing and
 			// the export.
-			win.html2canvas( stage.firstChild, { useCORS: true, backgroundColor: '#ffffff', scale: win.devicePixelRatio || 2 } )
+			var image = imageOptions( config );
+			win.html2canvas( stage.firstChild, { useCORS: true, backgroundColor: '#ffffff', scale: image.scale } )
 				.then( function ( canvas ) {
-					var link = el( doc, 'a', { download: name + '.jpg', href: canvas.toDataURL( 'image/jpeg', 0.9 ) } );
+					var link = el( doc, 'a', { download: name + '.jpg', href: canvas.toDataURL( 'image/jpeg', image.quality ) } );
 					doc.body.appendChild( link );
 					link.click();
 					doc.body.removeChild( link );
@@ -550,6 +569,7 @@
 		validate: validate,
 		render: render,
 		fileName: fileName,
+		imageOptions: imageOptions,
 		findModel: findModel,
 		mount: mount,
 		mountAll: mountAll,

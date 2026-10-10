@@ -28,6 +28,16 @@ final class Settings {
 
 	public const LOGO_WIDTH_MAX = 240;
 
+	public const IMAGE_QUALITY_MIN = 50;
+
+	public const IMAGE_QUALITY_MAX = 100;
+
+	/**
+	 * Pixel densities offered for the downloaded image. Above 3 the file
+	 * grows without a visible gain in any email client.
+	 */
+	public const IMAGE_SCALES = array( 1, 2, 3 );
+
 	/**
 	 * Fields whose value cannot be locked: they identify the person, so a
 	 * fixed value would give everyone the same signature.
@@ -37,7 +47,7 @@ final class Settings {
 	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, uppercase_name: bool, logo_id: int, logo_width: int, email_domain: string, regions: list<string>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, uppercase_name: bool, logo_id: int, logo_width: int, image_quality: int, image_scale: int, email_domain: string, regions: list<string>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -55,6 +65,8 @@ final class Settings {
 			'uppercase_name' => true,
 			'logo_id'        => 0,
 			'logo_width'     => Config::LOGO_WIDTH,
+			'image_quality'  => Config::IMAGE_QUALITY,
+			'image_scale'    => Config::IMAGE_SCALE,
 			'email_domain'   => '',
 			'regions'        => array(),
 			'access'         => self::ACCESS_EVERYONE,
@@ -68,7 +80,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, uppercase_name: bool, logo_id: int, logo_width: int, email_domain: string, regions: list<string>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, uppercase_name: bool, logo_id: int, logo_width: int, image_quality: int, image_scale: int, email_domain: string, regions: list<string>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -80,7 +92,9 @@ final class Settings {
 			$models = $ids;
 		}
 
-		$width = (int) ( $input['logo_width'] ?? Config::LOGO_WIDTH );
+		$width   = (int) ( $input['logo_width'] ?? Config::LOGO_WIDTH );
+		$quality = (int) ( $input['image_quality'] ?? Config::IMAGE_QUALITY );
+		$scale   = (int) ( $input['image_scale'] ?? Config::IMAGE_SCALE );
 
 		$domain = strtolower( trim( (string) ( $input['email_domain'] ?? '' ) ) );
 		$domain = ltrim( $domain, '@' );
@@ -110,6 +124,8 @@ final class Settings {
 			'uppercase_name' => array_key_exists( 'uppercase_name', $input ) ? ! empty( $input['uppercase_name'] ) : true,
 			'logo_id'        => max( 0, (int) ( $input['logo_id'] ?? 0 ) ),
 			'logo_width'     => min( self::LOGO_WIDTH_MAX, max( self::LOGO_WIDTH_MIN, $width ) ),
+			'image_quality'  => min( self::IMAGE_QUALITY_MAX, max( self::IMAGE_QUALITY_MIN, $quality ) ),
+			'image_scale'    => in_array( $scale, self::IMAGE_SCALES, true ) ? $scale : Config::IMAGE_SCALE,
 			'email_domain'   => $domain,
 			'regions'        => $regions,
 			'access'         => self::ACCESS_LOGGED_IN === $access ? self::ACCESS_LOGGED_IN : self::ACCESS_EVERYONE,
@@ -134,6 +150,10 @@ final class Settings {
 		$config['uppercaseName'] = (bool) $settings['uppercase_name'];
 		$config['emailDomain']   = (string) $settings['email_domain'];
 		$config['logo']['width'] = (int) $settings['logo_width'];
+		$config['image']         = array(
+			'quality' => (int) $settings['image_quality'],
+			'scale'   => (int) $settings['image_scale'],
+		);
 		if ( '' !== $logo_url ) {
 			$config['logo']['url'] = $logo_url;
 		}
