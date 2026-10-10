@@ -9,21 +9,30 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- **WordPress plugin scaffold** (#1). The standalone HTML generator becomes the `email-signature-generator` plugin, with CI, release packaging, a testes deploy and the repository conventions in `CLAUDE.md`.
-- **The generator as a shortcode** (#1). `[email_signature]` places the form on any page; `models="…"` limits which signature models it offers. The form is drawn in the browser from one configuration, and nothing a person types reaches the server.
-- **Standalone HTML download** (#1). Each release carries `email-signature-generator-X.Y.Z.html`, one self-contained file built from the plugin's own sources and defaults, translated into Brazilian Portuguese.
-- **Brazilian Portuguese translation** (#1). Every string the form, the signature and the plugin show.
-
-- **Settings → Email Signature** (#1). An administrator chooses the models offered, who may use the form (everyone or logged-in users), whether the name is upper-cased, an allowed email domain, the regional offices, and per field a default, whether it is required and whether it is locked. Unchanged settings keep the defaults.
-- **Logo from the media library** (#1). The bundled SME-SP logo stays the default; another image and its width can be chosen on the settings screen.
-- **Updates from GitHub Releases** (#1). WordPress offers new versions on its normal update screen, checks the package's SHA-256 before installing it, and reads the compatibility fields and upgrade notice from the release's own `readme.txt`. Ported from Total Mail Queue.
+- **The generator is a WordPress plugin with a shortcode** (#1, #3). `[email_signature]` places the form on any page, and `models="…"` narrows and orders the models it offers. The signature is built in the visitor's browser, so nothing typed reaches the site and the plugin stores no personal data.
+- **A standalone HTML download on every release** (#3). `email-signature-generator-X.Y.Z.html` is one self-contained file in Brazilian Portuguese, built from the plugin's own sources and defaults at the release tag, so the two cannot drift apart.
+- **Settings → Email Signature** (#4). An administrator chooses the models offered, whether only logged-in users may use the form, capitals for the name, an allowed email domain and the regional offices. Per field, they set a default and whether it is required or locked.
+- **Logo from the media library** (#4). The bundled SME-SP logo stays the default. Another image and its width (60–240 px) can be chosen, and a deleted image falls back to the bundled one.
+- **Updates from GitHub Releases** (#5). WordPress offers new versions on its normal update screen and checks the zip's SHA-256 before installing it. The compatibility fields and the upgrade notice come from the release's own `readme.txt`. Ported from Total Mail Queue.
+- **Brazilian Portuguese translation** (#3, #4, #5). Every string the form, the signature, the settings screen and the updater show.
+- **Release packaging, CI and a testes deploy** (#2). Each tag publishes the zip, the standalone HTML and the notes. Every PR runs PHPUnit (also against a real WordPress), Vitest, PHPStan, PHPCS, ESLint, Stylelint and a composer audit. `develop` deploys to the testes site, followed by a smoke check.
 
 ### Changed
 
-- **Example values are placeholders** (#1). The old page pre-filled fields with examples such as `55 11 3397-XXXX`, which its own validation then refused; they now show as hints, and only real defaults are pre-filled.
-- **Errors show beside the form** (#1). Validation messages appear in a list above the buttons and mark the field, instead of one `alert()` at a time.
+- **Example values are placeholders** (#3). The page pre-filled fields with examples such as `55 11 3397-XXXX`, which its own validation then refused. They now show as hints, and only real defaults are pre-filled.
+- **Errors show beside the form** (#3). Validation messages appear in a list above the buttons and mark the field, instead of one `alert()` at a time.
+- **Copying uses the Clipboard API** (#3). The signature is copied as rich text and as HTML, with the old `execCommand` copy kept as the fallback.
+- **The name is bold in every email client** (#4). The weight is set inline, because a theme or an email client can reset `<strong>`.
+
+### Removed
+
+- **`assinatura.html` left the repository** (#3). The release build now produces the standalone file from the plugin's sources.
 
 ### Security
 
-- **Typed values are escaped in the signature** (#1). The old page inserted them into the signature's HTML as they were, so a copied signature could carry markup or script someone typed. A link must also be `http` or `https`.
-- **The logo and html2canvas are bundled** (#1). The logo was hotlinked from a third-party site and html2canvas came from a CDN; both now ship with the plugin, and html2canvas is byte-identical to the 1.4.1 release.
+- **Typed values are escaped in the signature** (#3). The page inserted them into the signature's HTML as they were, so a copied signature could carry markup or script someone typed. A link must also be `http` or `https`.
+- **The logo and html2canvas are bundled** (#3). The logo was hotlinked from a third-party site and html2canvas came from a CDN. Both now ship with the plugin, and html2canvas is byte-identical to its 1.4.1 release.
+
+## Before 1.0.0
+
+The project was one page, `assinatura.html`, written between 2025-05-21 and 2025-06-24 and never versioned or tagged. It offered three models for SME-SP staff: staff at a regional office (DRE), staff at a school, and a department or school building. Each model had its own fields, checks on the name, role, email and phone format, a preview, "Copy HTML" for Outlook and a JPG download through html2canvas. 1.0.0 carries all of it over.
