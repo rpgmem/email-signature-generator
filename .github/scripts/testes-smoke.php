@@ -12,6 +12,8 @@
  *   2. The running Plugin::VERSION equals the commit being deployed. A deploy
  *      that silently did not land leaves the host on an old version while the
  *      workflow reports success.
+ *   3. The [email_signature] shortcode is registered, so pages that use it
+ *      show the form rather than the raw shortcode.
  *
  * It is an alarm, not a merge gate: the workflow runs after the merge.
  *
@@ -138,6 +140,9 @@ $ok   = esg_smoke_check(
 	'live version matches deploy',
 	$live === $expected ? $live : $live . ' on host, expected ' . $expected
 ) && $ok;
+
+// 3. The shortcode is registered, so pages using it render the form.
+$ok = esg_smoke_check( shortcode_exists( 'email_signature' ), 'shortcode registered', '[email_signature]' ) && $ok;
 
 $GLOBALS['esg_smoke_verdict'] = true;
 echo "\n" . ( $ok ? 'SMOKE PASSED' : 'SMOKE FAILED' ) . "\n";

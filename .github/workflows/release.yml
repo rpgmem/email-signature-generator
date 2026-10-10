@@ -50,7 +50,13 @@ jobs:
           echo "latest=$latest"        >> "$GITHUB_OUTPUT"
           echo "slug=email-signature-generator" >> "$GITHUB_OUTPUT"
 
-      - name: Build the zip and the notes
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      - name: Build the zip, the standalone HTML and the notes
         # Checks the tag's Version header against the tag, packages the tag's
         # files through .distignore and extracts its CHANGELOG section.
         run: bin/build-release-zip.sh "${{ steps.version.outputs.tag }}" build
@@ -61,7 +67,11 @@ jobs:
           tag_name: ${{ steps.version.outputs.tag }}
           name: ${{ steps.version.outputs.tag }}
           body_path: build/notes-${{ steps.version.outputs.version }}.md
-          files: build/${{ steps.version.outputs.slug }}-${{ steps.version.outputs.version }}.zip
-          fail_on_unmatched_files: true
+          # The standalone HTML is absent for a tag cut before its build
+          # existed; fail_on_unmatched_files is off for that reason only.
+          files: |
+            build/${{ steps.version.outputs.slug }}-${{ steps.version.outputs.version }}.zip
+            build/${{ steps.version.outputs.slug }}-${{ steps.version.outputs.version }}.html
+          fail_on_unmatched_files: false
           generate_release_notes: false
           make_latest: ${{ steps.version.outputs.latest }}

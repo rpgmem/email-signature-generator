@@ -1,0 +1,97 @@
+/*
+ * Email Signature Generator: the form.
+ *
+ * Every rule is scoped under .esg-generator, because the form lives inside
+ * someone else's theme. The signature itself carries inline styles only, so
+ * nothing here reaches what is copied.
+ */
+
+.esg-generator {
+	--esg-border: #8c8f94;
+	--esg-accent: #2271b1;
+	--esg-accent-text: #ffffff;
+	--esg-error: #b32d2e;
+	--esg-preview-bg: #ffffff;
+
+	max-width: 640px;
+	font-family: Arial, sans-serif;
+}
+
+.esg-generator .esg-field {
+	margin: 0 0 12px;
+}
+
+.esg-generator .esg-field label {
+	display: block;
+	margin-bottom: 4px;
+	font-weight: 600;
+}
+
+.esg-generator .esg-field input,
+.esg-generator .esg-field select {
+	box-sizing: border-box;
+	width: 100%;
+	padding: 6px 8px;
+	border: 1px solid var(--esg-border);
+	border-radius: 4px;
+	font: inherit;
+}
+
+.esg-generator .esg-field input[readonly] {
+	background: #f0f0f1;
+}
+
+.esg-generator .esg-field [aria-invalid="true"] {
+	border-color: var(--esg-error);
+}
+
+.esg-generator .esg-errors {
+	margin: 0 0 12px;
+	padding: 0;
+	list-style: none;
+	color: var(--esg-error);
+}
+
+.esg-generator .esg-errors:empty {
+	display: none;
+}
+
+.esg-generator .esg-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.esg-generator .esg-button {
+	padding: 8px 16px;
+	border: 1px solid var(--esg-accent);
+	border-radius: 4px;
+	background: var(--esg-accent-text);
+	color: var(--esg-accent);
+	font: inherit;
+	cursor: pointer;
+}
+
+.esg-generator .esg-generate {
+	background: var(--esg-accent);
+	color: var(--esg-accent-text);
+}
+
+.esg-generator .esg-status:empty {
+	display: none;
+}
+
+.esg-generator .esg-preview {
+	box-sizing: border-box;
+	max-width: 450px;
+	min-height: 100px;
+	padding: 10px;
+	border: 1px solid var(--esg-border);
+	background: var(--esg-preview-bg);
+}
+
+@media (max-width: 600px) {
+	.esg-generator .esg-button {
+		width: 100%;
+	}
+}

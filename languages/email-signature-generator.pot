@@ -1,0 +1,166 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Email Signature Generator package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Email Signature Generator 0.1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
+"POT-Creation-Date: 2026-10-10 21:55+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bin/build-standalone.php:100
+msgid "Email Signature Generator"
+msgstr ""
+
+#: bin/build-standalone.php:117 src/shortcode.php:63
+msgid "The signature generator needs JavaScript."
+msgstr ""
+
+#: src/config.php:48
+msgid "Logo"
+msgstr ""
+
+#: src/config.php:77
+msgid "Full name"
+msgstr ""
+
+#: src/config.php:79
+msgid "Type your full name"
+msgstr ""
+
+#: src/config.php:83
+msgid "Email"
+msgstr ""
+
+#: src/config.php:91
+msgid "Phone number(s)"
+msgstr ""
+
+#: src/config.php:97
+msgid "Address | Floor | Room"
+msgstr ""
+
+#: src/config.php:102
+msgid "Postal code | City | State"
+msgstr ""
+
+#: src/config.php:107
+msgid "Link 1"
+msgstr ""
+
+#: src/config.php:114
+msgid "Link 2"
+msgstr ""
+
+#: src/config.php:117
+msgid "Type a second link, if needed"
+msgstr ""
+
+#: src/config.php:123
+msgid "Staff - Regional office"
+msgstr ""
+
+#: src/config.php:128
+msgid "Role / Department"
+msgstr ""
+
+#: src/config.php:143
+msgid "Staff - School"
+msgstr ""
+
+#: src/config.php:148
+msgid "Role"
+msgstr ""
+
+#: src/config.php:157
+msgid "School / Regional office"
+msgstr ""
+
+#: src/config.php:168
+msgid "Department or school building"
+msgstr ""
+
+#: src/config.php:172
+msgid "Department or school"
+msgstr ""
+
+#: src/config.php:180
+msgid "Regional office or central"
+msgstr ""
+
+#: src/config.php:226
+msgid "Signature model"
+msgstr ""
+
+#: src/config.php:227
+msgid "Generate signature"
+msgstr ""
+
+#: src/config.php:228
+msgid "Copy HTML"
+msgstr ""
+
+#: src/config.php:229
+msgid "Download image"
+msgstr ""
+
+#: src/config.php:230
+msgid "Preview"
+msgstr ""
+
+#: src/config.php:231
+msgid "Tel.:"
+msgstr ""
+
+#: src/config.php:232
+msgid "Signature copied. Paste it into your email signature settings."
+msgstr ""
+
+#: src/config.php:233
+msgid "The signature could not be copied. Select it in the preview and copy it by hand."
+msgstr ""
+
+#: src/config.php:234
+msgid "The image could not be created. Try again."
+msgstr ""
+
+#. translators: %s: a field's label.
+#: src/config.php:236
+#, php-format
+msgid "%s is required."
+msgstr ""
+
+#: src/config.php:237
+msgid "Enter a valid email address."
+msgstr ""
+
+#: src/config.php:238
+msgid "Enter the phone number as 55 XX XXXX-XXXX or 55 XX XXXXX-XXXX. For two numbers, separate them with \" | \"."
+msgstr ""
+
+#. translators: %s: a field's label.
+#: src/config.php:240
+#, php-format
+msgid "%s is not a valid address."
+msgstr ""
+
+#: src/config.php:241
+msgid "Role / Department needs text on both sides of the slash, or a single word without spaces."
+msgstr ""
+
+#: src/config.php:242
+msgid "Role takes a single role, without slashes."
+msgstr ""
+
+#. Plugin header: Description
+msgid "A form, placed with a shortcode, that builds a consistent HTML email signature for your organisation and copies it to Outlook or downloads it as an image."
+msgstr ""

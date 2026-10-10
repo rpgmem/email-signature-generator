@@ -1,0 +1,166 @@
+# Portuguese translations for Email Signature Generator package.
+# Copyright (C) 2026 THE Email Signature Generator'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Email Signature Generator package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Email Signature Generator 0.1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
+"POT-Creation-Date: 2026-10-10 21:54+0000\n"
+"PO-Revision-Date: 2026-10-10 21:54+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: Português do Brasil\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: bin/build-standalone.php:100
+msgid "Email Signature Generator"
+msgstr "Gerador de Assinatura de E-mail"
+
+#: bin/build-standalone.php:117 src/shortcode.php:63
+msgid "The signature generator needs JavaScript."
+msgstr "O gerador de assinatura precisa de JavaScript."
+
+#: src/config.php:48
+msgid "Logo"
+msgstr "Logotipo"
+
+#: src/config.php:77
+msgid "Full name"
+msgstr "Nome completo"
+
+#: src/config.php:79
+msgid "Type your full name"
+msgstr "Digite seu nome completo"
+
+#: src/config.php:83
+msgid "Email"
+msgstr "E-mail"
+
+#: src/config.php:91
+msgid "Phone number(s)"
+msgstr "Telefone(s)"
+
+#: src/config.php:97
+msgid "Address | Floor | Room"
+msgstr "Endereço | Andar | Sala"
+
+#: src/config.php:102
+msgid "Postal code | City | State"
+msgstr "CEP | Cidade | Estado"
+
+#: src/config.php:107
+msgid "Link 1"
+msgstr "Link 1"
+
+#: src/config.php:114
+msgid "Link 2"
+msgstr "Link 2"
+
+#: src/config.php:117
+msgid "Type a second link, if needed"
+msgstr "Digite um segundo link, caso necessário"
+
+#: src/config.php:123
+msgid "Staff - Regional office"
+msgstr "Servidores - DRE"
+
+#: src/config.php:128
+msgid "Role / Department"
+msgstr "Cargo / Setor"
+
+#: src/config.php:143
+msgid "Staff - School"
+msgstr "Servidores - Escola"
+
+#: src/config.php:148
+msgid "Role"
+msgstr "Cargo"
+
+#: src/config.php:157
+msgid "School / Regional office"
+msgstr "Escola / DRE"
+
+#: src/config.php:168
+msgid "Department or school building"
+msgstr "Setores DRE / Prédio Escola"
+
+#: src/config.php:172
+msgid "Department or school"
+msgstr "Setor ou Escola"
+
+#: src/config.php:180
+msgid "Regional office or central"
+msgstr "Regional ou Central"
+
+#: src/config.php:226
+msgid "Signature model"
+msgstr "Modelo de assinatura"
+
+#: src/config.php:227
+msgid "Generate signature"
+msgstr "Gerar assinatura"
+
+#: src/config.php:228
+msgid "Copy HTML"
+msgstr "Copiar HTML"
+
+#: src/config.php:229
+msgid "Download image"
+msgstr "Baixar imagem"
+
+#: src/config.php:230
+msgid "Preview"
+msgstr "Pré-visualização"
+
+#: src/config.php:231
+msgid "Tel.:"
+msgstr "Tel.:"
+
+#: src/config.php:232
+msgid "Signature copied. Paste it into your email signature settings."
+msgstr "Assinatura copiada. Cole-a nas configurações de assinatura do seu e-mail."
+
+#: src/config.php:233
+msgid "The signature could not be copied. Select it in the preview and copy it by hand."
+msgstr "Não foi possível copiar a assinatura. Selecione-a na pré-visualização e copie manualmente."
+
+#: src/config.php:234
+msgid "The image could not be created. Try again."
+msgstr "Não foi possível gerar a imagem. Tente novamente."
+
+#. translators: %s: a field's label.
+#: src/config.php:236
+#, php-format
+msgid "%s is required."
+msgstr "O campo \"%s\" é obrigatório."
+
+#: src/config.php:237
+msgid "Enter a valid email address."
+msgstr "Informe um e-mail válido."
+
+#: src/config.php:238
+msgid "Enter the phone number as 55 XX XXXX-XXXX or 55 XX XXXXX-XXXX. For two numbers, separate them with \" | \"."
+msgstr "Informe o telefone no formato 55 XX XXXX-XXXX ou 55 XX XXXXX-XXXX. Para dois números, separe-os com \" | \"."
+
+#. translators: %s: a field's label.
+#: src/config.php:240
+#, php-format
+msgid "%s is not a valid address."
+msgstr "O campo \"%s\" não é um endereço válido."
+
+#: src/config.php:241
+msgid "Role / Department needs text on both sides of the slash, or a single word without spaces."
+msgstr "O campo \"Cargo / Setor\" precisa de texto antes e depois da barra, ou de uma única palavra sem espaços."
+
+#: src/config.php:242
+msgid "Role takes a single role, without slashes."
+msgstr "O campo \"Cargo\" aceita um único cargo, sem barras."
+
+#. Plugin header: Description
+msgid "A form, placed with a shortcode, that builds a consistent HTML email signature for your organisation and copies it to Outlook or downloads it as an image."
+msgstr "Um formulário, inserido por shortcode, que monta uma assinatura de e-mail em HTML padronizada para a sua organização e a copia para o Outlook ou a baixa como imagem."

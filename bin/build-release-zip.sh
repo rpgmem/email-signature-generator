@@ -10,7 +10,9 @@
 # corrected, is still packaged and described the way a release is today.
 # On a tag push the working tree is the tag itself, so nothing differs.
 #
-# Writes <out-dir>/email-signature-generator-X.Y.Z.zip and <out-dir>/notes-X.Y.Z.md.
+# Writes <out-dir>/email-signature-generator-X.Y.Z.zip, the standalone
+# <out-dir>/email-signature-generator-X.Y.Z.html (built from the tag's own
+# sources, when the tag has the build script) and <out-dir>/notes-X.Y.Z.md.
 # Fails when the tag's Version header disagrees with the tag, or when the
 # CHANGELOG has no section for the version.
 
@@ -48,6 +50,12 @@ mkdir -p "$work/stage/$slug"
 rsync -a --exclude-from="$root/.distignore" "$work/src/" "$work/stage/$slug/"
 rm -f "$out/$slug-$version.zip"
 (cd "$work/stage" && zip -rqX "$out/$slug-$version.zip" "$slug")
+
+# The standalone HTML, built from the tag's files so it matches the zip.
+if [ -f "$work/src/bin/build-standalone.php" ]; then
+	rm -f "$out/$slug-$version.html"
+	php "$work/src/bin/build-standalone.php" "$version" "$out/$slug-$version.html" >/dev/null
+fi
 
 # The section is everything between "## [X.Y.Z]" and the next "## " heading.
 awk -v head="## [$version]" '
