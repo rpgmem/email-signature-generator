@@ -43,7 +43,7 @@ return array (
     'Higher keeps the text sharper and makes the file larger. 90 suits most signatures.' => 'Quanto maior, mais nítido o texto e maior o arquivo. 90 atende à maioria das assinaturas.',
     'Resolution' => 'Resolução',
     '%1$d× (%2$d px wide)' => '%1$d× (%2$d px de largura)',
-    'Every visitor gets the same image, whatever their screen. 2× stays sharp on high-density screens.' => 'Todos recebem a mesma imagem, seja qual for a tela. 2× continua nítido em telas de alta densidade.',
+    '1× is the size of the signature in an email. 2× and 3× are sharper, but an email client may show them larger unless the image is resized.' => '1× é o tamanho da assinatura no e-mail. 2× e 3× são mais nítidos, mas o cliente de e-mail pode exibi-los maiores se a imagem não for redimensionada.',
     'Regional offices' => 'Diretorias Regionais',
     'The choices of the "Regional office or central" field, one per line, exactly as the signature prints them.' => 'As opções do campo "Regional ou Central", uma por linha, exatamente como a assinatura as imprime.',
     'Fields' => 'Campos',

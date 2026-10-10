@@ -46,11 +46,12 @@ final class Config {
 	public const IMAGE_QUALITY = 90;
 
 	/**
-	 * Pixel density of the downloaded image: 2 draws each CSS pixel as 2×2,
-	 * which stays sharp on high-density screens and when an email client
-	 * scales the image.
+	 * Pixel density of the downloaded image. 1 gives the signature's own size
+	 * (450 px wide), which is what the original page produced and what an
+	 * email client shows when the image is pasted in; 2 and 3 are sharper but
+	 * a client may show them that much larger.
 	 */
-	public const IMAGE_SCALE = 2;
+	public const IMAGE_SCALE = 1;
 
 	/**
 	 * The default configuration.

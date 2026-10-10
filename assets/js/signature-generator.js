@@ -245,8 +245,26 @@
 		var scale = parseInt( image.scale, 10 );
 		var quality = parseInt( image.quality, 10 );
 		return {
-			scale: scale >= 1 && scale <= 3 ? scale : 2,
+			scale: scale >= 1 && scale <= 3 ? scale : 1,
 			quality: ( quality >= 50 && quality <= 100 ? quality : 90 ) / 100,
+		};
+	}
+
+	/**
+	 * How to draw the image: at least twice the final size, then reduced to
+	 * it, which smooths the text the way the original page did. The final
+	 * size is the signature's own times the configured density.
+	 *
+	 * @param {number} width  Width of the signature, in CSS pixels.
+	 * @param {number} height Height of the signature, in CSS pixels.
+	 * @param {number} scale  Configured density.
+	 * @return {{render: number, width: number, height: number}} Drawing density and final size in pixels.
+	 */
+	function exportSize( width, height, scale ) {
+		return {
+			render: Math.max( 2, scale ),
+			width: Math.round( width * scale ),
+			height: Math.round( height * scale ),
 		};
 	}
 
@@ -516,8 +534,19 @@
 			// (the canvas is tainted), so the catch covers both the drawing and
 			// the export.
 			var image = imageOptions( config );
-			win.html2canvas( stage.firstChild, { useCORS: true, backgroundColor: '#ffffff', scale: image.scale } )
-				.then( function ( canvas ) {
+			var table = stage.firstChild;
+			var size = exportSize( table.offsetWidth, table.offsetHeight, image.scale );
+			win.html2canvas( table, { useCORS: true, backgroundColor: '#ffffff', scale: size.render } )
+				.then( function ( drawn ) {
+					var canvas = drawn;
+					if ( drawn.width !== size.width ) {
+						canvas = doc.createElement( 'canvas' );
+						canvas.width = size.width;
+						canvas.height = size.height;
+						var ctx = canvas.getContext( '2d' );
+						ctx.imageSmoothingQuality = 'high';
+						ctx.drawImage( drawn, 0, 0, size.width, size.height );
+					}
 					var link = el( doc, 'a', { download: name + '.jpg', href: canvas.toDataURL( 'image/jpeg', image.quality ) } );
 					doc.body.appendChild( link );
 					link.click();
@@ -570,6 +599,7 @@
 		render: render,
 		fileName: fileName,
 		imageOptions: imageOptions,
+		exportSize: exportSize,
 		findModel: findModel,
 		mount: mount,
 		mountAll: mountAll,
