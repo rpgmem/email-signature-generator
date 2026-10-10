@@ -180,6 +180,39 @@
 		tabs.classList.add( 'is-ready' );
 	}
 
+	/**
+	 * Regional offices: add a row from the template, remove a row, and keep
+	 * acronyms in capitals as they are typed.
+	 */
+	var rows = document.querySelector( '.esg-regions-rows' );
+	var template = document.querySelector( '.esg-regions-template' );
+	var addOffice = document.querySelector( '.esg-regions-add' );
+	if ( rows && template && addOffice ) {
+		var next = rows.children.length;
+		addOffice.addEventListener( 'click', function () {
+			var html = template.innerHTML.split( '__i__' ).join( String( next++ ) );
+			rows.insertAdjacentHTML( 'beforeend', html );
+			var added = rows.lastElementChild.querySelector( 'input' );
+			if ( added ) {
+				added.focus();
+			}
+		} );
+		rows.addEventListener( 'click', function ( event ) {
+			var remove = event.target.closest( '.esg-regions-delete' );
+			if ( remove ) {
+				remove.closest( 'tr' ).remove();
+			}
+		} );
+		rows.addEventListener( 'input', function ( event ) {
+			if ( event.target.classList.contains( 'esg-acronym' ) ) {
+				var upper = event.target.value.toUpperCase().replace( /\s+/g, '' );
+				if ( upper !== event.target.value ) {
+					event.target.value = upper;
+				}
+			}
+		} );
+	}
+
 	var preview = document.querySelector( '.esg-logo-preview' );
 	var input = document.querySelector( '.esg-logo-id' );
 	var choose = document.querySelector( '.esg-logo-choose' );

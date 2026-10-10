@@ -305,3 +305,26 @@
 	background: #fcf0f1;
 	color: #a00;
 }
+
+/* Regional offices: name, acronym, remove. */
+.esg-settings .esg-regions-table {
+	max-width: 960px;
+	margin-bottom: 8px;
+}
+
+.esg-settings .esg-regions-table td {
+	vertical-align: middle;
+}
+
+.esg-settings .esg-regions-acronym {
+	width: 140px;
+}
+
+.esg-settings .esg-regions-remove {
+	width: 80px;
+	text-align: right;
+}
+
+.esg-settings .esg-regions-delete {
+	color: #b32d2e;
+}

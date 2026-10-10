@@ -42,7 +42,7 @@ Settings → Email Signature sets, for every form on the site:
 * the logo, from the media library (the bundled one is the default), and its width;
 * whether the image can be downloaded at all, and how it is offered: a button that recommends Copy HTML after each download, the same inside a collapsed "More options", or a plain button;
 * the downloaded image's format (PNG by default, or JPG with its quality) and resolution (1×, 2× or 3×);
-* the list of regional offices;
+* the regional offices, each with a name and a unique acronym;
 * per field: a default value, whether it is required, and whether it is locked to that default.
 
 On/off settings are switches that save as soon as they are flipped. Text fields, the logo and the lists save with "Save Changes".

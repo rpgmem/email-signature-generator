@@ -58,7 +58,7 @@ final class Settings {
 	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<string>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<array{name: string, acronym: string}>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -95,7 +95,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<string>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<array{name: string, acronym: string}>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -120,18 +120,7 @@ final class Settings {
 			$domain = '';
 		}
 
-		$regions = $input['regions'] ?? array();
-		if ( is_string( $regions ) ) {
-			$regions = preg_split( '/\R/', $regions );
-		}
-		$regions = array_values(
-			array_unique(
-				array_filter(
-					array_map( static fn( $r ): string => sanitize_text_field( (string) $r ), (array) $regions ),
-					static fn( string $r ): bool => '' !== $r
-				)
-			)
-		);
+		$regions = Regions::parse( $input['regions'] ?? array() )['regions'];
 
 		$access = (string) ( $input['access'] ?? self::ACCESS_EVERYONE );
 
@@ -153,6 +142,35 @@ final class Settings {
 			'access'         => self::ACCESS_LOGGED_IN === $access ? self::ACCESS_LOGGED_IN : self::ACCESS_EVERYONE,
 			'fields'         => self::sanitizeFields( is_array( $input['fields'] ?? null ) ? $input['fields'] : array() ),
 		);
+	}
+
+	/**
+	 * The Settings API callback: sanitize, and tell the administrator about
+	 * any regional office that was left out.
+	 *
+	 * WordPress runs the callback twice on the first save of an option, so
+	 * the notice is added once per request.
+	 *
+	 * @param mixed $input Posted settings.
+	 * @return array<string, mixed>
+	 */
+	public static function save( $input ): array {
+		static $reported = false;
+		$input           = is_array( $input ) ? $input : array();
+		$rejected        = Regions::parse( $input['regions'] ?? array() )['rejected'];
+		if ( ! $reported && array() !== $rejected && function_exists( 'add_settings_error' ) ) {
+			$reported = true;
+			add_settings_error(
+				self::OPTION,
+				'regions_rejected',
+				sprintf(
+					/* translators: %s: the offices left out, separated by commas. */
+					__( 'These regional offices were not saved, because each needs a name and a unique acronym of capitals and digits: %s', 'email-signature-generator' ),
+					implode( ', ', $rejected )
+				)
+			);
+		}
+		return self::sanitize( $input );
 	}
 
 	/**
@@ -184,7 +202,7 @@ final class Settings {
 			$config['logo']['url'] = $logo_url;
 		}
 		if ( array() !== $settings['regions'] ) {
-			$config['regions'] = $settings['regions'];
+			$config['regions'] = Regions::labels( $settings['regions'] );
 		}
 
 		foreach ( $config['models'] as $m => $model ) {

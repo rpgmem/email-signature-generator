@@ -11,6 +11,7 @@ namespace EmailSignatureGenerator\Admin;
 
 use EmailSignatureGenerator\Config;
 use EmailSignatureGenerator\Plugin;
+use EmailSignatureGenerator\Regions;
 use EmailSignatureGenerator\Settings;
 
 /**
@@ -43,7 +44,7 @@ final class SettingsPage {
 			Settings::OPTION,
 			array(
 				'type'              => 'array',
-				'sanitize_callback' => array( Settings::class, 'sanitize' ),
+				'sanitize_callback' => array( Settings::class, 'save' ),
 				'default'           => Settings::defaults(),
 				'show_in_rest'      => false,
 			)
@@ -118,7 +119,7 @@ final class SettingsPage {
 		$config   = Settings::apply( Config::defaults( Config::bundledLogoUrl() ), array_merge( $settings, array( 'models' => Settings::modelIds() ) ) );
 		$name     = Settings::OPTION;
 		$logo_url = $settings['logo_id'] > 0 ? (string) wp_get_attachment_image_url( $settings['logo_id'], 'medium' ) : '';
-		$regions  = array() !== $settings['regions'] ? $settings['regions'] : Config::defaults( '' )['regions'];
+		$regions  = array() !== $settings['regions'] ? $settings['regions'] : Regions::defaults();
 
 		echo '<div class="wrap esg-settings">';
 		echo '<h1>' . esc_html__( 'Email Signature', 'email-signature-generator' ) . '</h1>';
@@ -314,12 +315,22 @@ final class SettingsPage {
 		// Regions.
 		self::openPanel( 'regions', $active );
 		self::openCard( __( 'Regional offices', 'email-signature-generator' ), 'building' );
-		printf(
-			'<p class="description"><label for="esg-regions">%1$s</label></p><textarea id="esg-regions" class="large-text code" rows="8" name="%2$s[regions]">%3$s</textarea>',
-			esc_html__( 'The choices of the "Regional office or central" field, one per line, exactly as the signature prints them.', 'email-signature-generator' ),
-			esc_attr( $name ),
-			esc_textarea( implode( "\n", $regions ) )
-		);
+		echo '<p class="description">' . esc_html__( 'The choices of the "Regional office or central" field. The signature prints each as "Name / ACRONYM". The acronym identifies the office: capitals and digits, up to 12, each used once.', 'email-signature-generator' ) . '</p>';
+		echo '<table class="widefat striped esg-regions-table"><thead><tr>';
+		echo '<th scope="col">' . esc_html__( 'Name', 'email-signature-generator' ) . '</th>';
+		echo '<th scope="col" class="esg-regions-acronym">' . esc_html__( 'Acronym', 'email-signature-generator' ) . '</th>';
+		echo '<td class="esg-regions-remove"></td>';
+		echo '</tr></thead><tbody class="esg-regions-rows">';
+		foreach ( array_values( $regions ) as $i => $region ) {
+			self::regionRow( $name, (string) $i, $region['name'], $region['acronym'] );
+		}
+		echo '</tbody></table>';
+		// The row the "Add" button copies; a template is inert, so its
+		// required inputs never block the form.
+		echo '<template class="esg-regions-template">';
+		self::regionRow( $name, '__i__', '', '' );
+		echo '</template>';
+		printf( '<p><button type="button" class="button esg-regions-add">%s</button></p>', esc_html__( 'Add an office', 'email-signature-generator' ) );
 		echo '</div></div>';
 
 		// Fields.
@@ -339,7 +350,7 @@ final class SettingsPage {
 				echo '<tr><td>' . esc_html( $field['label'] ) . '</td><td>';
 				if ( 'region' === ( $field['type'] ?? '' ) ) {
 					printf( '<select name="%s">', esc_attr( $base . '[default]' ) );
-					foreach ( $regions as $region ) {
+					foreach ( Regions::labels( $regions ) as $region ) {
 						printf( '<option value="%1$s"%2$s>%1$s</option>', esc_attr( $region ), selected( $field['default'] ?? '', $region, false ) );
 					}
 					echo '</select>';
@@ -387,6 +398,29 @@ final class SettingsPage {
 		echo '</div></div>';
 		submit_button();
 		echo '</form></div>';
+	}
+
+	/**
+	 * One row of the offices table.
+	 *
+	 * @param string $name    Option name.
+	 * @param string $index   Row index, or the template's placeholder.
+	 * @param string $office  Office name.
+	 * @param string $acronym Office acronym.
+	 */
+	private static function regionRow( string $name, string $index, string $office, string $acronym ): void {
+		$base = $name . '[regions][' . $index . ']';
+		printf(
+			'<tr><td><input type="text" class="large-text" name="%1$s" value="%2$s" aria-label="%3$s" required></td><td class="esg-regions-acronym"><input type="text" class="small-text esg-acronym" name="%4$s" value="%5$s" aria-label="%6$s" pattern="[A-Za-z0-9]{1,12}" maxlength="12" required></td><td class="esg-regions-remove"><button type="button" class="button-link esg-regions-delete" aria-label="%7$s">%8$s</button></td></tr>',
+			esc_attr( $base . '[name]' ),
+			esc_attr( $office ),
+			esc_attr__( 'Name', 'email-signature-generator' ),
+			esc_attr( $base . '[acronym]' ),
+			esc_attr( $acronym ),
+			esc_attr__( 'Acronym', 'email-signature-generator' ),
+			esc_attr__( 'Remove this office', 'email-signature-generator' ),
+			esc_html__( 'Remove', 'email-signature-generator' )
+		);
 	}
 
 	/**

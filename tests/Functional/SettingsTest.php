@@ -179,4 +179,47 @@ final class SettingsTest extends WP_UnitTestCase {
 		SettingsPage::render();
 		return (string) ob_get_clean();
 	}
+
+	public function test_offices_are_saved_as_name_and_acronym_and_a_bad_row_is_reported(): void {
+		global $wp_settings_errors;
+		$wp_settings_errors = array();
+
+		update_option(
+			Settings::OPTION,
+			array(
+				'regions' => array(
+					array( 'name' => 'Norte', 'acronym' => 'dren' ),
+					array( 'name' => 'Sem sigla', 'acronym' => '' ),
+				),
+			)
+		);
+
+		self::assertSame( array( array( 'name' => 'Norte', 'acronym' => 'DREN' ) ), Settings::get()['regions'] );
+		$errors = get_settings_errors( Settings::OPTION );
+		self::assertSame( 'regions_rejected', $errors[0]['code'] ?? '' );
+		self::assertStringContainsString( 'Sem sigla', $errors[0]['message'] );
+	}
+
+	public function test_an_install_with_the_old_text_list_reads_it_as_offices(): void {
+		// Written straight to the database, as a version before acronyms did.
+		global $wpdb;
+		$wpdb->insert( $wpdb->options, array( 'option_name' => Settings::OPTION, 'option_value' => maybe_serialize( array( 'regions' => array( 'Norte / DREN', 'Sul / DRES' ) ) ), 'autoload' => 'yes' ) );
+		wp_cache_delete( 'alloptions', 'options' );
+		wp_cache_delete( Settings::OPTION, 'options' );
+
+		self::assertSame(
+			array( array( 'name' => 'Norte', 'acronym' => 'DREN' ), array( 'name' => 'Sul', 'acronym' => 'DRES' ) ),
+			Settings::get()['regions']
+		);
+		self::assertSame( array( 'Norte / DREN', 'Sul / DRES' ), Settings::siteConfig()['regions'] );
+	}
+
+	public function test_the_offices_table_renders_a_row_per_office(): void {
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		$html = $this->renderScreen();
+
+		self::assertSame( 14, substr_count( $html, '[regions][' ) / 2 - 1, 'Fourteen rows plus the template, two inputs each.' );
+		self::assertStringContainsString( 'name="' . Settings::OPTION . '[regions][12][acronym]" value="DREMP"', $html );
+		self::assertStringContainsString( '<template class="esg-regions-template">', $html );
+	}
 }

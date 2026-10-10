@@ -241,22 +241,7 @@ final class Config {
 	 * @return list<string>
 	 */
 	private static function regions(): array {
-		return array(
-			'Diretoria Regional de Educação Butantã / DREBT',
-			'Diretoria Regional de Educação Campo Limpo / DRECL',
-			'Diretoria Regional de Educação Capela do Socorro / DRECS',
-			'Diretoria Regional de Educação Freguesia Brasilândia / DREFB',
-			'Diretoria Regional de Educação Guaianases / DREG',
-			'Diretoria Regional de Educação Ipiranga / DREIP',
-			'Diretoria Regional de Educação Itaquera / DREIQ',
-			'Diretoria Regional de Educação Jaçanã Tremembé / DREJT',
-			'Diretoria Regional de Educação Penha / DREPE',
-			'Diretoria Regional de Educação Pirituba Jaraguá / DREPJ',
-			'Diretoria Regional de Educação Santo Amaro / DRESA',
-			'Diretoria Regional de Educação São Mateus / DRESM',
-			'Diretoria Regional de Educação São Miguel / DREMP',
-			'Secretaria Municipal de Educação de São Paulo / SMESP',
-		);
+		return Regions::labels( Regions::defaults() );
 	}
 
 	/**

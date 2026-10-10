@@ -67,6 +67,7 @@ if ( ! function_exists( '__' ) ) {
 
 define( 'ABSPATH', $esg_root . '/' );
 require $esg_root . '/src/plugin.php';
+require $esg_root . '/src/regions.php';
 require $esg_root . '/src/config.php';
 require $esg_root . '/src/shortcode.php';
 
