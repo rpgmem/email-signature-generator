@@ -1,0 +1,18 @@
+/* Settings → Email Signature. Scoped to the screen's wrap. */
+
+.esg-settings .esg-logo-preview {
+	display: block;
+	max-width: 120px;
+	height: auto;
+	border: 1px solid #c3c4c7;
+	background: #ffffff;
+}
+
+.esg-settings .esg-fields-table {
+	max-width: 960px;
+	margin-bottom: 16px;
+}
+
+.esg-settings .esg-fields-table td {
+	vertical-align: middle;
+}

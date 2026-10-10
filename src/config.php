@@ -48,6 +48,7 @@ final class Config {
 				'alt'   => __( 'Logo', 'email-signature-generator' ),
 			),
 			'uppercaseName' => true,
+			'emailDomain'   => '',
 			'phonePattern'  => self::PHONE_PATTERN,
 			'regions'       => self::regions(),
 			'models'        => self::models(),
@@ -224,23 +225,25 @@ final class Config {
 	 */
 	private static function strings(): array {
 		return array(
-			'model'             => __( 'Signature model', 'email-signature-generator' ),
-			'generate'          => __( 'Generate signature', 'email-signature-generator' ),
-			'copy'              => __( 'Copy HTML', 'email-signature-generator' ),
-			'download'          => __( 'Download image', 'email-signature-generator' ),
-			'preview'           => __( 'Preview', 'email-signature-generator' ),
-			'phonePrefix'       => __( 'Tel.:', 'email-signature-generator' ),
-			'copied'            => __( 'Signature copied. Paste it into your email signature settings.', 'email-signature-generator' ),
-			'copyFailed'        => __( 'The signature could not be copied. Select it in the preview and copy it by hand.', 'email-signature-generator' ),
-			'downloadFailed'    => __( 'The image could not be created. Try again.', 'email-signature-generator' ),
+			'model'              => __( 'Signature model', 'email-signature-generator' ),
+			'generate'           => __( 'Generate signature', 'email-signature-generator' ),
+			'copy'               => __( 'Copy HTML', 'email-signature-generator' ),
+			'download'           => __( 'Download image', 'email-signature-generator' ),
+			'preview'            => __( 'Preview', 'email-signature-generator' ),
+			'phonePrefix'        => __( 'Tel.:', 'email-signature-generator' ),
+			'copied'             => __( 'Signature copied. Paste it into your email signature settings.', 'email-signature-generator' ),
+			'copyFailed'         => __( 'The signature could not be copied. Select it in the preview and copy it by hand.', 'email-signature-generator' ),
+			'downloadFailed'     => __( 'The image could not be created. Try again.', 'email-signature-generator' ),
 			/* translators: %s: a field's label. */
-			'required'          => __( '%s is required.', 'email-signature-generator' ),
-			'invalidEmail'      => __( 'Enter a valid email address.', 'email-signature-generator' ),
-			'invalidPhone'      => __( 'Enter the phone number as 55 XX XXXX-XXXX or 55 XX XXXXX-XXXX. For two numbers, separate them with " | ".', 'email-signature-generator' ),
+			'required'           => __( '%s is required.', 'email-signature-generator' ),
+			'invalidEmail'       => __( 'Enter a valid email address.', 'email-signature-generator' ),
+			/* translators: %s: an email domain, such as example.org. */
+			'invalidEmailDomain' => __( 'Use an address at %s.', 'email-signature-generator' ),
+			'invalidPhone'       => __( 'Enter the phone number as 55 XX XXXX-XXXX or 55 XX XXXXX-XXXX. For two numbers, separate them with " | ".', 'email-signature-generator' ),
 			/* translators: %s: a field's label. */
-			'invalidUrl'        => __( '%s is not a valid address.', 'email-signature-generator' ),
-			'invalidRoleSector' => __( 'Role / Department needs text on both sides of the slash, or a single word without spaces.', 'email-signature-generator' ),
-			'invalidSingleRole' => __( 'Role takes a single role, without slashes.', 'email-signature-generator' ),
+			'invalidUrl'         => __( '%s is not a valid address.', 'email-signature-generator' ),
+			'invalidRoleSector'  => __( 'Role / Department needs text on both sides of the slash, or a single word without spaces.', 'email-signature-generator' ),
+			'invalidSingleRole'  => __( 'Role takes a single role, without slashes.', 'email-signature-generator' ),
 		);
 	}
 }

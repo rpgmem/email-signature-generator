@@ -57,6 +57,10 @@ final class Plugin {
 		// Shortcodes are registered on `init`, after the translations above
 		// (both at the default priority, so registration order decides).
 		add_action( 'init', array( Shortcode::class, 'register' ) );
+
+		if ( is_admin() ) {
+			Admin\SettingsPage::register();
+		}
 	}
 
 	/**

@@ -16,6 +16,8 @@ export default [
 				// The generator exports itself for the Vitest suite when
 				// loaded as CommonJS.
 				module: 'readonly',
+				// Localized on the settings screen.
+				esgAdmin: 'readonly',
 			},
 		},
 		rules: {

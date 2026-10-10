@@ -32,6 +32,16 @@ The models are `staff_regional` (staff at a regional office), `staff_school` (st
 
 The signature is built in the visitor's browser: nothing they type is sent to the site.
 
+== Settings ==
+
+Settings → Email Signature sets, for every form on the site:
+
+* which models are offered, and whether only logged-in users may use the form;
+* whether the name is printed in capitals, and an email domain every address must use;
+* the logo, from the media library (the bundled one is the default), and its width;
+* the list of regional offices;
+* per field: a default value, whether it is required, and whether it is locked to that default.
+
 == Installation ==
 
 1. Download `email-signature-generator-X.Y.Z.zip` from the latest GitHub release.

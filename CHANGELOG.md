@@ -12,6 +12,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Standalone HTML download** (#1). Each release carries `email-signature-generator-X.Y.Z.html`, one self-contained file built from the plugin's own sources and defaults, translated into Brazilian Portuguese.
 - **Brazilian Portuguese translation** (#1). Every string the form, the signature and the plugin show.
 
+- **Settings → Email Signature** (#1). An administrator chooses the models offered, who may use the form (everyone or logged-in users), whether the name is upper-cased, an allowed email domain, the regional offices, and per field a default, whether it is required and whether it is locked. Unchanged settings keep the defaults.
+- **Logo from the media library** (#1). The bundled SME-SP logo stays the default; another image and its width can be chosen on the settings screen.
+
 ### Changed
 
 - **Example values are placeholders** (#1). The old page pre-filled fields with examples such as `55 11 3397-XXXX`, which its own validation then refused; they now show as hints, and only real defaults are pre-filled.

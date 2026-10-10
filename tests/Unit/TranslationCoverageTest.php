@@ -51,7 +51,11 @@ final class TranslationCoverageTest extends TestCase {
 	 * @return list<string>
 	 */
 	private function sourceStrings(): array {
-		$files   = array_merge( array( self::ROOT . '/email-signature-generator.php', self::ROOT . '/bin/build-standalone.php' ), glob( self::ROOT . '/src/*.php' ) ?: array() );
+		$files = array( self::ROOT . '/email-signature-generator.php', self::ROOT . '/bin/build-standalone.php' );
+		$it    = new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator( self::ROOT . '/src', \FilesystemIterator::SKIP_DOTS ) );
+		foreach ( $it as $file ) {
+			$files[] = $file->getPathname();
+		}
 		$strings = array();
 		foreach ( $files as $file ) {
 			preg_match_all( "/\\b(?:__|_e|esc_html__|esc_html_e|esc_attr__|esc_attr_e)\\(\\s*'((?:[^'\\\\]|\\\\.)*)'\\s*,\\s*'email-signature-generator'/", (string) file_get_contents( $file ), $m );
