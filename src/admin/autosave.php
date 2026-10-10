@@ -60,13 +60,13 @@ final class Autosave {
 	 * Apply one toggle to the settings.
 	 *
 	 * @param array<string, mixed> $settings Sanitized settings.
-	 * @param string               $key      `uppercase_name`, `models`, or `fields.<model>.<field>.<required|locked>`.
+	 * @param string               $key      `uppercase_name`, `offer_download`, `models`, or `fields.<model>.<field>.<required|locked>`.
 	 * @param mixed                $value    '1' / '0', or the list of model ids for `models`.
 	 * @return array<string, mixed>|WP_Error The sanitized settings, or why the change was refused.
 	 */
 	public static function apply( array $settings, string $key, $value ) {
-		if ( 'uppercase_name' === $key ) {
-			$settings['uppercase_name'] = self::on( $value );
+		if ( 'uppercase_name' === $key || 'offer_download' === $key ) {
+			$settings[ $key ] = self::on( $value );
 			return Settings::sanitize( $settings );
 		}
 
@@ -115,7 +115,7 @@ final class Autosave {
 	 * @return bool|list<string>
 	 */
 	public static function read( array $settings, string $key ) {
-		if ( 'uppercase_name' === $key || 'models' === $key ) {
+		if ( in_array( $key, array( 'uppercase_name', 'offer_download', 'models' ), true ) ) {
 			return $settings[ $key ];
 		}
 		$parts = explode( '.', $key );

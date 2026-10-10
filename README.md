@@ -21,7 +21,7 @@ The default layout and logo are those of the São Paulo Municipal Department of 
 
 **In WordPress**, put `[email_signature]` on any page. To offer only some models, list them: `[email_signature models="staff_school,department"]` (the ids are `staff_regional`, `staff_school` and `department`).
 
-In **Settings → Email Signature** an administrator chooses the models offered, who may use the form, an allowed email domain, the logo (from the media library), the downloaded image's format (PNG or JPG) and resolution, the regional offices, and per field a default and whether it is required or locked. The on/off settings save the moment they are flipped.
+In **Settings → Email Signature** an administrator chooses the models offered, who may use the form, an allowed email domain, the logo (from the media library), whether and how the image download is offered, the downloaded image's format (PNG or JPG) and resolution, the regional offices, and per field a default and whether it is required or locked. The on/off settings save the moment they are flipped.
 
 **Standalone**, open the `.html` file in a browser, or publish it on any web page.
 
@@ -29,7 +29,7 @@ Then:
 
 1. Choose a model and fill in the fields.
 2. Click **Generate signature** to see the preview.
-3. Click **Copy HTML** and paste it into your email client's signature settings, such as Outlook's or Gmail's. This is the recommended way: the text stays sharp at any size and the links work. **Download image** saves it as a PNG (or a JPG, if the site chose that) for programs that do not accept an HTML signature.
+3. Once the signature is generated, click **Copy HTML** and paste it into your email client's signature settings, such as Outlook's or Gmail's. This is the recommended way: the text stays sharp at any size and the links work. **Download image** saves it as a PNG (or a JPG, if the site chose that) for programs that do not accept an HTML signature, where the site offers it.
 
 ## Documentation and contributing
 

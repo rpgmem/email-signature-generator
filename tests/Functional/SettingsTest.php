@@ -115,6 +115,8 @@ final class SettingsTest extends WP_UnitTestCase {
 		self::assertStringNotContainsString( '[fields][staff_school][email][locked]', $html, 'The email is never lockable.' );
 		self::assertStringContainsString( 'name="' . Settings::OPTION . '[image_quality]" value="90"', $html );
 		self::assertStringContainsString( 'name="' . Settings::OPTION . '[image_scale]"', $html );
+		self::assertStringContainsString( 'data-esg-autosave="offer_download"', $html );
+		self::assertMatchesRegularExpression( '/name="' . preg_quote( Settings::OPTION, '/' ) . '\[download_style\]" value="notice" checked/', $html );
 		self::assertStringContainsString( '<option value="png" selected=\'selected\'>PNG (recommended)</option>', $html );
 		self::assertStringContainsString( '<option value="1" selected=\'selected\'>1× (450 px wide)</option>', $html );
 	}

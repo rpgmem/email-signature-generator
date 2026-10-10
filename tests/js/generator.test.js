@@ -180,6 +180,79 @@ describe( 'mount', () => {
 		expect( document.querySelectorAll( '.esg-errors li' ) ).toHaveLength( 0 );
 	} );
 
+	it( 'offers the download unless the site turned it off', () => {
+		document.body.innerHTML = '<div id="c"></div>';
+		gen.mount( document.getElementById( 'c' ), config );
+		expect( document.querySelector( '.esg-download' ) ).not.toBeNull();
+
+		document.body.innerHTML = '<div id="c"></div>';
+		gen.mount( document.getElementById( 'c' ), { ...config, offerDownload: false } );
+		expect( document.querySelector( '.esg-download' ) ).toBeNull();
+		expect( document.querySelector( '.esg-copy' ) ).not.toBeNull();
+	} );
+
+	it.each( [ [ 'notice', true ], [ 'more', true ], [ 'plain', false ] ] )( 'after a download in the %s style, recommends Copy HTML: %s', async ( style, notes ) => {
+		document.body.innerHTML = '<div id="c"></div>';
+		const ui = gen.mount( document.getElementById( 'c' ), { ...config, downloadStyle: style } );
+		Object.entries( valid ).forEach( ( [ key, value ] ) => {
+			const input = document.querySelector( `[name="${ key }"]` );
+			if ( input ) {
+				input.value = value;
+			}
+		} );
+		expect( ui.generate() ).toBe( true );
+		window.html2canvas = () => Promise.resolve( { width: 0, toDataURL: () => 'data:image/png;base64,' } );
+		const click = HTMLAnchorElement.prototype.click;
+		HTMLAnchorElement.prototype.click = () => {};
+		try {
+			document.querySelector( '.esg-download' ).click();
+			await new Promise( ( resolve ) => setTimeout( resolve, 0 ) );
+			expect( document.querySelector( '.esg-status' ).textContent ).toBe( notes ? config.strings.downloaded : '' );
+		} finally {
+			HTMLAnchorElement.prototype.click = click;
+			delete window.html2canvas;
+		}
+	} );
+
+	it( 'shows Copy HTML and the download only after a signature is generated', () => {
+		document.body.innerHTML = '<div id="c"></div>';
+		const ui = gen.mount( document.getElementById( 'c' ), config );
+		const output = document.querySelector( '.esg-output' );
+		expect( output.hidden ).toBe( true );
+		expect( output.contains( document.querySelector( '.esg-copy' ) ) ).toBe( true );
+		expect( output.contains( document.querySelector( '.esg-download' ) ) ).toBe( true );
+		expect( output.contains( document.querySelector( '.esg-hint' ) ) ).toBe( true );
+
+		expect( ui.generate() ).toBe( false );
+		expect( output.hidden ).toBe( true );
+
+		Object.entries( valid ).forEach( ( [ key, value ] ) => {
+			const input = document.querySelector( `[name="${ key }"]` );
+			if ( input ) {
+				input.value = value;
+			}
+		} );
+		expect( ui.generate() ).toBe( true );
+		expect( output.hidden ).toBe( false );
+
+		// Editing a field makes the signature stale until it is generated again.
+		document.querySelector( '[name="name"]' ).dispatchEvent( new Event( 'input', { bubbles: true } ) );
+		expect( output.hidden ).toBe( true );
+		expect( ui.generate() ).toBe( true );
+		ui.select( 'department' );
+		expect( output.hidden ).toBe( true );
+	} );
+
+	it( 'puts the download in a collapsed "More options" when the site asks', () => {
+		document.body.innerHTML = '<div id="c"></div>';
+		gen.mount( document.getElementById( 'c' ), { ...config, downloadStyle: 'more' } );
+		const details = document.querySelector( 'details.esg-more' );
+		expect( details ).not.toBeNull();
+		expect( details.open ).toBe( false );
+		expect( details.querySelector( 'summary' ).textContent ).toBe( config.strings.moreOptions );
+		expect( details.contains( document.querySelector( '.esg-download' ) ) ).toBe( true );
+	} );
+
 	it( 'switches the fields with the model', () => {
 		document.body.innerHTML = '<div id="c"></div>';
 		const ui = gen.mount( document.getElementById( 'c' ), config );

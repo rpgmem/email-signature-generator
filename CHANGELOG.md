@@ -16,6 +16,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Updates from GitHub Releases** (#5). WordPress offers new versions on its normal update screen and checks the zip's SHA-256 before installing it. The compatibility fields and the upgrade notice come from the release's own `readme.txt`. Ported from Total Mail Queue.
 - **Brazilian Portuguese translation** (#3, #4, #5). Every string the form, the signature, the settings screen and the updater show.
 - **Release packaging, CI and a testes deploy** (#2). Each tag publishes the zip, the standalone HTML and the notes. Every PR runs PHPUnit (also against a real WordPress), Vitest, PHPStan, PHPCS, ESLint, Stylelint and a composer audit. `develop` deploys to the testes site, followed by a smoke check.
+- **The site decides how the image is offered** (#15). The download can be turned off, leaving only Copy HTML, or offered as a button that recommends Copy HTML after each download (the default), the same inside a collapsed "More options", or a plain button.
 
 ### Changed
 
@@ -25,6 +26,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **The name is bold in every email client** (#4). The weight is set inline, because a theme or an email client can reset `<strong>`.
 - **Copying the HTML is the recommended way** (#12, #14). Its button is bold and the form says so under the buttons: pasted HTML keeps the text sharp at any size and the links working, while the image is for email programs that do not accept an HTML signature.
 - **The divider is as tall as the logo** (#13). It was the border of the text's cell, so it ran the whole height of the signature; it is now the border of a cell that holds only the logo, in plain table markup email programs keep.
+- **Copy and download appear once a signature is generated** (#15). They hide again when a field changes, so neither can deliver a signature that no longer matches the form. Copy HTML is the filled button and Download image a grey one.
 
 ### Removed
 

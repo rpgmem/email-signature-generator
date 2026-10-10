@@ -126,6 +126,21 @@ final class SettingsTest extends TestCase {
 		self::assertSame( Config::IMAGE_QUALITY, Settings::sanitize( array() )['image_quality'] );
 	}
 
+	public function test_the_download_is_offered_unless_turned_off(): void {
+		self::assertTrue( Settings::sanitize( array() )['offer_download'] );
+		self::assertFalse( Settings::sanitize( array( 'offer_download' => '0' ) )['offer_download'] );
+		self::assertFalse( Settings::apply( Config::defaults( '' ), Settings::sanitize( array( 'offer_download' => '0' ) ) )['offerDownload'] );
+	}
+
+	public function test_the_download_style_is_one_of_three(): void {
+		self::assertSame( 'notice', Settings::sanitize( array() )['download_style'] );
+		self::assertSame( 'more', Settings::sanitize( array( 'download_style' => 'more' ) )['download_style'] );
+		self::assertSame( 'plain', Settings::sanitize( array( 'download_style' => 'plain' ) )['download_style'] );
+		self::assertSame( 'notice', Settings::sanitize( array( 'download_style' => 'modal' ) )['download_style'] );
+		self::assertSame( 'notice', Settings::sanitize( array( 'download_style' => array( 'more' ) ) )['download_style'] );
+		self::assertSame( 'more', Settings::apply( Config::defaults( '' ), Settings::sanitize( array( 'download_style' => 'more' ) ) )['downloadStyle'] );
+	}
+
 	public function test_the_image_format_is_png_or_jpg(): void {
 		self::assertSame( 'png', Settings::sanitize( array() )['image_format'] );
 		self::assertSame( 'jpg', Settings::sanitize( array( 'image_format' => 'jpg' ) )['image_format'] );
