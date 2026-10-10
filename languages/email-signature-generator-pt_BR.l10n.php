@@ -71,6 +71,7 @@ return array (
     'Role takes a single role, without slashes.' => 'O campo "Cargo" aceita um único cargo, sem barras.',
     'Log in to create your email signature.' => 'Faça login para criar sua assinatura de e-mail.',
     'Log in' => 'Fazer login',
+    'Update package integrity check (SHA-256) failed. Installation aborted.' => 'A verificação de integridade (SHA-256) do pacote de atualização falhou. Instalação cancelada.',
     'A form, placed with a shortcode, that builds a consistent HTML email signature for your organisation and copies it to Outlook or downloads it as an image.' => 'Um formulário, inserido por shortcode, que monta uma assinatura de e-mail em HTML padronizada para a sua organização e a copia para o Outlook ou a baixa como imagem.',
   ),
 );

@@ -47,6 +47,8 @@ Settings → Email Signature sets, for every form on the site:
 1. Download `email-signature-generator-X.Y.Z.zip` from the latest GitHub release.
 2. In WordPress, go to Plugins → Add New → Upload Plugin, choose the zip and activate it.
 
+Updates then arrive through the normal WordPress update screen, straight from this plugin's GitHub Releases. Each package is checked against its published SHA-256 before it is installed, and WordPress's own per-plugin toggle turns on automatic updates.
+
 == Changelog ==
 
 The full history of every release is in [CHANGELOG.md](https://github.com/rpgmem/email-signature-generator/blob/main/CHANGELOG.md).
