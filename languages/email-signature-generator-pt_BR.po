@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Email Signature Generator 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
-"POT-Creation-Date: 2026-10-10 22:48+0000\n"
+"POT-Creation-Date: 2026-10-10 22:52+0000\n"
 "PO-Revision-Date: 2026-10-10 21:54+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Português do Brasil\n"
@@ -25,8 +25,32 @@ msgstr "Gerador de Assinatura de E-mail"
 msgid "The signature generator needs JavaScript."
 msgstr "O gerador de assinatura precisa de JavaScript."
 
+#: src/admin/autosave.php:39
+msgid "The page expired. Reload it and try again."
+msgstr "A página expirou. Recarregue e tente de novo."
+
+#: src/admin/autosave.php:42
+msgid "You are not allowed to change these settings."
+msgstr "Você não tem permissão para alterar estas configurações."
+
+#: src/admin/autosave.php:81
+msgid "This setting cannot be saved on its own. Use \"Save Changes\"."
+msgstr "Esta configuração não é salva sozinha. Use \"Salvar alterações\"."
+
+#: src/admin/autosave.php:86
+msgid "The name is always required."
+msgstr "O nome é sempre obrigatório."
+
+#: src/admin/autosave.php:89
+msgid "The name and the email cannot be locked."
+msgstr "O nome e o e-mail não podem ser travados."
+
+#: src/admin/autosave.php:102
+msgid "Type a default and save the page before locking this field."
+msgstr "Digite um valor padrão e salve a página antes de travar este campo."
+
 #: src/admin/settings-page.php:58 src/admin/settings-page.php:59
-#: src/admin/settings-page.php:118
+#: src/admin/settings-page.php:124
 msgid "Email Signature"
 msgstr "Assinatura de E-mail"
 
@@ -42,133 +66,157 @@ msgstr "Escolher o logotipo"
 msgid "Use this image"
 msgstr "Usar esta imagem"
 
+#: src/admin/settings-page.php:102
+msgid "Saving…"
+msgstr "Salvando…"
+
+#: src/admin/settings-page.php:103
+msgid "Saved"
+msgstr "Salvo"
+
+#: src/admin/settings-page.php:104
+msgid "Not saved"
+msgstr "Não salvo"
+
 #. translators: %s: the shortcode.
-#: src/admin/settings-page.php:122
+#: src/admin/settings-page.php:128
 #, php-format
 msgid "Place the form on any page with %s. These settings apply to every form on the site."
 msgstr "Coloque o formulário em qualquer página com %s. Estas configurações valem para todos os formulários do site."
 
-#: src/admin/settings-page.php:132
+#: src/admin/settings-page.php:138
 msgid "General"
 msgstr "Geral"
 
-#: src/admin/settings-page.php:135
+#: src/admin/settings-page.php:141
 msgid "Models offered"
 msgstr "Modelos oferecidos"
 
-#: src/admin/settings-page.php:145
+#: src/admin/settings-page.php:155
 msgid "With one model, the form does not ask which. With none ticked, every model is offered."
 msgstr "Com um único modelo, o formulário não pergunta qual. Sem nenhum marcado, todos os modelos são oferecidos."
 
-#: src/admin/settings-page.php:148
+#: src/admin/settings-page.php:158
 msgid "Who can use the form"
 msgstr "Quem pode usar o formulário"
 
-#: src/admin/settings-page.php:150
+#: src/admin/settings-page.php:160
 msgid "Everyone who can see the page"
 msgstr "Todos que podem ver a página"
 
-#: src/admin/settings-page.php:151
+#: src/admin/settings-page.php:161
 msgid "Logged-in users only"
 msgstr "Somente usuários logados"
 
-#: src/admin/settings-page.php:165
+#: src/admin/settings-page.php:175
 msgid "Name in capitals"
 msgstr "Nome em maiúsculas"
 
-#: src/admin/settings-page.php:168
+#: src/admin/settings-page.php:182
 msgid "Print the name in capital letters, whatever was typed"
 msgstr "Imprimir o nome em letras maiúsculas, como quer que tenha sido digitado"
 
-#: src/admin/settings-page.php:173
+#: src/admin/settings-page.php:190
 msgid "Allowed email domain"
 msgstr "Domínio de e-mail permitido"
 
-#: src/admin/settings-page.php:176
+#: src/admin/settings-page.php:193
 msgid "Only addresses at this domain are accepted. Leave it empty to accept any address."
 msgstr "Só são aceitos endereços deste domínio. Deixe vazio para aceitar qualquer endereço."
 
-#: src/admin/settings-page.php:181 src/config.php:66
+#: src/admin/settings-page.php:198 src/config.php:66
 msgid "Logo"
 msgstr "Logotipo"
 
-#: src/admin/settings-page.php:185
+#: src/admin/settings-page.php:202
 msgid "Image"
 msgstr "Imagem"
 
-#: src/admin/settings-page.php:189
+#: src/admin/settings-page.php:206
 msgid "Choose from the media library"
 msgstr "Escolher na biblioteca de mídia"
 
-#: src/admin/settings-page.php:190
+#: src/admin/settings-page.php:207
 msgid "Use the bundled logo"
 msgstr "Usar o logotipo padrão"
 
-#: src/admin/settings-page.php:191
+#: src/admin/settings-page.php:208
 msgid "The signature links to this image, so it must stay in the media library. A square image works best."
 msgstr "A assinatura aponta para esta imagem, por isso ela precisa continuar na biblioteca de mídia. Uma imagem quadrada funciona melhor."
 
-#: src/admin/settings-page.php:195
+#: src/admin/settings-page.php:212
 msgid "Width"
 msgstr "Largura"
 
-#: src/admin/settings-page.php:204
+#: src/admin/settings-page.php:221
 msgid "Downloaded image"
 msgstr "Imagem baixada"
 
-#: src/admin/settings-page.php:208
+#: src/admin/settings-page.php:225
 msgid "JPG quality"
 msgstr "Qualidade do JPG"
 
-#: src/admin/settings-page.php:213
+#: src/admin/settings-page.php:230
 msgid "Higher keeps the text sharper and makes the file larger. 90 suits most signatures."
 msgstr "Quanto maior, mais nítido o texto e maior o arquivo. 90 atende à maioria das assinaturas."
 
-#: src/admin/settings-page.php:215
+#: src/admin/settings-page.php:232
 msgid "Resolution"
 msgstr "Resolução"
 
 #. translators: 1: pixel density, such as 2; 2: image width in pixels.
-#: src/admin/settings-page.php:225
+#: src/admin/settings-page.php:242
 #, php-format
 msgid "%1$d× (%2$d px wide)"
 msgstr "%1$d× (%2$d px de largura)"
 
-#: src/admin/settings-page.php:232
+#: src/admin/settings-page.php:249
 msgid "Every visitor gets the same image, whatever their screen. 2× stays sharp on high-density screens."
 msgstr "Todos recebem a mesma imagem, seja qual for a tela. 2× continua nítido em telas de alta densidade."
 
-#: src/admin/settings-page.php:236
+#: src/admin/settings-page.php:253
 msgid "Regional offices"
 msgstr "Diretorias Regionais"
 
-#: src/admin/settings-page.php:239
+#: src/admin/settings-page.php:256
 msgid "The choices of the \"Regional office or central\" field, one per line, exactly as the signature prints them."
 msgstr "As opções do campo \"Regional ou Central\", uma por linha, exatamente como a assinatura as imprime."
 
-#: src/admin/settings-page.php:245
+#: src/admin/settings-page.php:262
 msgid "Fields"
 msgstr "Campos"
 
-#: src/admin/settings-page.php:246
+#: src/admin/settings-page.php:263
 msgid "A default pre-fills the field. A locked field shows its default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked."
 msgstr "Um valor padrão preenche o campo. Um campo travado mostra o valor padrão e não pode ser alterado, para um valor que toda assinatura deve compartilhar, como o endereço do prédio. O nome e o e-mail não podem ser travados."
 
-#: src/admin/settings-page.php:250
+#: src/admin/settings-page.php:267
 msgid "Field"
 msgstr "Campo"
 
-#: src/admin/settings-page.php:251
+#: src/admin/settings-page.php:268
 msgid "Default"
 msgstr "Padrão"
 
-#: src/admin/settings-page.php:252
+#: src/admin/settings-page.php:269
 msgid "Required"
 msgstr "Obrigatório"
 
-#: src/admin/settings-page.php:253
+#: src/admin/settings-page.php:270
 msgid "Locked"
 msgstr "Travado"
+
+#. translators: %s: field label.
+#: src/admin/settings-page.php:296
+#, php-format
+msgid "%s is required"
+msgstr "%s é obrigatório"
+
+#. translators: %s: field label.
+#: src/admin/settings-page.php:311
+#, php-format
+msgid "%s is locked"
+msgstr "%s está travado"
 
 #: src/config.php:101
 msgid "Full name"

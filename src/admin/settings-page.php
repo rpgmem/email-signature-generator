@@ -96,6 +96,12 @@ final class SettingsPage {
 				'bundledLogo' => Config::bundledLogoUrl(),
 				'choose'      => __( 'Choose the logo', 'email-signature-generator' ),
 				'use'         => __( 'Use this image', 'email-signature-generator' ),
+				'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
+				'action'      => Autosave::ACTION,
+				'nonce'       => wp_create_nonce( Autosave::ACTION ),
+				'saving'      => __( 'Saving…', 'email-signature-generator' ),
+				'saved'       => __( 'Saved', 'email-signature-generator' ),
+				'failed'      => __( 'Not saved', 'email-signature-generator' ),
 			)
 		);
 	}
@@ -134,13 +140,17 @@ final class SettingsPage {
 
 		echo '<tr><th scope="row">' . esc_html__( 'Models offered', 'email-signature-generator' ) . '</th><td><fieldset>';
 		foreach ( $config['models'] as $model ) {
-			printf(
-				'<label><input type="checkbox" name="%1$s[models][]" value="%2$s"%3$s> %4$s</label><br>',
-				esc_attr( $name ),
-				esc_attr( $model['id'] ),
-				checked( in_array( $model['id'], $settings['models'], true ), true, false ),
-				esc_html( $model['label'] )
+			echo '<p>';
+			self::toggle(
+				array(
+					'name'    => $name . '[models][]',
+					'value'   => $model['id'],
+					'checked' => in_array( $model['id'], $settings['models'], true ),
+					'label'   => $model['label'],
+					'key'     => 'models',
+				)
 			);
+			echo '</p>';
 		}
 		echo '<p class="description">' . esc_html__( 'With one model, the form does not ask which. With none ticked, every model is offered.', 'email-signature-generator' ) . '</p>';
 		echo '</fieldset></td></tr>';
@@ -161,12 +171,19 @@ final class SettingsPage {
 		echo '</fieldset></td></tr>';
 
 		printf(
-			'<tr><th scope="row">%1$s</th><td><input type="hidden" name="%2$s[uppercase_name]" value="0"><label><input type="checkbox" name="%2$s[uppercase_name]" value="1"%3$s> %4$s</label></td></tr>',
+			'<tr><th scope="row">%1$s</th><td><input type="hidden" name="%2$s[uppercase_name]" value="0">',
 			esc_html__( 'Name in capitals', 'email-signature-generator' ),
-			esc_attr( $name ),
-			checked( $settings['uppercase_name'], true, false ),
-			esc_html__( 'Print the name in capital letters, whatever was typed', 'email-signature-generator' )
+			esc_attr( $name )
 		);
+		self::toggle(
+			array(
+				'name'    => $name . '[uppercase_name]',
+				'checked' => $settings['uppercase_name'],
+				'label'   => __( 'Print the name in capital letters, whatever was typed', 'email-signature-generator' ),
+				'key'     => 'uppercase_name',
+			)
+		);
+		echo '</td></tr>';
 
 		printf(
 			'<tr><th scope="row"><label for="esg-email-domain">%1$s</label></th><td><input type="text" id="esg-email-domain" class="regular-text" name="%2$s[email_domain]" value="%3$s" placeholder="example.org"><p class="description">%4$s</p></td></tr>',
@@ -270,12 +287,15 @@ final class SettingsPage {
 					);
 				}
 				echo '</td><td>';
-				printf(
-					'<input type="checkbox" name="%1$s" value="1"%2$s%3$s aria-label="%4$s">',
-					esc_attr( $base . '[required]' ),
-					checked( ! empty( $field['required'] ), true, false ),
-					disabled( 'name' === $field['key'], true, false ),
-					esc_attr( $field['label'] )
+				self::toggle(
+					array(
+						'name'     => $base . '[required]',
+						'checked'  => ! empty( $field['required'] ),
+						'disabled' => 'name' === $field['key'],
+						/* translators: %s: field label. */
+						'aria'     => sprintf( __( '%s is required', 'email-signature-generator' ), $field['label'] ),
+						'key'      => 'name' === $field['key'] ? '' : 'fields.' . $model['id'] . '.' . $field['key'] . '.required',
+					)
 				);
 				if ( 'name' === $field['key'] ) {
 					// A disabled checkbox posts nothing; the name stays required.
@@ -283,11 +303,14 @@ final class SettingsPage {
 				}
 				echo '</td><td>';
 				if ( Settings::lockable( $field['key'] ) ) {
-					printf(
-						'<input type="checkbox" name="%1$s" value="1"%2$s aria-label="%3$s">',
-						esc_attr( $base . '[locked]' ),
-						checked( ! empty( $field['locked'] ), true, false ),
-						esc_attr( $field['label'] )
+					self::toggle(
+						array(
+							'name'    => $base . '[locked]',
+							'checked' => ! empty( $field['locked'] ),
+							/* translators: %s: field label. */
+							'aria'    => sprintf( __( '%s is locked', 'email-signature-generator' ), $field['label'] ),
+							'key'     => 'fields.' . $model['id'] . '.' . $field['key'] . '.locked',
+						)
 					);
 				}
 				echo '</td></tr>';
@@ -297,5 +320,27 @@ final class SettingsPage {
 
 		submit_button();
 		echo '</form></div>';
+	}
+
+	/**
+	 * An on/off switch: a real checkbox, so the form still posts it, drawn as
+	 * a track. With a `key` it also saves the moment it is flipped.
+	 *
+	 * @param array{name: string, value?: string, checked: bool, disabled?: bool, label?: string, aria?: string, key?: string} $args Toggle.
+	 */
+	private static function toggle( array $args ): void {
+		$label = (string) ( $args['label'] ?? '' );
+		$aria  = (string) ( $args['aria'] ?? '' );
+		$key   = (string) ( $args['key'] ?? '' );
+		printf(
+			'<label class="esg-toggle"><input type="checkbox" name="%1$s" value="%2$s"%3$s%4$s%5$s%6$s><span class="esg-toggle-track" aria-hidden="true"></span>%7$s</label>',
+			esc_attr( $args['name'] ),
+			esc_attr( $args['value'] ?? '1' ),
+			checked( $args['checked'], true, false ),
+			disabled( ! empty( $args['disabled'] ), true, false ),
+			'' !== $aria ? ' aria-label="' . esc_attr( $aria ) . '"' : '',
+			'' !== $key ? ' data-esg-autosave="' . esc_attr( $key ) . '"' : '',
+			'' !== $label ? '<span class="esg-toggle-label">' . esc_html( $label ) . '</span>' : ''
+		);
 	}
 }

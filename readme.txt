@@ -43,6 +43,8 @@ Settings → Email Signature sets, for every form on the site:
 * the list of regional offices;
 * per field: a default value, whether it is required, and whether it is locked to that default.
 
+On/off settings are switches that save as soon as they are flipped. Text fields, the logo and the lists save with "Save Changes".
+
 == Installation ==
 
 1. Download `email-signature-generator-X.Y.Z.zip` from the latest GitHub release.

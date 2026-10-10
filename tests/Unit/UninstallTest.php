@@ -32,7 +32,11 @@ final class UninstallTest extends TestCase {
 		foreach ( $it as $file ) {
 			++$found;
 			$code = (string) file_get_contents( $file->getPathname() );
-			self::assertDoesNotMatchRegularExpression( '/\b(?:update_option|add_option)\s*\(/', $code, $file->getPathname() . ' writes an option directly; list it here and in uninstall.php.' );
+			preg_match_all( '/\b(?:update_option|add_option)\s*\(\s*([^,)]+)/', $code, $writes );
+			foreach ( $writes[1] as $option ) {
+				// The settings option is the one uninstall.php deletes (above).
+				self::assertSame( 'Settings::OPTION', trim( $option ), $file->getPathname() . " writes {$option}; list it here and in uninstall.php." );
+			}
 		}
 		self::assertGreaterThan( 0, $found );
 	}

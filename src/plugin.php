@@ -60,6 +60,7 @@ final class Plugin {
 
 		if ( is_admin() ) {
 			Admin\SettingsPage::register();
+			Admin\Autosave::register();
 		}
 
 		// Not behind is_admin(): WordPress also scans for updates from cron.
