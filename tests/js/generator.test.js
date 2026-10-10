@@ -225,14 +225,25 @@ describe( 'settings in the configuration', () => {
 
 describe( 'imageOptions', () => {
 	it( 'reads the configured density and quality', () => {
-		expect( gen.imageOptions( config ) ).toEqual( { scale: 2, quality: 0.9 } );
+		expect( gen.imageOptions( config ) ).toEqual( { scale: 1, quality: 0.9 } );
 		expect( gen.imageOptions( { image: { scale: 3, quality: 75 } } ) ).toEqual( { scale: 3, quality: 0.75 } );
 	} );
 
-	it( 'falls back to 2× at 90% on a missing or out-of-range value', () => {
-		expect( gen.imageOptions( {} ) ).toEqual( { scale: 2, quality: 0.9 } );
-		expect( gen.imageOptions( null ) ).toEqual( { scale: 2, quality: 0.9 } );
-		expect( gen.imageOptions( { image: { scale: 9, quality: 10 } } ) ).toEqual( { scale: 2, quality: 0.9 } );
-		expect( gen.imageOptions( { image: { scale: 'x', quality: 'y' } } ) ).toEqual( { scale: 2, quality: 0.9 } );
+	it( 'falls back to 1× at 90% on a missing or out-of-range value', () => {
+		expect( gen.imageOptions( {} ) ).toEqual( { scale: 1, quality: 0.9 } );
+		expect( gen.imageOptions( null ) ).toEqual( { scale: 1, quality: 0.9 } );
+		expect( gen.imageOptions( { image: { scale: 9, quality: 10 } } ) ).toEqual( { scale: 1, quality: 0.9 } );
+		expect( gen.imageOptions( { image: { scale: 'x', quality: 'y' } } ) ).toEqual( { scale: 1, quality: 0.9 } );
+	} );
+} );
+
+describe( 'exportSize', () => {
+	it( 'keeps the signature size at 1× and draws it at 2× to smooth the text', () => {
+		expect( gen.exportSize( 450, 160, 1 ) ).toEqual( { render: 2, width: 450, height: 160 } );
+	} );
+
+	it( 'multiplies the final size by the density and never draws below it', () => {
+		expect( gen.exportSize( 450, 160, 2 ) ).toEqual( { render: 2, width: 900, height: 320 } );
+		expect( gen.exportSize( 450, 160.4, 3 ) ).toEqual( { render: 3, width: 1350, height: 481 } );
 	} );
 } );

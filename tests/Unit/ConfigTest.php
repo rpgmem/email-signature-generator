@@ -112,11 +112,12 @@ final class ConfigTest extends TestCase {
 		self::assertSame( Config::LOGO_WIDTH, $config['logo']['width'] );
 	}
 
-	public function test_the_image_defaults_are_quality_90_at_2x(): void {
+	public function test_the_image_defaults_are_quality_90_at_1x(): void {
 		$config = Config::defaults( '' );
 		self::assertSame( array( 'quality' => Config::IMAGE_QUALITY, 'scale' => Config::IMAGE_SCALE ), $config['image'] );
 		self::assertSame( 90, Config::IMAGE_QUALITY );
-		self::assertSame( 2, Config::IMAGE_SCALE );
+		// The original page's size: the signature's own 450 px.
+		self::assertSame( 1, Config::IMAGE_SCALE );
 	}
 
 	public function test_the_signature_width_mirrors_the_script(): void {

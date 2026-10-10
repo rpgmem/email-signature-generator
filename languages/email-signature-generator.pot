@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Email Signature Generator 1.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
-"POT-Creation-Date: 2026-10-10 23:01+0000\n"
+"POT-Creation-Date: 2026-10-10 23:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,7 +129,7 @@ msgid "Only addresses at this domain are accepted. Leave it empty to accept any 
 msgstr ""
 
 #: src/admin/settings-page.php:208 src/admin/settings-page.php:353
-#: src/config.php:66
+#: src/config.php:67
 msgid "Logo"
 msgstr ""
 
@@ -176,7 +176,7 @@ msgid "%1$d× (%2$d px wide)"
 msgstr ""
 
 #: src/admin/settings-page.php:260
-msgid "Every visitor gets the same image, whatever their screen. 2× stays sharp on high-density screens."
+msgid "1× is the size of the signature in an email. 2× and 3× are sharper, but an email client may show them larger unless the image is resized."
 msgstr ""
 
 #: src/admin/settings-page.php:265 src/admin/settings-page.php:361
@@ -227,141 +227,141 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: src/config.php:101
+#: src/config.php:102
 msgid "Full name"
 msgstr ""
 
-#: src/config.php:103
+#: src/config.php:104
 msgid "Type your full name"
 msgstr ""
 
-#: src/config.php:107
+#: src/config.php:108
 msgid "Email"
 msgstr ""
 
-#: src/config.php:115
+#: src/config.php:116
 msgid "Phone number(s)"
 msgstr ""
 
-#: src/config.php:121
+#: src/config.php:122
 msgid "Address | Floor | Room"
 msgstr ""
 
-#: src/config.php:126
+#: src/config.php:127
 msgid "Postal code | City | State"
 msgstr ""
 
-#: src/config.php:131
+#: src/config.php:132
 msgid "Link 1"
 msgstr ""
 
-#: src/config.php:138
+#: src/config.php:139
 msgid "Link 2"
 msgstr ""
 
-#: src/config.php:141
+#: src/config.php:142
 msgid "Type a second link, if needed"
 msgstr ""
 
-#: src/config.php:147
+#: src/config.php:148
 msgid "Staff - Regional office"
 msgstr ""
 
-#: src/config.php:152
+#: src/config.php:153
 msgid "Role / Department"
 msgstr ""
 
-#: src/config.php:167
+#: src/config.php:168
 msgid "Staff - School"
 msgstr ""
 
-#: src/config.php:172
+#: src/config.php:173
 msgid "Role"
 msgstr ""
 
-#: src/config.php:181
+#: src/config.php:182
 msgid "School / Regional office"
 msgstr ""
 
-#: src/config.php:192
+#: src/config.php:193
 msgid "Department or school building"
 msgstr ""
 
-#: src/config.php:196
+#: src/config.php:197
 msgid "Department or school"
 msgstr ""
 
-#: src/config.php:204
+#: src/config.php:205
 msgid "Regional office or central"
 msgstr ""
 
-#: src/config.php:250
+#: src/config.php:251
 msgid "Signature model"
 msgstr ""
 
-#: src/config.php:251
+#: src/config.php:252
 msgid "Generate signature"
 msgstr ""
 
-#: src/config.php:252
+#: src/config.php:253
 msgid "Copy HTML"
 msgstr ""
 
-#: src/config.php:253
+#: src/config.php:254
 msgid "Download image"
 msgstr ""
 
-#: src/config.php:254
+#: src/config.php:255
 msgid "Preview"
 msgstr ""
 
-#: src/config.php:255
+#: src/config.php:256
 msgid "Tel.:"
 msgstr ""
 
-#: src/config.php:256
+#: src/config.php:257
 msgid "Signature copied. Paste it into your email signature settings."
 msgstr ""
 
-#: src/config.php:257
+#: src/config.php:258
 msgid "The signature could not be copied. Select it in the preview and copy it by hand."
 msgstr ""
 
-#: src/config.php:258
+#: src/config.php:259
 msgid "The image could not be created. Try again."
 msgstr ""
 
 #. translators: %s: a field's label.
-#: src/config.php:260
+#: src/config.php:261
 #, php-format
 msgid "%s is required."
 msgstr ""
 
-#: src/config.php:261
+#: src/config.php:262
 msgid "Enter a valid email address."
 msgstr ""
 
 #. translators: %s: an email domain, such as example.org.
-#: src/config.php:263
+#: src/config.php:264
 #, php-format
 msgid "Use an address at %s."
 msgstr ""
 
-#: src/config.php:264
+#: src/config.php:265
 msgid "Enter the phone number as 55 XX XXXX-XXXX or 55 XX XXXXX-XXXX. For two numbers, separate them with \" | \"."
 msgstr ""
 
 #. translators: %s: a field's label.
-#: src/config.php:266
+#: src/config.php:267
 #, php-format
 msgid "%s is not a valid address."
 msgstr ""
 
-#: src/config.php:267
+#: src/config.php:268
 msgid "Role / Department needs text on both sides of the slash, or a single word without spaces."
 msgstr ""
 
-#: src/config.php:268
+#: src/config.php:269
 msgid "Role takes a single role, without slashes."
 msgstr ""
 

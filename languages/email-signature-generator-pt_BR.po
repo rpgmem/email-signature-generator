@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Email Signature Generator 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
-"POT-Creation-Date: 2026-10-10 22:58+0000\n"
+"POT-Creation-Date: 2026-10-10 23:00+0000\n"
 "PO-Revision-Date: 2026-10-10 21:54+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Português do Brasil\n"
@@ -129,7 +129,7 @@ msgid "Only addresses at this domain are accepted. Leave it empty to accept any 
 msgstr "Só são aceitos endereços deste domínio. Deixe vazio para aceitar qualquer endereço."
 
 #: src/admin/settings-page.php:208 src/admin/settings-page.php:353
-#: src/config.php:66
+#: src/config.php:67
 msgid "Logo"
 msgstr "Logotipo"
 
@@ -176,8 +176,8 @@ msgid "%1$d× (%2$d px wide)"
 msgstr "%1$d× (%2$d px de largura)"
 
 #: src/admin/settings-page.php:260
-msgid "Every visitor gets the same image, whatever their screen. 2× stays sharp on high-density screens."
-msgstr "Todos recebem a mesma imagem, seja qual for a tela. 2× continua nítido em telas de alta densidade."
+msgid "1× is the size of the signature in an email. 2× and 3× are sharper, but an email client may show them larger unless the image is resized."
+msgstr "1× é o tamanho da assinatura no e-mail. 2× e 3× são mais nítidos, mas o cliente de e-mail pode exibi-los maiores se a imagem não for redimensionada."
 
 #: src/admin/settings-page.php:265 src/admin/settings-page.php:361
 msgid "Regional offices"
@@ -227,141 +227,141 @@ msgstr "%s está travado"
 msgid "General"
 msgstr "Geral"
 
-#: src/config.php:101
+#: src/config.php:102
 msgid "Full name"
 msgstr "Nome completo"
 
-#: src/config.php:103
+#: src/config.php:104
 msgid "Type your full name"
 msgstr "Digite seu nome completo"
 
-#: src/config.php:107
+#: src/config.php:108
 msgid "Email"
 msgstr "E-mail"
 
-#: src/config.php:115
+#: src/config.php:116
 msgid "Phone number(s)"
 msgstr "Telefone(s)"
 
-#: src/config.php:121
+#: src/config.php:122
 msgid "Address | Floor | Room"
 msgstr "Endereço | Andar | Sala"
 
-#: src/config.php:126
+#: src/config.php:127
 msgid "Postal code | City | State"
 msgstr "CEP | Cidade | Estado"
 
-#: src/config.php:131
+#: src/config.php:132
 msgid "Link 1"
 msgstr "Link 1"
 
-#: src/config.php:138
+#: src/config.php:139
 msgid "Link 2"
 msgstr "Link 2"
 
-#: src/config.php:141
+#: src/config.php:142
 msgid "Type a second link, if needed"
 msgstr "Digite um segundo link, caso necessário"
 
-#: src/config.php:147
+#: src/config.php:148
 msgid "Staff - Regional office"
 msgstr "Servidores - DRE"
 
-#: src/config.php:152
+#: src/config.php:153
 msgid "Role / Department"
 msgstr "Cargo / Setor"
 
-#: src/config.php:167
+#: src/config.php:168
 msgid "Staff - School"
 msgstr "Servidores - Escola"
 
-#: src/config.php:172
+#: src/config.php:173
 msgid "Role"
 msgstr "Cargo"
 
-#: src/config.php:181
+#: src/config.php:182
 msgid "School / Regional office"
 msgstr "Escola / DRE"
 
-#: src/config.php:192
+#: src/config.php:193
 msgid "Department or school building"
 msgstr "Setores DRE / Prédio Escola"
 
-#: src/config.php:196
+#: src/config.php:197
 msgid "Department or school"
 msgstr "Setor ou Escola"
 
-#: src/config.php:204
+#: src/config.php:205
 msgid "Regional office or central"
 msgstr "Regional ou Central"
 
-#: src/config.php:250
+#: src/config.php:251
 msgid "Signature model"
 msgstr "Modelo de assinatura"
 
-#: src/config.php:251
+#: src/config.php:252
 msgid "Generate signature"
 msgstr "Gerar assinatura"
 
-#: src/config.php:252
+#: src/config.php:253
 msgid "Copy HTML"
 msgstr "Copiar HTML"
 
-#: src/config.php:253
+#: src/config.php:254
 msgid "Download image"
 msgstr "Baixar imagem"
 
-#: src/config.php:254
+#: src/config.php:255
 msgid "Preview"
 msgstr "Pré-visualização"
 
-#: src/config.php:255
+#: src/config.php:256
 msgid "Tel.:"
 msgstr "Tel.:"
 
-#: src/config.php:256
+#: src/config.php:257
 msgid "Signature copied. Paste it into your email signature settings."
 msgstr "Assinatura copiada. Cole-a nas configurações de assinatura do seu e-mail."
 
-#: src/config.php:257
+#: src/config.php:258
 msgid "The signature could not be copied. Select it in the preview and copy it by hand."
 msgstr "Não foi possível copiar a assinatura. Selecione-a na pré-visualização e copie manualmente."
 
-#: src/config.php:258
+#: src/config.php:259
 msgid "The image could not be created. Try again."
 msgstr "Não foi possível gerar a imagem. Tente novamente."
 
 #. translators: %s: a field's label.
-#: src/config.php:260
+#: src/config.php:261
 #, php-format
 msgid "%s is required."
 msgstr "O campo \"%s\" é obrigatório."
 
-#: src/config.php:261
+#: src/config.php:262
 msgid "Enter a valid email address."
 msgstr "Informe um e-mail válido."
 
 #. translators: %s: an email domain, such as example.org.
-#: src/config.php:263
+#: src/config.php:264
 #, php-format
 msgid "Use an address at %s."
 msgstr "Use um endereço do domínio %s."
 
-#: src/config.php:264
+#: src/config.php:265
 msgid "Enter the phone number as 55 XX XXXX-XXXX or 55 XX XXXXX-XXXX. For two numbers, separate them with \" | \"."
 msgstr "Informe o telefone no formato 55 XX XXXX-XXXX ou 55 XX XXXXX-XXXX. Para dois números, separe-os com \" | \"."
 
 #. translators: %s: a field's label.
-#: src/config.php:266
+#: src/config.php:267
 #, php-format
 msgid "%s is not a valid address."
 msgstr "O campo \"%s\" não é um endereço válido."
 
-#: src/config.php:267
+#: src/config.php:268
 msgid "Role / Department needs text on both sides of the slash, or a single word without spaces."
 msgstr "O campo \"Cargo / Setor\" precisa de texto antes e depois da barra, ou de uma única palavra sem espaços."
 
-#: src/config.php:268
+#: src/config.php:269
 msgid "Role takes a single role, without slashes."
 msgstr "O campo \"Cargo\" aceita um único cargo, sem barras."
 
@@ -380,3 +380,6 @@ msgstr "A verificação de integridade (SHA-256) do pacote de atualização falh
 #. Plugin header: Description
 msgid "A form, placed with a shortcode, that builds a consistent HTML email signature for your organisation and copies it to Outlook or downloads it as an image."
 msgstr "Um formulário, inserido por shortcode, que monta uma assinatura de e-mail em HTML padronizada para a sua organização e a copia para o Outlook ou a baixa como imagem."
+
+#~ msgid "Every visitor gets the same image, whatever their screen. 2× stays sharp on high-density screens."
+#~ msgstr "Todos recebem a mesma imagem, seja qual for a tela. 2× continua nítido em telas de alta densidade."

@@ -257,7 +257,7 @@ final class SettingsPage {
 				)
 			);
 		}
-		echo '</select><p class="description">' . esc_html__( 'Every visitor gets the same image, whatever their screen. 2× stays sharp on high-density screens.', 'email-signature-generator' ) . '</p></td></tr>';
+		echo '</select><p class="description">' . esc_html__( '1× is the size of the signature in an email. 2× and 3× are sharper, but an email client may show them larger unless the image is resized.', 'email-signature-generator' ) . '</p></td></tr>';
 		echo '</tbody></table></div></div>';
 
 		// Regions.
