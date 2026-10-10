@@ -14,3 +14,4 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 delete_option( 'email_signature_generator_settings' );
+delete_site_transient( 'email_signature_generator_github_update' );

@@ -156,6 +156,17 @@ The signature links its logo by URL, because email clients drop embedded images.
 - **Absent is not off.** A key missing from the stored option means "never saved", so it keeps the default. That is why the capitals checkbox posts a hidden `0` before itself.
 - **`Settings::apply()` is the only place a setting reaches the generator.** The standalone build never calls it, so the standalone HTML always carries the plain defaults.
 
+## Updates
+
+`Update\GithubUpdater` (ported from Total Mail Queue) feeds WordPress's own update check from `releases/latest`:
+
+- **The asset.** It picks the `email-signature-generator-*.zip` asset and never the standalone `.html` beside it.
+- **The checksum.** It verifies the asset's SHA-256 digest before WordPress installs it.
+- **The release's own metadata.** `Requires at least`, `Tested up to`, `Requires PHP` and the Upgrade Notice come from the offered release's own `readme.txt`.
+- **Caching.** It caches for 12 hours in the `email_signature_generator_github_update` site transient, with ETag requests. `uninstall.php` deletes it.
+- **Registration.** It is registered outside `is_admin()`, because WordPress also scans from cron.
+- **The `releases/latest` consequence.** A release published by hand for an old tag must never be marked latest, which is why `release.yml` sets `make_latest: false` for `workflow_dispatch`.
+
 ## Code
 
 - Namespace `EmailSignatureGenerator`; no global functions. A class maps to a kebab-case file under `src/`, and `AutoloaderTest` fails when one does not.

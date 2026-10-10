@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Email Signature Generator 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
-"POT-Creation-Date: 2026-10-10 22:06+0000\n"
+"POT-Creation-Date: 2026-10-10 22:14+0000\n"
 "PO-Revision-Date: 2026-10-10 21:54+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Português do Brasil\n"
@@ -289,6 +289,10 @@ msgstr "Faça login para criar sua assinatura de e-mail."
 #: src/shortcode.php:61
 msgid "Log in"
 msgstr "Fazer login"
+
+#: src/update/github-updater.php:197
+msgid "Update package integrity check (SHA-256) failed. Installation aborted."
+msgstr "A verificação de integridade (SHA-256) do pacote de atualização falhou. Instalação cancelada."
 
 #. Plugin header: Description
 msgid "A form, placed with a shortcode, that builds a consistent HTML email signature for your organisation and copies it to Outlook or downloads it as an image."

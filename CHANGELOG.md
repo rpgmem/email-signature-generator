@@ -14,6 +14,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - **Settings → Email Signature** (#1). An administrator chooses the models offered, who may use the form (everyone or logged-in users), whether the name is upper-cased, an allowed email domain, the regional offices, and per field a default, whether it is required and whether it is locked. Unchanged settings keep the defaults.
 - **Logo from the media library** (#1). The bundled SME-SP logo stays the default; another image and its width can be chosen on the settings screen.
+- **Updates from GitHub Releases** (#1). WordPress offers new versions on its normal update screen, checks the package's SHA-256 before installing it, and reads the compatibility fields and upgrade notice from the release's own `readme.txt`. Ported from Total Mail Queue.
 
 ### Changed
 
