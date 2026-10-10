@@ -3,7 +3,7 @@ Contributors: rpgmem
 Tags: email signature, signature generator, outlook, shortcode
 Requires at least: 6.8
 Tested up to: 6.9
-Stable tag: 0.1.0
+Stable tag: 1.0.0
 Requires PHP: 8.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -52,3 +52,15 @@ Updates then arrive through the normal WordPress update screen, straight from th
 == Changelog ==
 
 The full history of every release is in [CHANGELOG.md](https://github.com/rpgmem/email-signature-generator/blob/main/CHANGELOG.md).
+
+= 1.0.0 =
+* New: the email signature generator as a WordPress plugin, placed with the [email_signature] shortcode.
+* New: Settings → Email Signature for the models offered, access, an allowed email domain, the logo, the regional offices and per-field defaults, required and locked fields.
+* New: updates from GitHub Releases, each package checked against its SHA-256.
+* New: a standalone HTML version on every release, for use without WordPress.
+* Security: typed values are escaped in the signature, and the logo and html2canvas are bundled instead of loaded from other sites.
+
+== Upgrade Notice ==
+
+= 1.0.0 =
+First release as a WordPress plugin: the [email_signature] shortcode, settings for models, access, email domain, logo and fields, and updates from GitHub. Details in CHANGELOG.md.
