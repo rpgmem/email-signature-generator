@@ -259,21 +259,24 @@
 	function render( model, values, config ) {
 		var has = {};
 		model.fields.forEach( function ( field ) {
-			has[ field.key ] = true;
+			has[ field.key ] = field;
 		} );
+		// A field set to capitals is printed in them, whatever was typed;
+		// the others keep the case the person used.
 		var get = function ( key ) {
-			return has[ key ] ? String( values[ key ] || '' ).trim() : '';
+			if ( ! has[ key ] ) {
+				return '';
+			}
+			var text = String( values[ key ] || '' ).trim();
+			return has[ key ].uppercase ? text.toLocaleUpperCase( 'pt-BR' ) : text;
 		};
 
 		var name = get( 'name' );
-		if ( config.uppercaseName ) {
-			name = name.toUpperCase();
-		}
 		var email = get( 'email' ).toLowerCase();
 		var lines = [];
 
 		if ( name ) {
-			lines.push( '<div style="margin: 0; padding: 0; font-size: 16px; text-transform: uppercase; line-height: 1.2;"><strong style="font-size: inherit; font-weight: bold;">' + escapeHtml( name ) + '</strong></div>' );
+			lines.push( '<div style="margin: 0; padding: 0; font-size: 16px; line-height: 1.2;"><strong style="font-size: inherit; font-weight: bold;">' + escapeHtml( name ) + '</strong></div>' );
 		}
 		// The department and the school carry the chosen office's acronym:
 		// "NTIC / DREMP". Without the text there is nothing to qualify.
@@ -282,7 +285,7 @@
 		};
 		var role = has.sector ? withOffice( get( 'sector' ) ) : get( 'role' );
 		if ( role ) {
-			lines.push( '<div style="margin: 0; padding: 0; font-size: 7px; text-transform: uppercase; line-height: 1.2;">' + escapeHtml( role ) + '</div>' );
+			lines.push( '<div style="margin: 0; padding: 0; font-size: 7px; line-height: 1.2;">' + escapeHtml( role ) + '</div>' );
 		}
 		// A blank line in the background colour: email clients collapse an
 		// empty div, and the layout needs the gap.

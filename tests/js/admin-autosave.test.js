@@ -31,13 +31,13 @@ beforeEach( () => {
 
 describe( 'settings toggles', () => {
 	it( 'posts the flipped toggle and shows it saved', async () => {
-		document.body.innerHTML = `<p>${ toggle( 'uppercase_name' ) }</p>`;
+		document.body.innerHTML = `<p>${ toggle( 'offer_download' ) }</p>`;
 		boot( { success: true, data: { value: false } } );
 		const box = document.querySelector( 'input' );
 		box.checked = false;
 		box.dispatchEvent( new Event( 'change' ) );
 
-		expect( posted() ).toEqual( { action: 'esg_autosave', nonce: 'n', key: 'uppercase_name', value: '0' } );
+		expect( posted() ).toEqual( { action: 'esg_autosave', nonce: 'n', key: 'offer_download', value: '0' } );
 		expect( document.querySelector( '.esg-autosave-badge' ).textContent ).toBe( 'Saving' );
 		await flush();
 		expect( document.querySelector( '.esg-autosave-badge' ).className ).toContain( '--saved' );
@@ -106,7 +106,7 @@ describe( 'settings toggles', () => {
 	} );
 
 	it( 'falls back to a generic message when the answer is not JSON', async () => {
-		document.body.innerHTML = `<p>${ toggle( 'uppercase_name' ) }</p>`;
+		document.body.innerHTML = `<p>${ toggle( 'offer_download' ) }</p>`;
 		window.fetch = vi.fn( () => Promise.resolve( { json: () => Promise.reject( new Error( 'html' ) ) } ) );
 		new Function( script )();
 		const box = document.querySelector( 'input' );
@@ -119,7 +119,7 @@ describe( 'settings toggles', () => {
 	} );
 
 	it( 'binds nothing without a nonce', () => {
-		document.body.innerHTML = `<p>${ toggle( 'uppercase_name' ) }</p>`;
+		document.body.innerHTML = `<p>${ toggle( 'offer_download' ) }</p>`;
 		window.esgAdmin = {};
 		boot( { success: true } );
 		document.querySelector( 'input' ).dispatchEvent( new Event( 'change' ) );

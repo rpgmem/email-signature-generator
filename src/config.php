@@ -135,7 +135,6 @@ final class Config {
 			'offerDownload'       => true,
 			'rememberValues'      => false,
 			'downloadStyle'       => 'notice',
-			'uppercaseName'       => true,
 			'emailDomains'        => array(),
 			'blockedEmailDomains' => self::BLOCKED_EMAIL_DOMAINS,
 			'phonePattern'        => self::PHONE_PATTERN,
@@ -154,11 +153,22 @@ final class Config {
 	}
 
 	/**
+	 * Whether a field holds free text that may be printed in capitals: not
+	 * an email, a link, a phone number or a choice from a list.
+	 *
+	 * @param array<string, mixed> $field A field.
+	 */
+	public static function casable( array $field ): bool {
+		return ! isset( $field['type'] ) && 'phone' !== ( $field['rule'] ?? '' );
+	}
+
+	/**
 	 * The signature models offered in the form, in display order.
 	 *
 	 * `placeholder` shows an example; `default` pre-fills a value that most
 	 * people keep. A field's `rule` names a check the generator knows (`noSlash`,
-	 * `singleRole`, `email`, `phone`, `url`). `region` is a select over the
+	 * `singleRole`, `email`, `phone`, `url`). `uppercase` prints the value in
+	 * capitals, whatever was typed (see casable()). `region` is a select over the
 	 * configured regions that prints the office's full label; `office` is a
 	 * select over the same offices that keeps only the acronym, which the
 	 * signature appends to the department or the school ("NTIC / DREMP").
@@ -170,6 +180,7 @@ final class Config {
 			'key'         => 'name',
 			'label'       => __( 'Full name', 'email-signature-generator' ),
 			'required'    => true,
+			'uppercase'   => true,
 			'placeholder' => __( 'Type your full name', 'email-signature-generator' ),
 		);
 		$email   = array(
@@ -228,6 +239,7 @@ final class Config {
 						'key'         => 'sector',
 						'label'       => __( 'Department', 'email-signature-generator' ),
 						'required'    => true,
+						'uppercase'   => true,
 						'rule'        => 'noSlash',
 						'placeholder' => 'NTIC',
 					),
@@ -249,6 +261,7 @@ final class Config {
 						'key'         => 'role',
 						'label'       => __( 'Role', 'email-signature-generator' ),
 						'required'    => true,
+						'uppercase'   => true,
 						'rule'        => 'singleRole',
 						'placeholder' => 'Secretário Escolar',
 					),

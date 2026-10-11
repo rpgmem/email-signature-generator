@@ -35,9 +35,37 @@ final class SettingsTest extends TestCase {
 		self::assertSame( Settings::defaults(), Settings::sanitize( 'not an array' ) );
 	}
 
-	public function test_an_unticked_box_turns_capitals_off(): void {
-		self::assertFalse( Settings::sanitize( array( 'uppercase_name' => '0' ) )['uppercase_name'] );
-		self::assertTrue( Settings::sanitize( array( 'uppercase_name' => '1' ) )['uppercase_name'] );
+	public function test_capitals_are_a_choice_of_each_free_text_field(): void {
+		$config = Settings::apply( Config::defaults( '' ), Settings::defaults() );
+		self::assertTrue( $this->field( $config, 'staff_regional', 'name' )['uppercase'] );
+		self::assertTrue( $this->field( $config, 'staff_regional', 'sector' )['uppercase'] );
+		self::assertArrayNotHasKey( 'uppercase', $this->field( $config, 'staff_regional', 'address' ) );
+
+		$settings = Settings::sanitize(
+			array(
+				'fields' => array(
+					'staff_regional' => array(
+						'sector'  => array( 'uppercase' => '0' ),
+						'address' => array( 'uppercase' => '1' ),
+						'email'   => array( 'uppercase' => '1' ),
+					),
+				),
+			)
+		);
+		self::assertFalse( $settings['fields']['staff_regional']['sector']['uppercase'] );
+		self::assertTrue( $settings['fields']['staff_regional']['address']['uppercase'] );
+		self::assertArrayNotHasKey( 'uppercase', $settings['fields']['staff_regional']['email'], 'An email is never put in capitals.' );
+	}
+
+	public function test_the_old_general_capitals_switch_becomes_each_name_fields_choice(): void {
+		$settings = Settings::sanitize( array( 'uppercase_name' => '0' ) );
+		self::assertArrayNotHasKey( 'uppercase_name', $settings );
+		foreach ( Settings::modelIds() as $model ) {
+			self::assertFalse( $settings['fields'][ $model ]['name']['uppercase'] );
+		}
+
+		$kept = Settings::sanitize( array( 'uppercase_name' => '0', 'fields' => array( 'staff_school' => array( 'name' => array( 'uppercase' => '1' ) ) ) ) );
+		self::assertTrue( $kept['fields']['staff_school']['name']['uppercase'], 'A field\'s own choice wins.' );
 	}
 
 	public function test_unknown_models_are_dropped_and_none_means_all(): void {
@@ -344,7 +372,6 @@ final class SettingsTest extends TestCase {
 		$settings = Settings::sanitize(
 			array(
 				'models'         => array( 'staff_school', 'department' ),
-				'uppercase_name' => '0',
 				'logo_width'     => '90',
 				'image_format'   => 'jpg',
 				'image_quality'  => '80',
@@ -363,7 +390,6 @@ final class SettingsTest extends TestCase {
 		$config = Settings::apply( Config::defaults( 'https://example.org/default.png' ), $settings, 'https://example.org/chosen.png' );
 
 		self::assertSame( array( 'staff_school', 'department' ), array_column( $config['models'], 'id' ) );
-		self::assertFalse( $config['uppercaseName'] );
 		self::assertSame( array( 'format' => 'jpg', 'quality' => 80, 'scale' => 3 ), $config['image'] );
 		self::assertSame( array( 'example.org' ), $config['emailDomains'] );
 		self::assertSame( array( 'url' => 'https://example.org/chosen.png', 'width' => 90, 'alt' => '' ), $config['logo'], 'Another image does not carry the bundled logo\'s text.' );
