@@ -30,6 +30,8 @@ final class Settings {
 
 	public const TOP_SPACE_MAX = 20;
 
+	public const UNIT_LABEL_MAX = 40;
+
 	public const IMAGE_QUALITY_MIN = 50;
 
 	public const IMAGE_QUALITY_MAX = 100;
@@ -58,7 +60,7 @@ final class Settings {
 	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<array{name: string, acronym: string}>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<array{name: string, acronym: string}>, unit_label: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -84,6 +86,7 @@ final class Settings {
 			'image_scale'    => Config::IMAGE_SCALE,
 			'email_domain'   => '',
 			'regions'        => array(),
+			'unit_label'     => '',
 			'access'         => self::ACCESS_EVERYONE,
 			'fields'         => array(),
 		);
@@ -95,7 +98,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<array{name: string, acronym: string}>, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<array{name: string, acronym: string}>, unit_label: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -139,6 +142,7 @@ final class Settings {
 			'image_scale'    => in_array( $scale, self::IMAGE_SCALES, true ) ? $scale : Config::IMAGE_SCALE,
 			'email_domain'   => $domain,
 			'regions'        => $regions,
+			'unit_label'     => mb_substr( sanitize_text_field( is_string( $input['unit_label'] ?? null ) ? $input['unit_label'] : '' ), 0, self::UNIT_LABEL_MAX ),
 			'access'         => self::ACCESS_LOGGED_IN === $access ? self::ACCESS_LOGGED_IN : self::ACCESS_EVERYONE,
 			'fields'         => self::sanitizeFields( is_array( $input['fields'] ?? null ) ? $input['fields'] : array() ),
 		);
@@ -165,7 +169,7 @@ final class Settings {
 				'regions_rejected',
 				sprintf(
 					/* translators: %s: the offices left out, separated by commas. */
-					__( 'These regional offices were not saved, because each needs a name and a unique acronym of capitals and digits: %s', 'email-signature-generator' ),
+					__( 'These units were not saved, because each needs a name and a unique acronym of capitals and digits: %s', 'email-signature-generator' ),
 					implode( ', ', $rejected )
 				)
 			);
@@ -224,6 +228,9 @@ final class Settings {
 				}
 				if ( 'office' === ( $field['type'] ?? '' ) && ! in_array( $field['default'] ?? '', $acronyms, true ) ) {
 					$field['default'] = $acronyms[0] ?? '';
+				}
+				if ( 'office' === ( $field['type'] ?? '' ) && '' !== $settings['unit_label'] ) {
+					$field['label'] = $settings['unit_label'];
 				}
 
 				$config['models'][ $m ]['fields'][ $f ] = $field;

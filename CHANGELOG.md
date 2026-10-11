@@ -19,6 +19,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **The site decides how the image is offered** (#15). The download can be turned off, leaving only Copy HTML, or offered as a button that recommends Copy HTML after each download (the default), the same inside a collapsed "More options", or a plain button.
 - **Space above the signature** (#16). A configurable gap, 4 px by default and up to 20, keeps the signature apart from the text above it in both the copied HTML and the image; it adds to the height, never the width.
 - **Regional offices have a name and an acronym** (#17, #19). Settings → Regional offices is a table of both, with rows to add and remove; the signature still prints "Name / ACRONYM". The acronym is required and unique. A list saved as text before is read into the two parts, and a row that cannot be saved is named in a notice.
+- **Units, with the name the form uses** (#20). The settings call the list Units, so it fits any structure, not only regional offices; a "Name in the form" setting chooses what the signature form calls the field, "Regional office" (pt_BR "Diretoria") by default.
 
 ### Changed
 

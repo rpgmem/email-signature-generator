@@ -21,7 +21,7 @@ The default layout and logo are those of the São Paulo Municipal Department of 
 
 **In WordPress**, put `[email_signature]` on any page. To offer only some models, list them: `[email_signature models="staff_school,department"]` (the ids are `staff_regional`, `staff_school` and `department`).
 
-In **Settings → Email Signature** an administrator chooses the models offered, who may use the form, an allowed email domain, the space above the signature, the logo (from the media library), whether and how the image download is offered, the downloaded image's format (PNG or JPG) and resolution, the regional offices (name and acronym), and per field a default and whether it is required or locked. The on/off settings save the moment they are flipped.
+In **Settings → Email Signature** an administrator chooses the models offered, who may use the form, an allowed email domain, the space above the signature, the logo (from the media library), whether and how the image download is offered, the downloaded image's format (PNG or JPG) and resolution, the units (name and acronym) and what the form calls them, and per field a default and whether it is required or locked. The on/off settings save the moment they are flipped.
 
 **Standalone**, open the `.html` file in a browser, or publish it on any web page.
 

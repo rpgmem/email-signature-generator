@@ -128,6 +128,21 @@ final class SettingsTest extends TestCase {
 		self::assertSame( 'DREBT', $this->field( $config, 'staff_school', 'office' )['default'] );
 	}
 
+	public function test_the_unit_name_renames_the_unit_field_only(): void {
+		self::assertSame( '', Settings::sanitize( array() )['unit_label'] );
+		self::assertSame( 'Órgão', Settings::sanitize( array( 'unit_label' => ' <b>Órgão</b> ' ) )['unit_label'] );
+		self::assertSame( Settings::UNIT_LABEL_MAX, mb_strlen( Settings::sanitize( array( 'unit_label' => str_repeat( 'á', 60 ) ) )['unit_label'] ) );
+		self::assertSame( '', Settings::sanitize( array( 'unit_label' => array( 'x' ) ) )['unit_label'] );
+
+		$default = Settings::apply( Config::defaults( '' ), Settings::defaults() );
+		self::assertSame( Config::unitLabel(), $this->field( $default, 'staff_school', 'office' )['label'] );
+
+		$renamed = Settings::apply( Config::defaults( '' ), Settings::sanitize( array( 'unit_label' => 'Órgão' ) ) );
+		self::assertSame( 'Órgão', $this->field( $renamed, 'staff_regional', 'office' )['label'] );
+		self::assertSame( 'Órgão', $this->field( $renamed, 'staff_school', 'office' )['label'] );
+		self::assertNotSame( 'Órgão', $this->field( $renamed, 'department', 'region' )['label'], 'The department model names its own field.' );
+	}
+
 	public function test_access_accepts_only_the_two_modes(): void {
 		self::assertSame( Settings::ACCESS_LOGGED_IN, Settings::sanitize( array( 'access' => 'logged_in' ) )['access'] );
 		self::assertSame( Settings::ACCESS_EVERYONE, Settings::sanitize( array( 'access' => 'admins' ) )['access'] );
