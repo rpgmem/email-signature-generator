@@ -81,6 +81,13 @@ final class Config {
 	public const TOP_SPACE = 4;
 
 	/**
+	 * Widest the form gets on the page, in CSS pixels. Mirrors the max-width
+	 * of .esg-generator in assets/css/signature-generator.css, which is what
+	 * the standalone HTML uses.
+	 */
+	public const FORM_WIDTH = 640;
+
+	/**
 	 * Width of the signature table, in CSS pixels. Mirrors SIGNATURE_WIDTH in
 	 * assets/js/signature-generator.js, which draws it.
 	 */

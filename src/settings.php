@@ -30,6 +30,13 @@ final class Settings {
 
 	public const TOP_SPACE_MAX = 20;
 
+	/**
+	 * The form is never narrower than the signature, so the preview fits.
+	 */
+	public const FORM_WIDTH_MIN = Config::SIGNATURE_WIDTH;
+
+	public const FORM_WIDTH_MAX = 1200;
+
 	public const LABEL_MAX = 40;
 
 	public const LOGO_ALT_MAX = 150;
@@ -68,7 +75,7 @@ final class Settings {
 	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -90,6 +97,7 @@ final class Settings {
 			'logo_alt'              => '',
 			'logo_width'            => Config::LOGO_WIDTH,
 			'top_space'             => Config::TOP_SPACE,
+			'form_width'            => Config::FORM_WIDTH,
 			'image_format'          => Config::IMAGE_FORMAT,
 			'image_quality'         => Config::IMAGE_QUALITY,
 			'image_scale'           => Config::IMAGE_SCALE,
@@ -109,7 +117,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -124,6 +132,7 @@ final class Settings {
 		$width   = (int) ( $input['logo_width'] ?? Config::LOGO_WIDTH );
 		$quality = (int) ( $input['image_quality'] ?? Config::IMAGE_QUALITY );
 		$space   = (int) ( $input['top_space'] ?? Config::TOP_SPACE );
+		$form    = (int) ( $input['form_width'] ?? Config::FORM_WIDTH );
 		$style   = is_string( $input['download_style'] ?? null ) ? $input['download_style'] : 'notice';
 		$format  = is_string( $input['image_format'] ?? null ) ? $input['image_format'] : Config::IMAGE_FORMAT;
 		$scale   = (int) ( $input['image_scale'] ?? Config::IMAGE_SCALE );
@@ -162,6 +171,7 @@ final class Settings {
 			'logo_alt'              => mb_substr( sanitize_text_field( is_string( $input['logo_alt'] ?? null ) ? $input['logo_alt'] : '' ), 0, self::LOGO_ALT_MAX ),
 			'logo_width'            => min( self::LOGO_WIDTH_MAX, max( self::LOGO_WIDTH_MIN, $width ) ),
 			'top_space'             => min( self::TOP_SPACE_MAX, max( 0, $space ) ),
+			'form_width'            => min( self::FORM_WIDTH_MAX, max( self::FORM_WIDTH_MIN, $form ) ),
 			'image_format'          => in_array( $format, self::IMAGE_FORMATS, true ) ? $format : Config::IMAGE_FORMAT,
 			'image_quality'         => min( self::IMAGE_QUALITY_MAX, max( self::IMAGE_QUALITY_MIN, $quality ) ),
 			'image_scale'           => in_array( $scale, self::IMAGE_SCALES, true ) ? $scale : Config::IMAGE_SCALE,
