@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Email Signature Generator 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
-"POT-Creation-Date: 2026-10-11 02:31+0000\n"
+"POT-Creation-Date: 2026-10-11 23:03+0000\n"
 "PO-Revision-Date: 2026-10-10 21:54+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Português do Brasil\n"
@@ -117,7 +117,7 @@ msgstr "Formatados quando a pessoa sai do campo, e cada número vira um link que
 msgid "Phone numbers"
 msgstr "Telefones"
 
-#: src/admin/documentation.php:51 src/config.php:367
+#: src/admin/documentation.php:51 src/config.php:369
 msgid "See it in dark mode"
 msgstr "Ver no modo escuro"
 
@@ -129,7 +129,7 @@ msgstr "Mostra a prévia como o tema escuro de um programa de e-mail mostraria. 
 msgid "A collapsed section with the steps for Outlook on the web, classic Outlook, Gmail and phones."
 msgstr "Uma seção recolhida com o passo a passo para o Outlook na web, o Outlook clássico, o Gmail e o celular."
 
-#: src/admin/documentation.php:52 src/config.php:368
+#: src/admin/documentation.php:52 src/config.php:370
 msgid "How to add the signature to your email"
 msgstr "Como adicionar a assinatura ao seu e-mail"
 
@@ -802,72 +802,80 @@ msgid "Forget it"
 msgstr "Esquecer"
 
 #: src/config.php:366
+msgid "The signature is built in your browser: nothing you type is sent to the site."
+msgstr "A assinatura é gerada no seu navegador: nada do que você digita é enviado ao site."
+
+#: src/config.php:367
+msgid "Check the marked fields."
+msgstr "Verifique os campos marcados."
+
+#: src/config.php:368
 msgid "This browser no longer keeps what you typed."
 msgstr "Este navegador não guarda mais o que você digitou."
 
-#: src/config.php:369
+#: src/config.php:371
 msgid "Outlook on the web and the new Outlook for Windows: Settings (gear) → Account → Signatures. Create a signature, paste with Ctrl+V, choose it for new messages and replies, and save."
 msgstr "Outlook na web e novo Outlook para Windows: Configurações (engrenagem) → Conta → Assinaturas. Crie uma assinatura, cole com Ctrl+V, escolha-a para novas mensagens e respostas e salve."
 
-#: src/config.php:370
+#: src/config.php:372
 msgid "Classic Outlook for Windows: File → Options → Mail → Signatures → New. Paste with Ctrl+V, choose it for new messages and replies, and select OK."
 msgstr "Outlook clássico para Windows: Arquivo → Opções → Email → Assinaturas → Novo. Cole com Ctrl+V, escolha-a para novas mensagens e respostas e clique em OK."
 
-#: src/config.php:371
+#: src/config.php:373
 msgid "Gmail: Settings (gear) → See all settings → General → Signature → Create new. Paste with Ctrl+V, choose it in \"Signature defaults\", and select \"Save changes\" at the bottom of the page."
 msgstr "Gmail: Configurações (engrenagem) → Ver todas as configurações → Geral → Assinatura → Criar nova. Cole com Ctrl+V, escolha-a em \"Padrões de assinatura\" e clique em \"Salvar alterações\" no fim da página."
 
-#: src/config.php:372
+#: src/config.php:374
 msgid "Phone apps: most accept only plain text. Set the signature on the web or on the computer; messages sent from there carry it."
 msgstr "Aplicativos de celular: a maioria aceita só texto simples. Configure a assinatura na web ou no computador; as mensagens enviadas de lá a levam."
 
 #. translators: %s: a field's label.
-#: src/config.php:374
+#: src/config.php:376
 #, php-format
 msgid "%s is required."
 msgstr "O campo \"%s\" é obrigatório."
 
-#: src/config.php:375
+#: src/config.php:377
 msgid "Enter a valid email address."
 msgstr "Informe um e-mail válido."
 
 #. translators: %s: the allowed email domains, such as example.org, separated by commas.
-#: src/config.php:377
+#: src/config.php:379
 #, php-format
 msgid "Use an address at %s."
 msgstr "Use um endereço do domínio %s."
 
-#: src/config.php:378
+#: src/config.php:380
 msgid "Email domain"
 msgstr "Domínio do e-mail"
 
-#: src/config.php:379
+#: src/config.php:381
 msgid "Type only the part before the \"@\": the domain is already beside the field."
 msgstr "Digite só a parte antes do \"@\": o domínio já está ao lado do campo."
 
 #. translators: %s: an email domain, such as test.com.
-#: src/config.php:381
+#: src/config.php:383
 #, php-format
 msgid "Addresses at %s are not accepted. Use your real email address."
 msgstr "Endereços em %s não são aceitos. Use seu e-mail real."
 
-#: src/config.php:382
+#: src/config.php:384
 msgid "Enter the phone number as 55 XX XXXX-XXXX or 55 XX XXXXX-XXXX. For two numbers, separate them with \" | \"."
 msgstr "Informe o telefone no formato 55 XX XXXX-XXXX ou 55 XX XXXXX-XXXX. Para dois números, separe-os com \" | \"."
 
 #. translators: %s: a field's label.
-#: src/config.php:384
+#: src/config.php:386
 #, php-format
 msgid "%s is not a valid address."
 msgstr "O campo \"%s\" não é um endereço válido."
 
 #. translators: %s: a field's label.
-#: src/config.php:386
+#: src/config.php:388
 #, php-format
 msgid "%s cannot contain a slash: the acronym is added on its own."
 msgstr "O campo %s não pode ter barra: a sigla é acrescentada sozinha."
 
-#: src/config.php:387
+#: src/config.php:389
 msgid "Role takes a single role, without slashes."
 msgstr "O campo \"Cargo\" aceita um único cargo, sem barras."
 
