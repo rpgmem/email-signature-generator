@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Email Signature Generator 1.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
-"POT-Creation-Date: 2026-10-11 01:46+0000\n"
+"POT-Creation-Date: 2026-10-11 01:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -128,7 +128,7 @@ msgstr ""
 msgid "Logged-in users only"
 msgstr ""
 
-#: src/admin/settings-page.php:193 src/config.php:187
+#: src/admin/settings-page.php:193 src/config.php:190
 msgid "Email"
 msgstr ""
 
@@ -204,7 +204,7 @@ msgstr ""
 msgid "Keeps the signature slightly apart from the text above it, in the copied HTML and in the image. It adds to the height, never to the width."
 msgstr ""
 
-#: src/admin/settings-page.php:277 src/admin/settings-page.php:530
+#: src/admin/settings-page.php:277 src/admin/settings-page.php:538
 msgid "Downloaded image"
 msgstr ""
 
@@ -278,7 +278,7 @@ msgstr ""
 msgid "1× is the size of the signature in an email. 2× and 3× are sharper, but an email client may show them larger unless the image is resized."
 msgstr ""
 
-#: src/admin/settings-page.php:349 src/admin/settings-page.php:534
+#: src/admin/settings-page.php:349 src/admin/settings-page.php:542
 msgid "Units"
 msgstr ""
 
@@ -286,93 +286,96 @@ msgstr ""
 msgid "The units people choose from in the signature form. The signature prints a unit as \"Name / ACRONYM\", or adds its acronym to the department or the school. The acronym identifies the unit: capitals and digits, up to 12, each used once."
 msgstr ""
 
-#: src/admin/settings-page.php:354
-msgid "Name in the form"
-msgstr ""
-
-#: src/admin/settings-page.php:359
-msgid "What the signature form calls the unit it asks for. Leave it empty to use the default shown."
-msgstr ""
-
-#: src/admin/settings-page.php:363 src/admin/settings-page.php:388
+#: src/admin/settings-page.php:352 src/admin/settings-page.php:385
 msgid "Default"
 msgstr ""
 
-#: src/admin/settings-page.php:364 src/admin/settings-page.php:489
+#: src/admin/settings-page.php:353 src/admin/settings-page.php:497
+#: src/config.php:292
 msgid "Name"
 msgstr ""
 
-#: src/admin/settings-page.php:365 src/admin/settings-page.php:492
+#: src/admin/settings-page.php:354 src/admin/settings-page.php:500
 msgid "Acronym"
 msgstr ""
 
-#: src/admin/settings-page.php:377
+#: src/admin/settings-page.php:366
 msgid "Add a unit"
 msgstr ""
 
-#: src/admin/settings-page.php:382 src/admin/settings-page.php:538
+#: src/admin/settings-page.php:371 src/admin/settings-page.php:546
 msgid "Fields"
 msgstr ""
 
-#: src/admin/settings-page.php:383
-msgid "A default pre-fills the field. A locked field shows its default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked. Capitals prints the field in capital letters, however it was typed."
+#: src/admin/settings-page.php:372
+msgid "A default pre-fills the field. A locked field shows its default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked. Capitals prints the field in capital letters, however it was typed. The label is what the form calls the field; leave it empty for the one shown."
 msgstr ""
 
-#: src/admin/settings-page.php:387
+#: src/admin/settings-page.php:383
 msgid "Field"
 msgstr ""
 
-#: src/admin/settings-page.php:389
+#: src/admin/settings-page.php:384
+msgid "Label in the form"
+msgstr ""
+
+#: src/admin/settings-page.php:386
 msgid "Required"
 msgstr ""
 
-#: src/admin/settings-page.php:390
+#: src/admin/settings-page.php:387
 msgid "Locked"
 msgstr ""
 
-#: src/admin/settings-page.php:391
+#: src/admin/settings-page.php:388
 msgid "Capitals"
 msgstr ""
 
-#: src/admin/settings-page.php:408
+#. translators: %s: a field's generic name.
+#: src/admin/settings-page.php:402
+#, php-format
+msgid "Label of %s in the form"
+msgstr ""
+
+#: src/admin/settings-page.php:416
 msgid "Set on the Units tab"
 msgstr ""
 
 #. translators: %s: field label.
-#: src/admin/settings-page.php:425
+#: src/admin/settings-page.php:433
 #, php-format
 msgid "%s is required"
 msgstr ""
 
 #. translators: %s: field label.
-#: src/admin/settings-page.php:440
+#: src/admin/settings-page.php:448
 #, php-format
 msgid "%s is locked"
 msgstr ""
 
 #. translators: %s: field label.
-#: src/admin/settings-page.php:454
+#: src/admin/settings-page.php:462
 #, php-format
 msgid "%s in capital letters"
 msgstr ""
 
-#: src/admin/settings-page.php:485
+#: src/admin/settings-page.php:493
 msgid "Default unit of the form"
 msgstr ""
 
-#: src/admin/settings-page.php:493
+#: src/admin/settings-page.php:501
 msgid "Remove this unit"
 msgstr ""
 
-#: src/admin/settings-page.php:494
+#: src/admin/settings-page.php:502
 msgid "Remove"
 msgstr ""
 
-#: src/admin/settings-page.php:522
+#: src/admin/settings-page.php:530
 msgid "General"
 msgstr ""
 
-#: src/admin/settings-page.php:526
+#: src/admin/settings-page.php:534
 msgid "Layout"
 msgstr ""
 
@@ -380,196 +383,204 @@ msgstr ""
 msgid "Regional office"
 msgstr ""
 
-#: src/config.php:180
+#: src/config.php:183
 msgid "Full name"
 msgstr ""
 
-#: src/config.php:183
+#: src/config.php:186
 msgid "Type your full name"
 msgstr ""
 
-#: src/config.php:195
+#: src/config.php:198
 msgid "Phone number(s)"
 msgstr ""
 
-#: src/config.php:201
+#: src/config.php:204
 msgid "Address | Floor | Room"
 msgstr ""
 
-#: src/config.php:206
+#: src/config.php:209
 msgid "Postal code | City | State"
 msgstr ""
 
-#: src/config.php:211
+#: src/config.php:214
 msgid "Link 1"
 msgstr ""
 
-#: src/config.php:225
+#: src/config.php:221
+msgid "Unit"
+msgstr ""
+
+#: src/config.php:229
 msgid "Link 2"
 msgstr ""
 
-#: src/config.php:228
+#: src/config.php:232
 msgid "Type a second link, if needed"
 msgstr ""
 
-#: src/config.php:234
+#: src/config.php:238
 msgid "Staff - Regional office"
 msgstr ""
 
-#: src/config.php:239
+#: src/config.php:243
 msgid "Department"
 msgstr ""
 
-#: src/config.php:256
+#: src/config.php:260
 msgid "Staff - School"
 msgstr ""
 
-#: src/config.php:261
+#: src/config.php:265
 msgid "Role"
 msgstr ""
 
-#: src/config.php:271
+#: src/config.php:275
 msgid "School"
 msgstr ""
 
-#: src/config.php:284
+#: src/config.php:288
 msgid "Department or school building"
 msgstr ""
 
-#: src/config.php:288
+#: src/config.php:293
 msgid "Department or school"
 msgstr ""
 
-#: src/config.php:296
+#: src/config.php:301
+msgid "Unit, full name"
+msgstr ""
+
+#: src/config.php:302
 msgid "Regional office or central"
 msgstr ""
 
-#: src/config.php:327
+#: src/config.php:333
 msgid "Signature model"
 msgstr ""
 
-#: src/config.php:328
+#: src/config.php:334
 msgid "Generate signature"
 msgstr ""
 
-#: src/config.php:329
+#: src/config.php:335
 msgid "Copy HTML"
 msgstr ""
 
-#: src/config.php:330
+#: src/config.php:336
 msgid "Download image"
 msgstr ""
 
-#: src/config.php:331
+#: src/config.php:337
 msgid "Preview"
 msgstr ""
 
-#: src/config.php:332
+#: src/config.php:338
 msgid "Tel.:"
 msgstr ""
 
-#: src/config.php:333
+#: src/config.php:339
 msgid "Signature copied. Paste it into your email signature settings."
 msgstr ""
 
-#: src/config.php:334
+#: src/config.php:340
 msgid "The signature could not be copied. Select it in the preview and copy it by hand."
 msgstr ""
 
-#: src/config.php:335
+#: src/config.php:341
 msgid "The image could not be created. Try again."
 msgstr ""
 
-#: src/config.php:336
+#: src/config.php:342
 msgid "More options"
 msgstr ""
 
-#: src/config.php:337
+#: src/config.php:343
 msgid "Image downloaded. Links in an image cannot be clicked and small text loses sharpness: if your email program accepts it, prefer Copy HTML."
 msgstr ""
 
-#: src/config.php:338
+#: src/config.php:344
 msgid "Recommended: copy the HTML and paste it into your email program's signature settings. The text stays sharp at any size and the links work. Use the image only where a signature cannot be HTML."
 msgstr ""
 
-#: src/config.php:339
+#: src/config.php:345
 msgid "How to add the signature to your email"
 msgstr ""
 
-#: src/config.php:340
+#: src/config.php:346
 msgid "Outlook on the web and the new Outlook for Windows: Settings (gear) → Account → Signatures. Create a signature, paste with Ctrl+V, choose it for new messages and replies, and save."
 msgstr ""
 
-#: src/config.php:341
+#: src/config.php:347
 msgid "Classic Outlook for Windows: File → Options → Mail → Signatures → New. Paste with Ctrl+V, choose it for new messages and replies, and select OK."
 msgstr ""
 
-#: src/config.php:342
+#: src/config.php:348
 msgid "Gmail: Settings (gear) → See all settings → General → Signature → Create new. Paste with Ctrl+V, choose it in \"Signature defaults\", and select \"Save changes\" at the bottom of the page."
 msgstr ""
 
-#: src/config.php:343
+#: src/config.php:349
 msgid "Phone apps: most accept only plain text. Set the signature on the web or on the computer; messages sent from there carry it."
 msgstr ""
 
 #. translators: %s: a field's label.
-#: src/config.php:345
+#: src/config.php:351
 #, php-format
 msgid "%s is required."
 msgstr ""
 
-#: src/config.php:346
+#: src/config.php:352
 msgid "Enter a valid email address."
 msgstr ""
 
 #. translators: %s: the allowed email domains, such as example.org, separated by commas.
-#: src/config.php:348
+#: src/config.php:354
 #, php-format
 msgid "Use an address at %s."
 msgstr ""
 
-#: src/config.php:349
+#: src/config.php:355
 msgid "Email domain"
 msgstr ""
 
-#: src/config.php:350
+#: src/config.php:356
 msgid "Type only the part before the \"@\": the domain is already beside the field."
 msgstr ""
 
 #. translators: %s: an email domain, such as test.com.
-#: src/config.php:352
+#: src/config.php:358
 #, php-format
 msgid "Addresses at %s are not accepted. Use your real email address."
 msgstr ""
 
-#: src/config.php:353
+#: src/config.php:359
 msgid "Enter the phone number as 55 XX XXXX-XXXX or 55 XX XXXXX-XXXX. For two numbers, separate them with \" | \"."
 msgstr ""
 
 #. translators: %s: a field's label.
-#: src/config.php:355
+#: src/config.php:361
 #, php-format
 msgid "%s is not a valid address."
 msgstr ""
 
 #. translators: %s: a field's label.
-#: src/config.php:357
+#: src/config.php:363
 #, php-format
 msgid "%s cannot contain a slash: the acronym is added on its own."
 msgstr ""
 
-#: src/config.php:358
+#: src/config.php:364
 msgid "Role takes a single role, without slashes."
 msgstr ""
 
 #. translators: %s: the offices left out, separated by commas.
-#: src/settings.php:202
+#: src/settings.php:200
 #, php-format
 msgid "These units were not saved, because each needs a name and a unique acronym of capitals and digits: %s"
 msgstr ""
 
 #. translators: %s: the domains left out, separated by commas.
-#: src/settings.php:218
+#: src/settings.php:216
 #, php-format
 msgid "These email domains were not saved, because they are not domain names: %s"
 msgstr ""

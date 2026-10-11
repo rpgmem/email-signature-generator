@@ -30,7 +30,7 @@ final class Settings {
 
 	public const TOP_SPACE_MAX = 20;
 
-	public const UNIT_LABEL_MAX = 40;
+	public const LABEL_MAX = 40;
 
 	public const LOGO_ALT_MAX = 150;
 
@@ -68,7 +68,7 @@ final class Settings {
 	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, logo_id: int, logo_alt: string, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, logo_id: int, logo_alt: string, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -96,7 +96,6 @@ final class Settings {
 			'email_domains'         => array(),
 			'blocked_email_domains' => Config::BLOCKED_EMAIL_DOMAINS,
 			'regions'               => array(),
-			'unit_label'            => '',
 			'default_unit'          => '',
 			'access'                => self::ACCESS_EVERYONE,
 			'fields'                => array(),
@@ -109,7 +108,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, logo_id: int, logo_alt: string, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, logo_id: int, logo_alt: string, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -170,10 +169,9 @@ final class Settings {
 			// is a choice and stays empty.
 			'blocked_email_domains' => array_key_exists( 'blocked_email_domains', $input ) ? self::parseDomains( $input['blocked_email_domains'] )['domains'] : Config::BLOCKED_EMAIL_DOMAINS,
 			'regions'               => $regions,
-			'unit_label'            => mb_substr( sanitize_text_field( is_string( $input['unit_label'] ?? null ) ? $input['unit_label'] : '' ), 0, self::UNIT_LABEL_MAX ),
 			'default_unit'          => $default_unit,
 			'access'                => self::ACCESS_LOGGED_IN === $access ? self::ACCESS_LOGGED_IN : self::ACCESS_EVERYONE,
-			'fields'                => self::sanitizeFields( self::legacyCapitals( $input ) ),
+			'fields'                => self::sanitizeFields( self::legacyUnitLabel( $input, self::legacyCapitals( $input ) ) ),
 		);
 	}
 
@@ -311,6 +309,9 @@ final class Settings {
 				if ( isset( $override['uppercase'] ) ) {
 					$field['uppercase'] = $override['uppercase'];
 				}
+				if ( '' !== ( $override['label'] ?? '' ) ) {
+					$field['label'] = $override['label'];
+				}
 				$field['locked'] = ! empty( $override['locked'] ) && '' !== (string) ( $field['default'] ?? '' );
 
 				// A select must start on one of its options.
@@ -324,9 +325,6 @@ final class Settings {
 				}
 				if ( 'office' === ( $field['type'] ?? '' ) && ! in_array( $field['default'] ?? '', $acronyms, true ) ) {
 					$field['default'] = $acronyms[0] ?? '';
-				}
-				if ( 'office' === ( $field['type'] ?? '' ) && '' !== $settings['unit_label'] ) {
-					$field['label'] = $settings['unit_label'];
 				}
 
 				$config['models'][ $m ]['fields'][ $f ] = $field;
@@ -381,11 +379,39 @@ final class Settings {
 	}
 
 	/**
+	 * The field overrides, with the "Name in the form" the Units tab once
+	 * had carried into every unit field that has no label of its own.
+	 *
+	 * @param array<string, mixed> $input  Raw settings.
+	 * @param array<mixed>         $fields Field overrides so far.
+	 * @return array<mixed>
+	 */
+	private static function legacyUnitLabel( array $input, array $fields ): array {
+		$label = is_string( $input['unit_label'] ?? null ) ? trim( $input['unit_label'] ) : '';
+		if ( '' === $label ) {
+			return $fields;
+		}
+		foreach ( Config::defaults( '' )['models'] as $model ) {
+			foreach ( $model['fields'] as $field ) {
+				if ( 'office' !== ( $field['type'] ?? '' ) ) {
+					continue;
+				}
+				$override = is_array( $fields[ $model['id'] ][ $field['key'] ] ?? null ) ? $fields[ $model['id'] ][ $field['key'] ] : array();
+				if ( '' === (string) ( $override['label'] ?? '' ) ) {
+					$override['label']                       = $label;
+					$fields[ $model['id'] ][ $field['key'] ] = $override;
+				}
+			}
+		}
+		return $fields;
+	}
+
+	/**
 	 * Clean the per-field overrides: known models and fields only, text
 	 * values, and locks only where a lock makes sense.
 	 *
 	 * @param array<mixed> $input Raw overrides, model id => field key => override.
-	 * @return array<string, array<string, array{default?: string, required?: bool, locked?: bool, uppercase?: bool}>>
+	 * @return array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>
 	 */
 	private static function sanitizeFields( array $input ): array {
 		$input = self::splitLegacyFields( $input );
@@ -406,6 +432,10 @@ final class Settings {
 				}
 				if ( ! in_array( $field['key'], self::UNLOCKABLE, true ) && ! empty( $raw['locked'] ) && '' !== $override['default'] ) {
 					$override['locked'] = true;
+				}
+				$label = mb_substr( sanitize_text_field( is_string( $raw['label'] ?? null ) ? $raw['label'] : '' ), 0, self::LABEL_MAX );
+				if ( '' !== $label ) {
+					$override['label'] = $label;
 				}
 				// Absent means "never set": the field keeps its built-in case.
 				if ( Config::casable( $field ) && array_key_exists( 'uppercase', $raw ) ) {

@@ -164,7 +164,10 @@ final class Config {
 	/**
 	 * The signature models offered in the form, in display order.
 	 *
-	 * `placeholder` shows an example; `default` pre-fills a value that most
+	 * `label` is what the form shows, and an administrator can change it per
+	 * field; `title`, when present, is the field's generic name on the
+	 * settings screen, so the screen still says what the field is after the
+	 * label is changed. `placeholder` shows an example; `default` pre-fills a value that most
 	 * people keep. A field's `rule` names a check the generator knows (`noSlash`,
 	 * `singleRole`, `email`, `phone`, `url`). `uppercase` prints the value in
 	 * capitals, whatever was typed (see casable()). `region` is a select over the
@@ -215,6 +218,7 @@ final class Config {
 		);
 		$office  = array(
 			'key'      => 'office',
+			'title'    => __( 'Unit', 'email-signature-generator' ),
 			'label'    => self::unitLabel(),
 			'type'     => 'office',
 			'required' => true,
@@ -285,6 +289,7 @@ final class Config {
 				'fields' => array(
 					array(
 						'key'         => 'name',
+						'title'       => __( 'Name', 'email-signature-generator' ),
 						'label'       => __( 'Department or school', 'email-signature-generator' ),
 						'required'    => true,
 						'placeholder' => 'EMEF Joaquim José da Silva Xavier',
@@ -293,6 +298,7 @@ final class Config {
 					$phone,
 					array(
 						'key'      => 'region',
+						'title'    => __( 'Unit, full name', 'email-signature-generator' ),
 						'label'    => __( 'Regional office or central', 'email-signature-generator' ),
 						'type'     => 'region',
 						'required' => true,
