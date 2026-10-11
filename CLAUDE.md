@@ -149,11 +149,12 @@ The signature links its logo by URL, because email clients drop embedded images.
 - **It saves through the Settings API.** `options.php` checks the nonce and `manage_options` before `Settings::sanitize()` runs.
 - **Sanitizing never fails a save, it repairs it.**
   - Unknown models and fields are dropped.
-  - Widths are clamped, and an invalid domain becomes empty.
+  - Widths are clamped, and an entry in a domain list that is not a domain name is left out (and named in a notice).
   - With no model ticked, all of them are offered.
   - The name stays required, and the name and the email never lock.
   - A field can only be locked with a default.
 - **Absent is not off.** A key missing from the stored option means "never saved", so it keeps the default. That is why the capitals checkbox posts a hidden `0` before itself.
+- **A row that only matters in one state of a toggle** carries `data-esg-shown-by="<key>"` or `data-esg-hidden-by="<key>"`; the script hides it at once, and again when a failed save puts the toggle back. The server renders it with `hidden` already set, so it never flashes. The hidden fields still post, so turning a toggle off never loses what is under it.
 - **On/off settings save as they are flipped** (`Admin\Autosave`, one AJAX action, nonce plus `manage_options`). Every toggle also stays a named field of the form, so "Save Changes" posts its current state and cannot undo an autosave. A new toggle needs both: the `data-esg-autosave` key and its branch in `Autosave::apply()`. The handler reads the stored settings, changes one key and runs `Settings::sanitize()` over the whole, so it can never store what the form could not.
 - **The screen is vertical tabs inside the one form** (`SettingsPage::tabs()`), Free Form Certificate's layout. Every panel is in the form, so switching tabs never loses an edit and "Save Changes" still posts everything; that is why the tabs switch in the browser instead of reloading as Free Form Certificate's do (a per-tab form would need a merge-based save, which `Settings::sanitize()` deliberately is not). `?tab=` only chooses the panel shown first, and the script carries it into `_wp_http_referer` so a save returns to the same tab. Without JavaScript every panel shows.
 - **Every section is a `.card` whose `h2` opens with an icon** from `Admin\Icons`, which holds Free Form Certificate's drawings (24×24, stroke in `currentColor`, geometry only; `IconsTest` refuses anything else). A new icon joins that registry; never an inline one-off SVG, an emoji or a dashicon.

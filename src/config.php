@@ -30,6 +30,34 @@ final class Config {
 	public const PHONE_PATTERN = '^55\s\d{2}\s\d{4,5}-\d{4}(?:\s\|\s55\s\d{2}\s\d{4,5}-\d{4})?$';
 
 	/**
+	 * Domains refused while any address is accepted: the placeholders and
+	 * throwaway inboxes people type to get past an email field. A subdomain
+	 * of one is refused too. An administrator edits the list.
+	 */
+	public const BLOCKED_EMAIL_DOMAINS = array(
+		'test.com',
+		'teste.com',
+		'test.com.br',
+		'teste.com.br',
+		'example.com',
+		'example.org',
+		'example.net',
+		'exemplo.com',
+		'exemplo.com.br',
+		'fake.com',
+		'fakemail.com',
+		'mailinator.com',
+		'yopmail.com',
+		'guerrillamail.com',
+		'sharklasers.com',
+		'10minutemail.com',
+		'tempmail.com',
+		'temp-mail.org',
+		'trashmail.com',
+		'dispostable.com',
+	);
+
+	/**
 	 * Width, in pixels, at which the logo is drawn in the signature.
 	 */
 	public const LOGO_WIDTH = 120;
@@ -82,26 +110,27 @@ final class Config {
 	 */
 	public static function defaults( string $logo_url ): array {
 		return array(
-			'logo'          => array(
+			'logo'                => array(
 				'url'   => $logo_url,
 				'width' => self::LOGO_WIDTH,
 				'alt'   => __( 'Logo', 'email-signature-generator' ),
 			),
-			'image'         => array(
+			'image'               => array(
 				'format'  => self::IMAGE_FORMAT,
 				'quality' => self::IMAGE_QUALITY,
 				'scale'   => self::IMAGE_SCALE,
 			),
-			'topSpace'      => self::TOP_SPACE,
-			'offerDownload' => true,
-			'downloadStyle' => 'notice',
-			'uppercaseName' => true,
-			'emailDomain'   => '',
-			'phonePattern'  => self::PHONE_PATTERN,
-			'regions'       => self::regions(),
-			'offices'       => Regions::defaults(),
-			'models'        => self::models(),
-			'strings'       => self::strings(),
+			'topSpace'            => self::TOP_SPACE,
+			'offerDownload'       => true,
+			'downloadStyle'       => 'notice',
+			'uppercaseName'       => true,
+			'emailDomains'        => array(),
+			'blockedEmailDomains' => self::BLOCKED_EMAIL_DOMAINS,
+			'phonePattern'        => self::PHONE_PATTERN,
+			'regions'             => self::regions(),
+			'offices'             => Regions::defaults(),
+			'models'              => self::models(),
+			'strings'             => self::strings(),
 		);
 	}
 
@@ -286,8 +315,12 @@ final class Config {
 			/* translators: %s: a field's label. */
 			'required'           => __( '%s is required.', 'email-signature-generator' ),
 			'invalidEmail'       => __( 'Enter a valid email address.', 'email-signature-generator' ),
-			/* translators: %s: an email domain, such as example.org. */
+			/* translators: %s: the allowed email domains, such as example.org, separated by commas. */
 			'invalidEmailDomain' => __( 'Use an address at %s.', 'email-signature-generator' ),
+			'emailDomain'        => __( 'Email domain', 'email-signature-generator' ),
+			'emailLocalOnly'     => __( 'Type only the part before the "@": the domain is already beside the field.', 'email-signature-generator' ),
+			/* translators: %s: an email domain, such as test.com. */
+			'emailBlocked'       => __( 'Addresses at %s are not accepted. Use your real email address.', 'email-signature-generator' ),
 			'invalidPhone'       => __( 'Enter the phone number as 55 XX XXXX-XXXX or 55 XX XXXXX-XXXX. For two numbers, separate them with " | ".', 'email-signature-generator' ),
 			/* translators: %s: a field's label. */
 			'invalidUrl'         => __( '%s is not a valid address.', 'email-signature-generator' ),

@@ -114,9 +114,31 @@
 			} )
 			.catch( function ( error ) {
 				input.checked = before;
+				syncShown();
 				setBadge( badge, 'error', error && error.message ? error.message : settings.failed );
 			} );
 	}
+
+	/**
+	 * Rows that only matter while a toggle is on (or off) follow it, at
+	 * once and again if a failed save puts the toggle back.
+	 */
+	function syncShown() {
+		function on( key ) {
+			var toggle = document.querySelector( 'input[type="checkbox"][data-esg-autosave="' + key + '"]' );
+			return !! ( toggle && toggle.checked );
+		}
+		document.querySelectorAll( '[data-esg-shown-by]' ).forEach( function ( row ) {
+			row.hidden = ! on( row.getAttribute( 'data-esg-shown-by' ) );
+		} );
+		document.querySelectorAll( '[data-esg-hidden-by]' ).forEach( function ( row ) {
+			row.hidden = on( row.getAttribute( 'data-esg-hidden-by' ) );
+		} );
+	}
+	document.querySelectorAll( 'input[data-esg-autosave]' ).forEach( function ( input ) {
+		input.addEventListener( 'change', syncShown );
+	} );
+	syncShown();
 
 	if ( settings.action && settings.nonce && window.fetch ) {
 		document.querySelectorAll( 'input[data-esg-autosave]' ).forEach( function ( input ) {

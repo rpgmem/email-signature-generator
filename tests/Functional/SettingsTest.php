@@ -34,11 +34,11 @@ final class SettingsTest extends WP_UnitTestCase {
 	}
 
 	public function test_saving_goes_through_the_sanitizer(): void {
-		update_option( Settings::OPTION, array( 'logo_width' => '9999', 'email_domain' => '<b>x', 'access' => 'nope' ) );
+		update_option( Settings::OPTION, array( 'logo_width' => '9999', 'email_domains' => '<b>x', 'access' => 'nope' ) );
 		$stored = get_option( Settings::OPTION );
 
 		self::assertSame( Settings::LOGO_WIDTH_MAX, $stored['logo_width'] );
-		self::assertSame( '', $stored['email_domain'] );
+		self::assertSame( array(), $stored['email_domains'] );
 		self::assertSame( Settings::ACCESS_EVERYONE, $stored['access'] );
 	}
 
@@ -52,14 +52,14 @@ final class SettingsTest extends WP_UnitTestCase {
 			Settings::OPTION,
 			array(
 				'models'       => array( 'department' ),
-				'email_domain' => 'example.org',
+				'email_domain' => 'example.org', // Stored before the list: still applies.
 				'fields'       => array( 'department' => array( 'address' => array( 'default' => 'Rua A, 1', 'locked' => '1' ) ) ),
 			)
 		);
 
 		$config = $this->renderedConfig( '[email_signature]' );
 		self::assertSame( array( 'department' ), array_column( $config['models'], 'id' ) );
-		self::assertSame( 'example.org', $config['emailDomain'] );
+		self::assertSame( array( 'example.org' ), $config['emailDomains'] );
 
 		$address = array_values( array_filter( $config['models'][0]['fields'], static fn( $f ) => 'address' === $f['key'] ) )[0];
 		self::assertSame( 'Rua A, 1', $address['default'] );

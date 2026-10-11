@@ -32,6 +32,12 @@ final class Settings {
 
 	public const UNIT_LABEL_MAX = 40;
 
+	/**
+	 * A domain name: dot-separated labels of letters, digits and inner
+	 * hyphens, ending in a top-level label of two letters or more.
+	 */
+	public const DOMAIN_PATTERN = '/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/';
+
 	public const IMAGE_QUALITY_MIN = 50;
 
 	public const IMAGE_QUALITY_MAX = 100;
@@ -60,7 +66,7 @@ final class Settings {
 	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<array{name: string, acronym: string}>, unit_label: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -74,21 +80,23 @@ final class Settings {
 	 */
 	public static function defaults(): array {
 		return array(
-			'models'         => self::modelIds(),
-			'offer_download' => true,
-			'download_style' => 'notice',
-			'uppercase_name' => true,
-			'logo_id'        => 0,
-			'logo_width'     => Config::LOGO_WIDTH,
-			'top_space'      => Config::TOP_SPACE,
-			'image_format'   => Config::IMAGE_FORMAT,
-			'image_quality'  => Config::IMAGE_QUALITY,
-			'image_scale'    => Config::IMAGE_SCALE,
-			'email_domain'   => '',
-			'regions'        => array(),
-			'unit_label'     => '',
-			'access'         => self::ACCESS_EVERYONE,
-			'fields'         => array(),
+			'models'                => self::modelIds(),
+			'offer_download'        => true,
+			'download_style'        => 'notice',
+			'uppercase_name'        => true,
+			'logo_id'               => 0,
+			'logo_width'            => Config::LOGO_WIDTH,
+			'top_space'             => Config::TOP_SPACE,
+			'image_format'          => Config::IMAGE_FORMAT,
+			'image_quality'         => Config::IMAGE_QUALITY,
+			'image_scale'           => Config::IMAGE_SCALE,
+			'restrict_email_domain' => false,
+			'email_domains'         => array(),
+			'blocked_email_domains' => Config::BLOCKED_EMAIL_DOMAINS,
+			'regions'               => array(),
+			'unit_label'            => '',
+			'access'                => self::ACCESS_EVERYONE,
+			'fields'                => array(),
 		);
 	}
 
@@ -98,7 +106,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, email_domain: string, regions: list<array{name: string, acronym: string}>, unit_label: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -117,34 +125,38 @@ final class Settings {
 		$format  = is_string( $input['image_format'] ?? null ) ? $input['image_format'] : Config::IMAGE_FORMAT;
 		$scale   = (int) ( $input['image_scale'] ?? Config::IMAGE_SCALE );
 
-		$domain = strtolower( trim( (string) ( $input['email_domain'] ?? '' ) ) );
-		$domain = ltrim( $domain, '@' );
-		if ( '' !== $domain && ! preg_match( '/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/', $domain ) ) {
-			$domain = '';
-		}
+		// Before the list, one domain was stored as `email_domain`, and a
+		// non-empty one meant the restriction was on.
+		$legacy   = is_string( $input['email_domain'] ?? null ) ? $input['email_domain'] : '';
+		$domains  = self::parseDomains( $input['email_domains'] ?? $legacy )['domains'];
+		$restrict = array_key_exists( 'restrict_email_domain', $input ) ? ! empty( $input['restrict_email_domain'] ) : '' !== trim( $legacy );
 
 		$regions = Regions::parse( $input['regions'] ?? array() )['regions'];
 
 		$access = (string) ( $input['access'] ?? self::ACCESS_EVERYONE );
 
 		return array(
-			'models'         => $models,
+			'models'                => $models,
 			// Absent means "never saved": keep the default. The form posts a
 			// hidden 0 before the checkbox, so unticking it is never absent.
-			'offer_download' => array_key_exists( 'offer_download', $input ) ? ! empty( $input['offer_download'] ) : true,
-			'download_style' => in_array( $style, self::DOWNLOAD_STYLES, true ) ? $style : 'notice',
-			'uppercase_name' => array_key_exists( 'uppercase_name', $input ) ? ! empty( $input['uppercase_name'] ) : true,
-			'logo_id'        => max( 0, (int) ( $input['logo_id'] ?? 0 ) ),
-			'logo_width'     => min( self::LOGO_WIDTH_MAX, max( self::LOGO_WIDTH_MIN, $width ) ),
-			'top_space'      => min( self::TOP_SPACE_MAX, max( 0, $space ) ),
-			'image_format'   => in_array( $format, self::IMAGE_FORMATS, true ) ? $format : Config::IMAGE_FORMAT,
-			'image_quality'  => min( self::IMAGE_QUALITY_MAX, max( self::IMAGE_QUALITY_MIN, $quality ) ),
-			'image_scale'    => in_array( $scale, self::IMAGE_SCALES, true ) ? $scale : Config::IMAGE_SCALE,
-			'email_domain'   => $domain,
-			'regions'        => $regions,
-			'unit_label'     => mb_substr( sanitize_text_field( is_string( $input['unit_label'] ?? null ) ? $input['unit_label'] : '' ), 0, self::UNIT_LABEL_MAX ),
-			'access'         => self::ACCESS_LOGGED_IN === $access ? self::ACCESS_LOGGED_IN : self::ACCESS_EVERYONE,
-			'fields'         => self::sanitizeFields( is_array( $input['fields'] ?? null ) ? $input['fields'] : array() ),
+			'offer_download'        => array_key_exists( 'offer_download', $input ) ? ! empty( $input['offer_download'] ) : true,
+			'download_style'        => in_array( $style, self::DOWNLOAD_STYLES, true ) ? $style : 'notice',
+			'uppercase_name'        => array_key_exists( 'uppercase_name', $input ) ? ! empty( $input['uppercase_name'] ) : true,
+			'logo_id'               => max( 0, (int) ( $input['logo_id'] ?? 0 ) ),
+			'logo_width'            => min( self::LOGO_WIDTH_MAX, max( self::LOGO_WIDTH_MIN, $width ) ),
+			'top_space'             => min( self::TOP_SPACE_MAX, max( 0, $space ) ),
+			'image_format'          => in_array( $format, self::IMAGE_FORMATS, true ) ? $format : Config::IMAGE_FORMAT,
+			'image_quality'         => min( self::IMAGE_QUALITY_MAX, max( self::IMAGE_QUALITY_MIN, $quality ) ),
+			'image_scale'           => in_array( $scale, self::IMAGE_SCALES, true ) ? $scale : Config::IMAGE_SCALE,
+			'restrict_email_domain' => $restrict,
+			'email_domains'         => $domains,
+			// Absent means "never saved": the built-in list. An emptied box
+			// is a choice and stays empty.
+			'blocked_email_domains' => array_key_exists( 'blocked_email_domains', $input ) ? self::parseDomains( $input['blocked_email_domains'] )['domains'] : Config::BLOCKED_EMAIL_DOMAINS,
+			'regions'               => $regions,
+			'unit_label'            => mb_substr( sanitize_text_field( is_string( $input['unit_label'] ?? null ) ? $input['unit_label'] : '' ), 0, self::UNIT_LABEL_MAX ),
+			'access'                => self::ACCESS_LOGGED_IN === $access ? self::ACCESS_LOGGED_IN : self::ACCESS_EVERYONE,
+			'fields'                => self::sanitizeFields( is_array( $input['fields'] ?? null ) ? $input['fields'] : array() ),
 		);
 	}
 
@@ -159,9 +171,10 @@ final class Settings {
 	 * @return array<string, mixed>
 	 */
 	public static function save( $input ): array {
-		static $reported = false;
-		$input           = is_array( $input ) ? $input : array();
-		$rejected        = Regions::parse( $input['regions'] ?? array() )['rejected'];
+		static $reported         = false;
+		static $reported_domains = false;
+		$input                   = is_array( $input ) ? $input : array();
+		$rejected                = Regions::parse( $input['regions'] ?? array() )['rejected'];
 		if ( ! $reported && array() !== $rejected && function_exists( 'add_settings_error' ) ) {
 			$reported = true;
 			add_settings_error(
@@ -174,7 +187,60 @@ final class Settings {
 				)
 			);
 		}
+		$bad = array_merge(
+			self::parseDomains( $input['email_domains'] ?? array() )['rejected'],
+			self::parseDomains( $input['blocked_email_domains'] ?? array() )['rejected']
+		);
+		if ( ! $reported_domains && array() !== $bad && function_exists( 'add_settings_error' ) ) {
+			$reported_domains = true;
+			add_settings_error(
+				self::OPTION,
+				'domains_rejected',
+				sprintf(
+					/* translators: %s: the domains left out, separated by commas. */
+					__( 'These email domains were not saved, because they are not domain names: %s', 'email-signature-generator' ),
+					implode( ', ', $bad )
+				)
+			);
+		}
 		return self::sanitize( $input );
+	}
+
+	/**
+	 * Clean a list of email domains: one per line (or separated by commas or
+	 * spaces) as the form posts it, or a list. Each is lower-cased and loses
+	 * a leading "@"; repeats are dropped, and anything that is not a domain
+	 * name is left out and reported.
+	 *
+	 * @param mixed $input Raw domains.
+	 * @return array{domains: list<string>, rejected: list<string>}
+	 */
+	public static function parseDomains( $input ): array {
+		if ( is_string( $input ) ) {
+			$input = preg_split( '/[\s,;]+/', $input );
+		}
+		$domains  = array();
+		$rejected = array();
+		foreach ( is_array( $input ) ? $input : array() as $raw ) {
+			if ( ! is_scalar( $raw ) ) {
+				continue;
+			}
+			$domain = ltrim( strtolower( trim( (string) $raw ) ), '@' );
+			if ( '' === $domain ) {
+				continue;
+			}
+			if ( ! preg_match( self::DOMAIN_PATTERN, $domain ) ) {
+				$rejected[] = sanitize_text_field( (string) $raw );
+				continue;
+			}
+			if ( ! in_array( $domain, $domains, true ) ) {
+				$domains[] = $domain;
+			}
+		}
+		return array(
+			'domains'  => $domains,
+			'rejected' => $rejected,
+		);
 	}
 
 	/**
@@ -191,13 +257,14 @@ final class Settings {
 			array_filter( $config['models'], static fn( array $m ): bool => in_array( $m['id'], $enabled, true ) )
 		);
 
-		$config['offerDownload'] = (bool) $settings['offer_download'];
-		$config['downloadStyle'] = (string) $settings['download_style'];
-		$config['uppercaseName'] = (bool) $settings['uppercase_name'];
-		$config['emailDomain']   = (string) $settings['email_domain'];
-		$config['logo']['width'] = (int) $settings['logo_width'];
-		$config['topSpace']      = (int) $settings['top_space'];
-		$config['image']         = array(
+		$config['offerDownload']       = (bool) $settings['offer_download'];
+		$config['downloadStyle']       = (string) $settings['download_style'];
+		$config['uppercaseName']       = (bool) $settings['uppercase_name'];
+		$config['emailDomains']        = $settings['restrict_email_domain'] ? array_values( $settings['email_domains'] ) : array();
+		$config['blockedEmailDomains'] = array_values( $settings['blocked_email_domains'] );
+		$config['logo']['width']       = (int) $settings['logo_width'];
+		$config['topSpace']            = (int) $settings['top_space'];
+		$config['image']               = array(
 			'format'  => (string) $settings['image_format'],
 			'quality' => (int) $settings['image_quality'],
 			'scale'   => (int) $settings['image_scale'],

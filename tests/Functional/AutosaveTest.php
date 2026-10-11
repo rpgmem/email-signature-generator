@@ -51,12 +51,13 @@ final class AutosaveTest extends WP_Ajax_UnitTestCase {
 	}
 
 	public function test_a_toggle_keeps_the_other_settings(): void {
-		update_option( Settings::OPTION, array( 'email_domain' => 'example.org', 'logo_width' => 90 ) );
+		update_option( Settings::OPTION, array( 'restrict_email_domain' => true, 'email_domains' => array( 'example.org' ), 'logo_width' => 90 ) );
 		$this->_setRole( 'administrator' );
 		$this->post( 'fields.staff_school.phone.required', '0' );
 
 		$stored = Settings::get();
-		self::assertSame( 'example.org', $stored['email_domain'] );
+		self::assertSame( array( 'example.org' ), $stored['email_domains'] );
+		self::assertTrue( $stored['restrict_email_domain'] );
 		self::assertSame( 90, $stored['logo_width'] );
 		self::assertFalse( $stored['fields']['staff_school']['phone']['required'] );
 	}
