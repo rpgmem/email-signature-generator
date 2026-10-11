@@ -68,6 +68,7 @@ final class Documentation {
 						),
 					),
 					array( __( 'Who can use the form', 'email-signature-generator' ), __( 'Everyone who can see the page, or logged-in users only; the others see a link to log in.', 'email-signature-generator' ) ),
+					array( __( 'Google Analytics', 'email-signature-generator' ), __( 'Off by default, and then nothing of Google\'s is loaded. Switched on with a measurement ID (G-XXXXXXXXXX), the pages that show the form load Google\'s tag and record when a signature is generated, copied or downloaded, with only the model and the image format.', 'email-signature-generator' ) ),
 					array( __( 'Allowed email domain', 'email-signature-generator' ), __( 'On: the person types only the part before the "@" and the domain is shown beside the field, as a list when there is more than one. Off: any valid address is accepted, except the refused domains, a list of placeholder and disposable domains such as test.com that you can edit.', 'email-signature-generator' ) ),
 				),
 				'note'  => __( 'The on/off switches save as soon as they are flipped. Everything else saves with "Save Changes".', 'email-signature-generator' ),
@@ -135,6 +136,27 @@ final class Documentation {
 					array( __( 'Capitals', 'email-signature-generator' ), __( 'Prints the field in capital letters, however it was typed. The email is always printed in lower case.', 'email-signature-generator' ) ),
 				),
 			),
+			'design'   => array(
+				'title' => __( 'Design', 'email-signature-generator' ),
+				'icon'  => 'brush',
+				'tab'   => 'design',
+				'intro' => __( 'The form\'s colours, corners and font, to match the site. The signature keeps its own look, since that is what email programs receive.', 'email-signature-generator' ),
+				'items' => array(
+					array( __( 'Customise', 'email-signature-generator' ), __( 'Off by default, and the form keeps its own look. Switching it off again puts every value back to its default.', 'email-signature-generator' ) ),
+					array( __( 'Colours', 'email-signature-generator' ), __( 'The accent of the buttons and links, the text on it, the field borders, the notes and the errors. A pair hard to read (below 4.5:1, as WCAG asks) is saved with a warning naming it.', 'email-signature-generator' ) ),
+					array(
+						__( 'Rounded corners', 'email-signature-generator' ),
+						sprintf(
+							/* translators: 1: default, 2: maximum, in pixels. */
+							__( 'Of the fields, the buttons and the lists, from 0 (square) to %2$d px; %1$d px by default.', 'email-signature-generator' ),
+							Config::RADIUS,
+							Settings::RADIUS_MAX
+						),
+					),
+					array( __( 'Font', 'email-signature-generator' ), __( 'The form\'s own (Arial) or the site theme\'s.', 'email-signature-generator' ) ),
+					array( __( 'Standalone HTML', 'email-signature-generator' ), __( 'Always keeps the form\'s own look: it never reads these settings.', 'email-signature-generator' ) ),
+				),
+			),
 			'privacy'  => array(
 				'title' => __( 'Privacy', 'email-signature-generator' ),
 				'icon'  => 'shield',
@@ -142,6 +164,7 @@ final class Documentation {
 				'items' => array(
 					array( __( 'In the browser', 'email-signature-generator' ), __( 'With "Remember what was typed" on, the values stay in the visitor\'s own browser until they expire or the visitor forgets them. Leave it off where computers are shared.', 'email-signature-generator' ) ),
 					array( __( 'On the site', 'email-signature-generator' ), __( 'Only these settings are stored, in one option that is deleted when the plugin is.', 'email-signature-generator' ) ),
+					array( __( 'With Google Analytics', 'email-signature-generator' ), __( 'If an administrator switches it on, Google receives each visit to a page with the form, as on any site that uses it, and an event when a signature is generated, copied or downloaded. What was typed and the signature are never sent.', 'email-signature-generator' ) ),
 				),
 			),
 			'updates'  => array(

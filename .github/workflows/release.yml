@@ -75,3 +75,14 @@ jobs:
           fail_on_unmatched_files: false
           generate_release_notes: false
           make_latest: ${{ steps.version.outputs.latest }}
+
+  pages:
+    name: Publish the standalone generator on Pages
+    needs: build
+    # Only the latest release replaces the page; a historical one never does.
+    if: github.event_name == 'push'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/pages.yml

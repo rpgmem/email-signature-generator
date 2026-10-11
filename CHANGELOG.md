@@ -5,7 +5,26 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-## [1.0.0] (2026-10-11)
+## [1.1.0] (2026-10-11)
+
+The form gets clearer errors and a sturdier email field, and the plugin gains optional analytics and a design of its own; the standalone page gets a stable address.
+
+### Added
+
+- **The latest standalone generator has a stable address** (#48). Each release publishes its HTML on GitHub Pages at https://rpgmem.github.io/email-signature-generator/, for a link or an `<iframe>`, byte-for-byte the file the release offers.
+- **Optional Google Analytics** (#50). Off by default; switched on with a GA4 measurement ID, pages with the form load Google's tag and record when a signature is generated, copied or downloaded, with only the model and the image format. Nothing typed is ever sent.
+- **A Design tab for the form's colours, corners and font** (#51). Off by default; switched on, five colours, the corner radius and the theme's font reach the form, and colour pairs below WCAG's 4.5:1 are saved with a warning. The signature and the standalone HTML keep their own look.
+
+### Changed
+
+- **Each field shows its own error, and the form says what stays private** (#47). A message sits under its field and is read with it; the box above the buttons only says to check the marked fields, and sending the form focuses the first one. The form always says nothing typed is sent to the site.
+
+### Fixed
+
+- **The split email field keeps the domain whole and the typed part usable** (#46). The domain stays on one line at its own width, the part before the "@" never gets narrower than 14 characters, and the domain moves under the field when the form's column is narrow, not only on a small screen.
+- **The form's lists no longer look disabled** (#47). Selects paint like the text fields; a locked one keeps the disabled look.
+
+## [1.0.0] (2026-10-11) — `4797e9c`
 
 The signature page becomes a WordPress plugin: a form placed with a shortcode, set up from the admin, and a standalone HTML file published beside it on every release.
 

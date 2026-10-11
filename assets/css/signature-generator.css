@@ -13,10 +13,12 @@
 	--esg-accent-text: #ffffff;
 	--esg-error: #b32d2e;
 	--esg-preview-bg: #ffffff;
+	--esg-radius: 4px;
+	--esg-font: arial, sans-serif;
 
 	/* The shortcode sets the configured width inline; this is the standalone HTML's. */
 	max-width: 640px;
-	font-family: Arial, sans-serif;
+	font-family: var(--esg-font);
 }
 
 .esg-generator .esg-field {
@@ -35,7 +37,7 @@
 	width: 100%;
 	padding: 6px 8px;
 	border: 1px solid var(--esg-border);
-	border-radius: 4px;
+	border-radius: var(--esg-radius);
 	font: inherit;
 }
 
@@ -43,19 +45,34 @@
 	background: #f0f0f1;
 }
 
+/* A select paints like the text fields, not like a button; a locked one keeps the browser's disabled look. */
+.esg-generator .esg-field select:not(:disabled) {
+	background-color: Field;
+	color: FieldText;
+}
+
 .esg-generator .esg-field [aria-invalid="true"] {
 	border-color: var(--esg-error);
 }
 
-/* The email field joined to its fixed or chosen domain. */
+/*
+ * The email field joined to its fixed or chosen domain. The domain is known
+ * text, so it keeps its own width on one line and the typed part takes the
+ * rest, never less than 14 characters.
+ *
+ * The group is its own size container: whether the two fit side by side
+ * depends on the column the shortcode sits in, not on the screen.
+ */
 .esg-generator .esg-email-group {
 	display: flex;
+	flex-wrap: wrap;
+	container-type: inline-size;
 }
 
 .esg-generator .esg-email-group input {
-	flex: 1 1 10em;
+	flex: 1 1 14ch;
 	width: auto;
-	min-width: 0;
+	min-width: 14ch;
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 }
@@ -64,34 +81,43 @@
 	box-sizing: border-box;
 	flex: 0 1 auto;
 	width: auto;
-	max-width: 100%;
+	min-width: 0;
 	padding: 6px 8px;
 	border: 1px solid var(--esg-border);
 	border-left: 0;
-	border-radius: 0 4px 4px 0;
+	border-radius: 0 var(--esg-radius) var(--esg-radius) 0;
 	background: #f0f0f1;
 	color: var(--esg-muted);
-	overflow-wrap: anywhere;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
-/* Too narrow for both on one line: the domain goes under the field. */
-@media (max-width: 480px) {
-	.esg-generator .esg-email-group {
-		flex-direction: column;
+/* Too narrow for both on one line: the domain goes under the field, whole. */
+@container (max-width: 26em) {
+	.esg-generator .esg-email-group input,
+	.esg-generator .esg-email-group .esg-email-domain {
+		flex: 1 0 100%;
 	}
 
 	.esg-generator .esg-email-group input {
-		flex: 0 0 auto;
-		width: 100%;
-		border-radius: 4px 4px 0 0;
+		border-radius: var(--esg-radius) var(--esg-radius) 0 0;
 	}
 
 	.esg-generator .esg-email-group .esg-email-domain {
-		width: 100%;
 		border-top: 0;
 		border-left: 1px solid var(--esg-border);
-		border-radius: 0 0 4px 4px;
+		border-radius: 0 0 var(--esg-radius) var(--esg-radius);
+		white-space: normal;
+		overflow-wrap: anywhere;
 	}
+}
+
+/* A field's own error, under it. */
+.esg-generator .esg-field-error {
+	display: block;
+	margin-top: 4px;
+	color: var(--esg-error);
 }
 
 .esg-generator .esg-errors {
@@ -114,7 +140,7 @@
 .esg-generator .esg-button {
 	padding: 8px 16px;
 	border: 1px solid var(--esg-accent);
-	border-radius: 4px;
+	border-radius: var(--esg-radius);
 	background: var(--esg-accent-text);
 	color: var(--esg-accent);
 	font: inherit;
@@ -208,7 +234,8 @@
 }
 
 /* "This browser remembers…" and its link to forget. */
-.esg-generator .esg-remember {
+.esg-generator .esg-remember,
+.esg-generator .esg-privacy {
 	margin: 0 0 12px;
 	color: var(--esg-muted);
 	font-size: 0.875em;

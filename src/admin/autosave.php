@@ -60,12 +60,12 @@ final class Autosave {
 	 * Apply one toggle to the settings.
 	 *
 	 * @param array<string, mixed> $settings Sanitized settings.
-	 * @param string               $key      `offer_download`, `restrict_email_domain`, `remember_values`, `models`, or `fields.<model>.<field>.<required|locked|uppercase>`.
+	 * @param string               $key      `offer_download`, `restrict_email_domain`, `remember_values`, `analytics`, `custom_style`, `models`, or `fields.<model>.<field>.<required|locked|uppercase>`.
 	 * @param mixed                $value    '1' / '0', or the list of model ids for `models`.
 	 * @return array<string, mixed>|WP_Error The sanitized settings, or why the change was refused.
 	 */
 	public static function apply( array $settings, string $key, $value ) {
-		if ( in_array( $key, array( 'offer_download', 'restrict_email_domain', 'remember_values' ), true ) ) {
+		if ( in_array( $key, array( 'offer_download', 'restrict_email_domain', 'remember_values', 'analytics', 'custom_style' ), true ) ) {
 			$settings[ $key ] = self::on( $value );
 			return Settings::sanitize( $settings );
 		}
@@ -119,7 +119,7 @@ final class Autosave {
 	 * @return bool|list<string>
 	 */
 	public static function read( array $settings, string $key ) {
-		if ( in_array( $key, array( 'offer_download', 'restrict_email_domain', 'remember_values', 'models' ), true ) ) {
+		if ( in_array( $key, array( 'offer_download', 'restrict_email_domain', 'remember_values', 'analytics', 'custom_style', 'models' ), true ) ) {
 			return $settings[ $key ];
 		}
 		$parts = explode( '.', $key );

@@ -94,6 +94,28 @@ final class Config {
 	public const FORM_WIDTH = 640;
 
 	/**
+	 * The form's colours, as the stylesheet declares them. Each key is a
+	 * custom property of the form, `--esg-` plus the key with dashes.
+	 */
+	public const COLORS = array(
+		'accent'      => '#2271b1',
+		'accent_text' => '#ffffff',
+		'border'      => '#8c8f94',
+		'muted'       => '#50575e',
+		'error'       => '#b32d2e',
+	);
+
+	/**
+	 * The corners' radius, in pixels, as the stylesheet declares it.
+	 */
+	public const RADIUS = 4;
+
+	/**
+	 * The fonts the form can use: its own (the stylesheet's) or the theme's.
+	 */
+	public const FONTS = array( 'form', 'theme' );
+
+	/**
 	 * Width of the signature table, in CSS pixels. Mirrors SIGNATURE_WIDTH in
 	 * assets/js/signature-generator.js, which draws it.
 	 */
@@ -147,6 +169,7 @@ final class Config {
 			'topSpace'            => self::TOP_SPACE,
 			'offerDownload'       => true,
 			'rememberValues'      => false,
+			'analytics'           => false,
 			'rememberMinutes'     => self::REMEMBER_MINUTES,
 			'downloadStyle'       => 'notice',
 			'emailDomains'        => array(),
@@ -363,6 +386,8 @@ final class Config {
 				self::REMEMBER_MINUTES
 			),
 			'forget'             => __( 'Forget it', 'email-signature-generator' ),
+			'privacy'            => __( 'The signature is built in your browser: nothing you type is sent to the site.', 'email-signature-generator' ),
+			'fixErrors'          => __( 'Check the marked fields.', 'email-signature-generator' ),
 			'forgotten'          => __( 'This browser no longer keeps what you typed.', 'email-signature-generator' ),
 			'darkPreview'        => __( 'See it in dark mode', 'email-signature-generator' ),
 			'howTo'              => __( 'How to add the signature to your email', 'email-signature-generator' ),

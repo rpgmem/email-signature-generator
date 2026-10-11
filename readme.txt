@@ -3,7 +3,7 @@ Contributors: rpgmem
 Tags: email signature, signature generator, outlook, shortcode
 Requires at least: 6.8
 Tested up to: 7.1.3
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 Requires PHP: 8.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -16,7 +16,7 @@ Everyone in an organisation fills in the same form and gets a signature with the
 
 The plugin ships with the São Paulo Municipal Department of Education (SME-SP) layout as its default, and an administrator can adapt it to another organisation.
 
-A standalone HTML version, which needs no WordPress, is published next to the plugin on each GitHub release.
+A standalone HTML version, which needs no WordPress, is published next to the plugin on each GitHub release, and the latest one is served at https://rpgmem.github.io/email-signature-generator/.
 
 == Usage ==
 
@@ -46,6 +46,8 @@ Settings → Email Signature sets, for every form on the site:
 * the downloaded image's format (PNG by default, or JPG with its quality) and resolution (1×, 2× or 3×);
 * the units, each with a name and a unique acronym, and the one the form starts on;
 * per field: the label the form shows, a default value, whether it is required, whether it is locked to that default, and whether it is printed in capitals.
+* optional Google Analytics, with a GA4 measurement ID (off by default);
+* the form's colours, rounded corners and font, to match the site (off by default; the signature keeps its own look).
 
 A Documentation tab on the same screen explains every setting, how the form behaves, privacy and updates.
 
@@ -54,6 +56,8 @@ On/off settings are switches that save as soon as they are flipped. Text fields,
 == Privacy ==
 
 Nothing typed in the form is sent to the site, and the plugin stores no personal data. With "Remember what was typed" on, the values stay in the visitor's own browser and are forgotten 60 minutes after the signature was last generated, or at once with the form's "Forget it" link. Leave it off where computers are shared.
+
+By default the form loads nothing from third parties. With Google Analytics switched on (off by default), the pages with the form load Google's tag, which sets Google's cookies, and record when a signature is generated, copied or downloaded, with only the model and the image format.
 
 == Installation ==
 
@@ -77,6 +81,13 @@ Updates then arrive through the normal WordPress update screen, straight from th
 
 The full history of every release is in [CHANGELOG.md](https://github.com/rpgmem/email-signature-generator/blob/main/CHANGELOG.md).
 
+= 1.1.0 =
+* New: the latest standalone generator on GitHub Pages at a stable address.
+* New: optional Google Analytics (GA4), recording only when a signature is generated, copied or downloaded; nothing typed is sent.
+* New: a Design tab for the form's colours, corners and font, with a contrast warning.
+* Changed: each field shows its own error, and the form says nothing typed is sent to the site.
+* Fixed: the split email field keeps the domain whole, and the form's lists no longer look disabled.
+
 = 1.0.0 =
 * New: the email signature generator as a WordPress plugin, placed with the [email_signature] shortcode.
 * New: Settings → Email Signature for the models offered, access, remembered values, the allowed or refused email domains, the form width, the logo and its alternative text, the image format and resolution, the units and the default one, and per field the label, default, required, locked and capitals, with a Documentation tab explaining each.
@@ -87,5 +98,5 @@ The full history of every release is in [CHANGELOG.md](https://github.com/rpgmem
 
 == Upgrade Notice ==
 
-= 1.0.0 =
-First release as a WordPress plugin: the [email_signature] shortcode, settings for models, access, email domains, layout, units and fields, and updates from GitHub. Details in CHANGELOG.md.
+= 1.1.0 =
+Optional Google Analytics and a Design tab for the form's colours, corners and font, both off by default; errors under each field; a fixed email field; the standalone HTML on GitHub Pages. Details in CHANGELOG.md.

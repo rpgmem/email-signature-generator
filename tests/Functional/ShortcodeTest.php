@@ -36,6 +36,14 @@ final class ShortcodeTest extends WP_UnitTestCase {
 		self::assertStringContainsString( 'style="max-width:900px"', do_shortcode( '[email_signature]' ) );
 	}
 
+	public function test_a_custom_design_reaches_the_container(): void {
+		update_option( Settings::OPTION, array( 'custom_style' => true, 'colors' => array( 'accent' => '#aa0000' ), 'radius' => 0, 'font' => 'theme' ) );
+
+		self::assertSame( 1, preg_match( '/<div class="esg-generator" style="([^"]+)"/', do_shortcode( '[email_signature]' ), $m ) );
+		self::assertStringStartsWith( 'max-width:640px; --esg-accent: #aa0000; ', $m[1] );
+		self::assertStringContainsString( '--esg-radius: 0px; --esg-font: inherit', $m[1] );
+	}
+
 	public function test_the_models_attribute_limits_the_form(): void {
 		$html = do_shortcode( '[email_signature models="staff_school"]' );
 		preg_match( '/data-esg-config="([^"]+)"/', $html, $m );
@@ -52,6 +60,28 @@ final class ShortcodeTest extends WP_UnitTestCase {
 		self::assertTrue( wp_script_is( Shortcode::SCRIPT_HANDLE, 'enqueued' ) );
 		self::assertTrue( wp_script_is( Shortcode::HTML2CANVAS_HANDLE, 'enqueued' ) );
 		self::assertTrue( wp_style_is( Shortcode::STYLE_HANDLE, 'enqueued' ) );
+	}
+
+	public function test_analytics_off_loads_nothing_of_googles(): void {
+		update_option( Settings::OPTION, array( 'analytics' => false, 'analytics_id' => 'G-ABC1234' ) );
+
+		$html = do_shortcode( '[email_signature]' );
+
+		self::assertFalse( wp_script_is( Shortcode::GTAG_HANDLE, 'enqueued' ) );
+		self::assertSame( 1, preg_match( '/data-esg-config="([^"]+)"/', $html, $m ) );
+		self::assertFalse( json_decode( html_entity_decode( $m[1], ENT_QUOTES, 'UTF-8' ), true )['analytics'] );
+	}
+
+	public function test_analytics_on_loads_googles_tag_with_the_id(): void {
+		update_option( Settings::OPTION, array( 'analytics' => true, 'analytics_id' => 'G-ABC1234' ) );
+
+		$html = do_shortcode( '[email_signature]' );
+
+		self::assertTrue( wp_script_is( Shortcode::GTAG_HANDLE, 'enqueued' ) );
+		self::assertSame( 'https://www.googletagmanager.com/gtag/js?id=G-ABC1234', wp_scripts()->registered[ Shortcode::GTAG_HANDLE ]->src );
+		self::assertStringContainsString( 'gtag("config","G-ABC1234")', implode( '', wp_scripts()->get_data( Shortcode::GTAG_HANDLE, 'after' ) ) );
+		self::assertSame( 1, preg_match( '/data-esg-config="([^"]+)"/', $html, $m ) );
+		self::assertTrue( json_decode( html_entity_decode( $m[1], ENT_QUOTES, 'UTF-8' ), true )['analytics'] );
 	}
 
 	public function test_its_own_assets_are_versioned_by_file_time(): void {
@@ -81,6 +111,7 @@ final class ShortcodeTest extends WP_UnitTestCase {
 		wp_dequeue_script( Shortcode::SCRIPT_HANDLE );
 		wp_dequeue_script( Shortcode::HTML2CANVAS_HANDLE );
 		wp_dequeue_style( Shortcode::STYLE_HANDLE );
+		wp_deregister_script( Shortcode::GTAG_HANDLE );
 		parent::tearDown();
 	}
 }
