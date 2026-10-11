@@ -21,6 +21,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Regional offices have a name and an acronym** (#17, #19). Settings → Regional offices is a table of both, with rows to add and remove; the signature still prints "Name / ACRONYM". The acronym is required and unique. A list saved as text before is read into the two parts, and a row that cannot be saved is named in a notice.
 - **Units, with the name the form uses** (#20). The settings call the list Units, so it fits any structure, not only regional offices; a "Name in the form" setting chooses what the signature form calls the field, "Regional office" (pt_BR "Diretoria") by default.
 - **Where to paste the signature** (#29). Under the result, a collapsed "How to add the signature to your email" gives the steps for Outlook on the web and the new Outlook, classic Outlook, Gmail, and phone apps.
+- **The form can remember what was typed, and shows dark mode** (#31). Off by default, a General switch lets each browser keep its person's last model and values, in that browser only, with a link on the form to forget them. Beside the preview, "See it in dark mode" inverts text and backgrounds and leaves images alone, as email programs do.
 
 ### Changed
 

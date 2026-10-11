@@ -205,3 +205,39 @@
 .esg-generator .esg-howto li {
 	margin-bottom: 6px;
 }
+
+/* "This browser remembers…" and its link to forget. */
+.esg-generator .esg-remember {
+	margin: 0 0 12px;
+	color: var(--esg-muted);
+	font-size: 0.875em;
+}
+
+.esg-generator .esg-forget {
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--esg-accent);
+	font: inherit;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+/* The preview's title and its dark-mode switch on one line. */
+.esg-generator .esg-preview-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.esg-generator .esg-dark {
+	color: var(--esg-muted);
+	font-size: 0.875em;
+}
+
+/* Email programs in dark mode invert text and backgrounds. */
+.esg-generator .esg-preview--dark {
+	filter: invert(1) hue-rotate(180deg);
+}

@@ -43,6 +43,13 @@ final class AutosaveTest extends TestCase {
 		self::assertSame( 'not_casable', $refused->get_error_code() );
 	}
 
+	public function test_remembering_turns_on_and_off(): void {
+		$on = Autosave::apply( Settings::defaults(), 'remember_values', '1' );
+		self::assertIsArray( $on );
+		self::assertTrue( Autosave::read( $on, 'remember_values' ) );
+		self::assertFalse( Autosave::apply( $on, 'remember_values', '0' )['remember_values'] );
+	}
+
 	public function test_the_domain_restriction_turns_on_and_off_and_keeps_the_list(): void {
 		$on = Autosave::apply( Settings::sanitize( array( 'email_domains' => 'a.org' ) ), 'restrict_email_domain', '1' );
 		self::assertIsArray( $on );
