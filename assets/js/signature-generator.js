@@ -90,6 +90,60 @@
 	}
 
 	/**
+	 * The email domains the site accepts; empty when any address is.
+	 *
+	 * @param {Object} config The configuration.
+	 * @return {string[]} Lower-case domains, without the "@".
+	 */
+	function domains( config ) {
+		return Array.isArray( config.emailDomains ) ? config.emailDomains : [];
+	}
+
+	/**
+	 * The lower-case domain of an address.
+	 *
+	 * @param {string} value Address.
+	 * @return {string} What follows its last "@".
+	 */
+	function domainOf( value ) {
+		return value.slice( value.lastIndexOf( '@' ) + 1 ).trim().toLowerCase();
+	}
+
+	/**
+	 * The refused domain an address domain falls under, itself or a parent.
+	 *
+	 * @param {string} domain Lower-case domain.
+	 * @param {Object} config The configuration.
+	 * @return {string} The refused domain, or '' when it is accepted.
+	 */
+	function blockedBy( domain, config ) {
+		var blocked = Array.isArray( config.blockedEmailDomains ) ? config.blockedEmailDomains : [];
+		for ( var i = 0; i < blocked.length; i++ ) {
+			if ( domain === blocked[ i ] || domain.slice( -( blocked[ i ].length + 1 ) ) === '.' + blocked[ i ] ) {
+				return blocked[ i ];
+			}
+		}
+		return '';
+	}
+
+	/**
+	 * Split an address at its last "@" when the part after it is an
+	 * accepted domain.
+	 *
+	 * @param {string}   value   Typed or pasted text.
+	 * @param {string[]} allowed Accepted domains.
+	 * @return {?{local: string, domain: string}} The two parts, or null.
+	 */
+	function splitAddress( value, allowed ) {
+		var at = String( value || '' ).lastIndexOf( '@' );
+		if ( -1 === at ) {
+			return null;
+		}
+		var domain = value.slice( at + 1 ).trim().toLowerCase();
+		return -1 === allowed.indexOf( domain ) ? null : { local: value.slice( 0, at ).trim(), domain: domain };
+	}
+
+	/**
 	 * Check the values of one model against its fields' rules.
 	 *
 	 * @param {Object} model  The model.
@@ -114,10 +168,15 @@
 
 			switch ( field.rule ) {
 				case 'email':
-					if ( ! /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test( value ) ) {
+					if ( domains( config ).length && value.indexOf( '@' ) !== value.lastIndexOf( '@' ) ) {
+						// The part typed beside the domain carried an "@".
+						errors.push( { key: field.key, message: strings.emailLocalOnly } );
+					} else if ( ! /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test( value ) ) {
 						errors.push( { key: field.key, message: strings.invalidEmail } );
-					} else if ( config.emailDomain && value.toLowerCase().slice( -( config.emailDomain.length + 1 ) ) !== '@' + config.emailDomain ) {
-						errors.push( { key: field.key, message: format( strings.invalidEmailDomain, config.emailDomain ) } );
+					} else if ( domains( config ).length && -1 === domains( config ).indexOf( domainOf( value ) ) ) {
+						errors.push( { key: field.key, message: format( strings.invalidEmailDomain, domains( config ).join( ', ' ) ) } );
+					} else if ( ! domains( config ).length && blockedBy( domainOf( value ), config ) ) {
+						errors.push( { key: field.key, message: format( strings.emailBlocked, blockedBy( domainOf( value ), config ) ) } );
 					}
 					break;
 				case 'phone':
@@ -458,6 +517,60 @@
 		container.appendChild( el( doc, 'h3', { class: 'esg-preview-title', text: strings.preview } ) );
 		container.appendChild( previewHost );
 
+		/**
+		 * The email field when the site accepts only some domains: the person
+		 * types the part before the "@", and the domain sits beside it, fixed
+		 * when there is one and chosen from a list when there are more. A
+		 * pasted address at an accepted domain is split into the two.
+		 *
+		 * @param {Object} field The email field.
+		 * @param {string} id    The input's id.
+		 * @return {HTMLElement} The group.
+		 */
+		function emailGroup( field, id ) {
+			var allowed = domains( config );
+			var placeholder = String( field.placeholder || '' );
+			var local = el( doc, 'input', {
+				id: id,
+				name: field.key,
+				type: 'text',
+				inputmode: 'email',
+				autocomplete: 'off',
+				placeholder: -1 === placeholder.indexOf( '@' ) ? placeholder : placeholder.slice( 0, placeholder.indexOf( '@' ) ),
+				'aria-required': field.required ? 'true' : undefined,
+				'aria-describedby': id + '-domain',
+			} );
+			var suffix;
+			if ( 1 === allowed.length ) {
+				suffix = el( doc, 'span', { id: id + '-domain', class: 'esg-email-domain', text: '@' + allowed[ 0 ] } );
+			} else {
+				suffix = el( doc, 'select', { id: id + '-domain', class: 'esg-email-domain', name: field.key + '__domain', 'aria-label': strings.emailDomain } );
+				allowed.forEach( function ( domain ) {
+					suffix.appendChild( el( doc, 'option', { value: domain, text: '@' + domain } ) );
+				} );
+			}
+
+			function take( value ) {
+				var parts = splitAddress( value, allowed );
+				if ( ! parts ) {
+					return false;
+				}
+				local.value = parts.local;
+				if ( 'SELECT' === suffix.tagName ) {
+					suffix.value = parts.domain;
+				}
+				return true;
+			}
+
+			if ( ! take( field.default || '' ) ) {
+				local.value = field.default || '';
+			}
+			local.addEventListener( 'input', function () {
+				take( local.value );
+			} );
+			return el( doc, 'span', { class: 'esg-email-group' }, [ local, suffix ] );
+		}
+
 		function drawFields() {
 			fieldsBox.innerHTML = '';
 			current.fields.forEach( function ( field ) {
@@ -474,6 +587,8 @@
 					( config.offices || [] ).forEach( function ( office ) {
 						input.appendChild( el( doc, 'option', { value: office.acronym, text: office.name + ' / ' + office.acronym, selected: office.acronym === field.default } ) );
 					} );
+				} else if ( 'email' === field.type && ! field.locked && domains( config ).length ) {
+					input = emailGroup( field, id );
 				} else {
 					input = el( doc, 'input', {
 						id: id,
@@ -498,6 +613,13 @@
 			current.fields.forEach( function ( field ) {
 				var input = fieldsBox.querySelector( '[name="' + field.key + '"]' );
 				values[ field.key ] = field.locked ? ( field.default || '' ) : ( input ? input.value : '' );
+				var domain = input && input.parentNode && input.parentNode.querySelector( '.esg-email-domain' );
+				var local = values[ field.key ].trim();
+				if ( domain && ! field.locked && '' !== local ) {
+					// A part typed with an "@" of its own keeps it, and the
+					// second "@" is what validate() refuses.
+					values[ field.key ] = local + '@' + ( 'SELECT' === domain.tagName ? domain.value : domain.textContent.slice( 1 ) );
+				}
 			} );
 			return values;
 		}

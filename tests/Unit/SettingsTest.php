@@ -54,23 +54,74 @@ final class SettingsTest extends TestCase {
 
 	/**
 	 * @dataProvider domains
+	 *
+	 * @param string|list<string> $input  Posted domains.
+	 * @param list<string>        $stored Kept domains.
 	 */
-	public function test_the_email_domain( string $input, string $stored ): void {
-		self::assertSame( $stored, Settings::sanitize( array( 'email_domain' => $input ) )['email_domain'] );
+	public function test_the_email_domains( $input, array $stored ): void {
+		self::assertSame( $stored, Settings::sanitize( array( 'email_domains' => $input ) )['email_domains'] );
 	}
 
 	/**
-	 * @return array<string, array{string, string}>
+	 * @return array<string, array{string|list<string>, list<string>}>
 	 */
 	public static function domains(): array {
 		return array(
-			'plain'         => array( 'sme.prefeitura.sp.gov.br', 'sme.prefeitura.sp.gov.br' ),
-			'with at'       => array( '@Example.ORG ', 'example.org' ),
-			'empty'         => array( '', '' ),
-			'not a domain'  => array( 'not a domain', '' ),
-			'markup'        => array( '"><script>', '' ),
-			'single label'  => array( 'localhost', '' ),
+			'one'           => array( 'sme.prefeitura.sp.gov.br', array( 'sme.prefeitura.sp.gov.br' ) ),
+			'one per line'  => array( "sme.prefeitura.sp.gov.br\r\n\n@Prefeitura.SP.gov.br \n", array( 'sme.prefeitura.sp.gov.br', 'prefeitura.sp.gov.br' ) ),
+			'commas'        => array( 'a.org, b.org;a.org', array( 'a.org', 'b.org' ) ),
+			'a list'        => array( array( 'a.org', 'B.ORG' ), array( 'a.org', 'b.org' ) ),
+			'with at'       => array( '@Example.ORG ', array( 'example.org' ) ),
+			'empty'         => array( '', array() ),
+			'not a domain'  => array( 'not a domain', array() ),
+			'markup'        => array( '"><script>', array() ),
+			'single label'  => array( 'localhost', array() ),
 		);
+	}
+
+	public function test_bad_domains_are_reported_and_good_ones_kept(): void {
+		self::assertSame(
+			array(
+				'domains'  => array( 'example.org' ),
+				'rejected' => array( 'localhost', 'x_y.org' ),
+			),
+			Settings::parseDomains( "example.org\nlocalhost\nx_y.org" )
+		);
+	}
+
+	public function test_the_restriction_is_off_by_default_and_follows_its_toggle(): void {
+		self::assertFalse( Settings::sanitize( array() )['restrict_email_domain'] );
+		self::assertTrue( Settings::sanitize( array( 'restrict_email_domain' => '1' ) )['restrict_email_domain'] );
+		self::assertFalse( Settings::sanitize( array( 'restrict_email_domain' => '0', 'email_domains' => 'a.org' ) )['restrict_email_domain'] );
+	}
+
+	public function test_a_domain_stored_before_the_list_turns_the_restriction_on(): void {
+		$settings = Settings::sanitize( array( 'email_domain' => 'Example.org' ) );
+		self::assertTrue( $settings['restrict_email_domain'] );
+		self::assertSame( array( 'example.org' ), $settings['email_domains'] );
+		self::assertArrayNotHasKey( 'email_domain', $settings );
+
+		self::assertFalse( Settings::sanitize( array( 'email_domain' => '' ) )['restrict_email_domain'] );
+	}
+
+	public function test_refused_domains_start_from_the_built_in_list_and_can_be_emptied(): void {
+		self::assertSame( Config::BLOCKED_EMAIL_DOMAINS, Settings::sanitize( array() )['blocked_email_domains'] );
+		self::assertSame( array( 'spam.org' ), Settings::sanitize( array( 'blocked_email_domains' => "@Spam.org\nnot a domain" ) )['blocked_email_domains'] );
+		self::assertSame( array(), Settings::sanitize( array( 'blocked_email_domains' => '' ) )['blocked_email_domains'] );
+		self::assertSame( array( 'spam.org' ), Settings::apply( Config::defaults( '' ), Settings::sanitize( array( 'blocked_email_domains' => 'spam.org' ) ) )['blockedEmailDomains'] );
+	}
+
+	public function test_the_built_in_refused_domains_are_valid_and_unique(): void {
+		self::assertSame( Config::BLOCKED_EMAIL_DOMAINS, Settings::parseDomains( Config::BLOCKED_EMAIL_DOMAINS )['domains'] );
+	}
+
+	public function test_the_form_gets_the_domains_only_while_the_restriction_is_on(): void {
+		$on  = Settings::sanitize( array( 'restrict_email_domain' => '1', 'email_domains' => "a.org\nb.org" ) );
+		$off = Settings::sanitize( array( 'restrict_email_domain' => '0', 'email_domains' => "a.org\nb.org" ) );
+
+		self::assertSame( array( 'a.org', 'b.org' ), Settings::apply( Config::defaults( '' ), $on )['emailDomains'] );
+		self::assertSame( array(), Settings::apply( Config::defaults( '' ), $off )['emailDomains'] );
+		self::assertSame( array( 'a.org', 'b.org' ), $off['email_domains'], 'Turning it off keeps the list for later.' );
 	}
 
 	public function test_regions_from_the_old_text_become_name_and_acronym(): void {
@@ -255,7 +306,8 @@ final class SettingsTest extends TestCase {
 				'image_format'   => 'jpg',
 				'image_quality'  => '80',
 				'image_scale'    => '3',
-				'email_domain'   => 'example.org',
+				'restrict_email_domain' => '1',
+				'email_domains'  => 'example.org',
 				'regions'        => array(
 					array( 'name' => 'North', 'acronym' => 'N' ),
 					array( 'name' => 'South', 'acronym' => 'S' ),
@@ -270,7 +322,7 @@ final class SettingsTest extends TestCase {
 		self::assertSame( array( 'staff_school', 'department' ), array_column( $config['models'], 'id' ) );
 		self::assertFalse( $config['uppercaseName'] );
 		self::assertSame( array( 'format' => 'jpg', 'quality' => 80, 'scale' => 3 ), $config['image'] );
-		self::assertSame( 'example.org', $config['emailDomain'] );
+		self::assertSame( array( 'example.org' ), $config['emailDomains'] );
 		self::assertSame( array( 'url' => 'https://example.org/chosen.png', 'width' => 90, 'alt' => 'Logo' ), $config['logo'] );
 		self::assertSame( array( 'North / N', 'South / S' ), $config['regions'] );
 

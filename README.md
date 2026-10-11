@@ -4,7 +4,7 @@ A form that builds a consistent HTML email signature for everyone in an organisa
 
 It comes in two forms, both published on every [release](https://github.com/rpgmem/email-signature-generator/releases/latest):
 
-- **WordPress plugin** (`email-signature-generator-X.Y.Z.zip`): place the form on any page with a shortcode. An administrator sets which models are offered, the defaults, the required and locked fields, the allowed email domain and the logo. Updates arrive through the normal WordPress update screen.
+- **WordPress plugin** (`email-signature-generator-X.Y.Z.zip`): place the form on any page with a shortcode. An administrator sets which models are offered, the defaults, the required and locked fields, the allowed or refused email domains and the logo. Updates arrive through the normal WordPress update screen.
 - **Standalone HTML** (`email-signature-generator-X.Y.Z.html`): one self-contained file that needs no WordPress. Open it in a browser or publish it on any web page.
 
 The default layout and logo are those of the São Paulo Municipal Department of Education (SME-SP), and both can be adapted to another organisation.
@@ -21,7 +21,7 @@ The default layout and logo are those of the São Paulo Municipal Department of 
 
 **In WordPress**, put `[email_signature]` on any page. To offer only some models, list them: `[email_signature models="staff_school,department"]` (the ids are `staff_regional`, `staff_school` and `department`).
 
-In **Settings → Email Signature** an administrator chooses the models offered, who may use the form, an allowed email domain, the space above the signature, the logo (from the media library), whether and how the image download is offered, the downloaded image's format (PNG or JPG) and resolution, the units (name and acronym) and what the form calls them, and per field a default and whether it is required or locked. The on/off settings save the moment they are flipped.
+In **Settings → Email Signature** an administrator chooses the models offered, who may use the form, the email domains (only some allowed, or any address except placeholder domains such as `test.com`), the space above the signature, the logo (from the media library), whether and how the image download is offered, the downloaded image's format (PNG or JPG) and resolution, the units (name and acronym) and what the form calls them, and per field a default and whether it is required or locked. The on/off settings save the moment they are flipped.
 
 **Standalone**, open the `.html` file in a browser, or publish it on any web page.
 

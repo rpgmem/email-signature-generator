@@ -38,6 +38,15 @@ final class AutosaveTest extends TestCase {
 		self::assertTrue( Autosave::apply( $off, 'uppercase_name', '1' )['uppercase_name'] );
 	}
 
+	public function test_the_domain_restriction_turns_on_and_off_and_keeps_the_list(): void {
+		$on = Autosave::apply( Settings::sanitize( array( 'email_domains' => 'a.org' ) ), 'restrict_email_domain', '1' );
+		self::assertIsArray( $on );
+		self::assertTrue( Autosave::read( $on, 'restrict_email_domain' ) );
+		$off = Autosave::apply( $on, 'restrict_email_domain', '0' );
+		self::assertFalse( $off['restrict_email_domain'] );
+		self::assertSame( array( 'a.org' ), $off['email_domains'] );
+	}
+
 	public function test_the_download_turns_off_and_on(): void {
 		$off = Autosave::apply( Settings::defaults(), 'offer_download', '0' );
 		self::assertFalse( $off['offer_download'] );

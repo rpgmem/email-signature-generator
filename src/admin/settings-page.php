@@ -196,11 +196,34 @@ final class SettingsPage {
 		echo '</td></tr>';
 
 		printf(
-			'<tr><th scope="row"><label for="esg-email-domain">%1$s</label></th><td><input type="text" id="esg-email-domain" class="regular-text" name="%2$s[email_domain]" value="%3$s" placeholder="example.org"><p class="description">%4$s</p></td></tr>',
+			'<tr><th scope="row">%1$s</th><td><input type="hidden" name="%2$s[restrict_email_domain]" value="0">',
 			esc_html__( 'Allowed email domain', 'email-signature-generator' ),
+			esc_attr( $name )
+		);
+		self::toggle(
+			array(
+				'name'    => $name . '[restrict_email_domain]',
+				'checked' => $settings['restrict_email_domain'],
+				'label'   => __( 'Accept only addresses at the domains below', 'email-signature-generator' ),
+				'key'     => 'restrict_email_domain',
+			)
+		);
+		echo '<p class="description">' . esc_html__( 'Off, the form accepts any valid address outside the refused domains.', 'email-signature-generator' ) . '</p></td></tr>';
+		printf(
+			'<tr data-esg-shown-by="restrict_email_domain"%1$s><th scope="row"><label for="esg-email-domains">%2$s</label></th><td><textarea id="esg-email-domains" class="regular-text" rows="3" name="%3$s[email_domains]" placeholder="example.org">%4$s</textarea><p class="description">%5$s</p></td></tr>',
+			$settings['restrict_email_domain'] ? '' : ' hidden',
+			esc_html__( 'Domains', 'email-signature-generator' ),
 			esc_attr( $name ),
-			esc_attr( $settings['email_domain'] ),
-			esc_html__( 'Only addresses at this domain are accepted. Leave it empty to accept any address.', 'email-signature-generator' )
+			esc_textarea( implode( "\n", $settings['email_domains'] ) ),
+			esc_html__( 'One per line. The form shows the domain beside the field, so a person types only the part before the "@"; with more than one, they pick it from a list, and the first is preselected. With none, any address is accepted.', 'email-signature-generator' )
+		);
+		printf(
+			'<tr data-esg-hidden-by="restrict_email_domain"%1$s><th scope="row"><label for="esg-blocked-domains">%2$s</label></th><td><textarea id="esg-blocked-domains" class="regular-text" rows="6" name="%3$s[blocked_email_domains]">%4$s</textarea><p class="description">%5$s</p></td></tr>',
+			$settings['restrict_email_domain'] ? ' hidden' : '',
+			esc_html__( 'Refused domains', 'email-signature-generator' ),
+			esc_attr( $name ),
+			esc_textarea( implode( "\n", $settings['blocked_email_domains'] ) ),
+			esc_html__( 'While any address is accepted, addresses at these domains are refused: placeholders and throwaway inboxes people type to get past the field. One per line; a subdomain of one is refused too.', 'email-signature-generator' )
 		);
 		echo '</tbody></table></div>';
 

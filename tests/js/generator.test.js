@@ -329,7 +329,7 @@ describe( 'mount', () => {
 
 describe( 'settings in the configuration', () => {
 	it( 'refuses an address outside the allowed domain', () => {
-		const cfg = { ...config, emailDomain: 'sme.prefeitura.sp.gov.br' };
+		const cfg = { ...config, emailDomains: [ 'sme.prefeitura.sp.gov.br' ] };
 		expect( gen.validate( model( 'staff_regional' ), valid, cfg ) ).toEqual( [] );
 
 		const errors = gen.validate( model( 'staff_regional' ), { ...valid, email: 'maria@gmail.com' }, cfg );
@@ -338,9 +338,99 @@ describe( 'settings in the configuration', () => {
 	} );
 
 	it( 'does not accept a domain that merely ends the same way', () => {
-		const cfg = { ...config, emailDomain: 'example.org' };
+		const cfg = { ...config, emailDomains: [ 'example.org' ] };
 		const errors = gen.validate( model( 'staff_regional' ), { ...valid, email: 'a@evilexample.org' }, cfg );
 		expect( errors.map( ( e ) => e.key ) ).toEqual( [ 'email' ] );
+	} );
+
+	it( 'accepts any of several domains and names them all when none matches', () => {
+		const cfg = { ...config, emailDomains: [ 'sme.prefeitura.sp.gov.br', 'prefeitura.sp.gov.br' ] };
+		expect( gen.validate( model( 'staff_regional' ), { ...valid, email: 'a@prefeitura.sp.gov.br' }, cfg ) ).toEqual( [] );
+
+		const errors = gen.validate( model( 'staff_regional' ), { ...valid, email: 'a@gmail.com' }, cfg );
+		expect( errors[ 0 ].message ).toContain( 'sme.prefeitura.sp.gov.br, prefeitura.sp.gov.br' );
+	} );
+
+	function fill( values ) {
+		Object.entries( values ).forEach( ( [ key, value ] ) => {
+			const input = document.querySelector( `[name="${ key }"]` );
+			if ( input ) {
+				input.value = value;
+			}
+		} );
+	}
+
+	it( 'refuses an "@" in the part typed beside the domain', () => {
+		const cfg = { ...config, emailDomains: [ 'sme.prefeitura.sp.gov.br' ] };
+		const errors = gen.validate( model( 'staff_regional' ), { ...valid, email: 'maria@gmail.com@sme.prefeitura.sp.gov.br' }, cfg );
+		expect( errors ).toEqual( [ { key: 'email', message: config.strings.emailLocalOnly } ] );
+	} );
+
+	it( 'refuses a placeholder domain, and its subdomains, when any address is accepted', () => {
+		const cfg = { ...config, emailDomains: [], blockedEmailDomains: [ 'test.com' ] };
+		for ( const email of [ 'a@test.com', 'a@TEST.com', 'a@mail.test.com' ] ) {
+			const errors = gen.validate( model( 'staff_regional' ), { ...valid, email }, cfg );
+			expect( errors.map( ( e ) => e.message ) ).toEqual( [ config.strings.emailBlocked.replace( '%s', 'test.com' ) ] );
+		}
+		expect( gen.validate( model( 'staff_regional' ), { ...valid, email: 'a@latest.com' }, cfg ) ).toEqual( [] );
+		expect( gen.validate( model( 'staff_regional' ), { ...valid, email: 'a@gmail.com' }, cfg ) ).toEqual( [] );
+	} );
+
+	it( 'ships a list of placeholder domains by default', () => {
+		expect( config.blockedEmailDomains ).toContain( 'test.com' );
+		expect( gen.validate( model( 'staff_regional' ), { ...valid, email: 'a@example.com' }, config ) ).toHaveLength( 1 );
+	} );
+
+	it( 'leaves the email field free when no domain is set', () => {
+		document.body.innerHTML = '<div id="c"></div>';
+		gen.mount( document.getElementById( 'c' ), config );
+		expect( document.querySelector( '.esg-email-group' ) ).toBeNull();
+		expect( document.querySelector( '[name="email"]' ).getAttribute( 'type' ) ).toBe( 'email' );
+	} );
+
+	it( 'shows one domain beside the field and joins it to what is typed', () => {
+		document.body.innerHTML = '<div id="c"></div>';
+		const ui = gen.mount( document.getElementById( 'c' ), { ...config, emailDomains: [ 'sme.prefeitura.sp.gov.br' ] } );
+		const domain = document.querySelector( '.esg-email-group .esg-email-domain' );
+		expect( domain.tagName ).toBe( 'SPAN' );
+		expect( domain.textContent ).toBe( '@sme.prefeitura.sp.gov.br' );
+		expect( document.querySelector( '[name="email"]' ).getAttribute( 'aria-describedby' ) ).toBe( domain.id );
+
+		fill( { ...valid, email: 'Maria.Silva' } );
+		expect( ui.generate() ).toBe( true );
+		expect( ui.html() ).toContain( 'mailto:maria.silva@sme.prefeitura.sp.gov.br' );
+	} );
+
+	it( 'offers several domains in a list, the first chosen', () => {
+		document.body.innerHTML = '<div id="c"></div>';
+		const ui = gen.mount( document.getElementById( 'c' ), { ...config, emailDomains: [ 'sme.prefeitura.sp.gov.br', 'prefeitura.sp.gov.br' ] } );
+		const select = document.querySelector( 'select.esg-email-domain' );
+		expect( [ ...select.options ].map( ( o ) => o.textContent ) ).toEqual( [ '@sme.prefeitura.sp.gov.br', '@prefeitura.sp.gov.br' ] );
+		expect( select.value ).toBe( 'sme.prefeitura.sp.gov.br' );
+		expect( select.getAttribute( 'aria-label' ) ).toBe( config.strings.emailDomain );
+
+		fill( { ...valid, email: 'maria' } );
+		select.value = 'prefeitura.sp.gov.br';
+		expect( ui.generate() ).toBe( true );
+		expect( ui.html() ).toContain( 'mailto:maria@prefeitura.sp.gov.br' );
+	} );
+
+	it( 'splits a pasted address at an accepted domain, and refuses another', () => {
+		document.body.innerHTML = '<div id="c"></div>';
+		const ui = gen.mount( document.getElementById( 'c' ), { ...config, emailDomains: [ 'sme.prefeitura.sp.gov.br', 'prefeitura.sp.gov.br' ] } );
+		fill( valid );
+		const local = document.querySelector( '[name="email"]' );
+		local.value = 'Maria@Prefeitura.SP.gov.br';
+		local.dispatchEvent( new window.Event( 'input', { bubbles: true } ) );
+		expect( local.value ).toBe( 'Maria' );
+		expect( document.querySelector( 'select.esg-email-domain' ).value ).toBe( 'prefeitura.sp.gov.br' );
+
+		local.value = 'maria@gmail.com';
+		local.dispatchEvent( new window.Event( 'input', { bubbles: true } ) );
+		expect( local.value ).toBe( 'maria@gmail.com' );
+		expect( ui.generate() ).toBe( false );
+		expect( local.getAttribute( 'aria-invalid' ) ).toBe( 'true' );
+		expect( document.querySelector( '.esg-errors' ).textContent ).toContain( config.strings.emailLocalOnly );
 	} );
 
 	it( 'shows a locked field read-only and always uses its default', () => {

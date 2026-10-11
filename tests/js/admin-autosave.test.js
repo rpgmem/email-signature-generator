@@ -44,6 +44,26 @@ describe( 'settings toggles', () => {
 		expect( box.checked ).toBe( false );
 	} );
 
+	it( 'shows the rows a toggle governs only while it is on, and again after a failed save', async () => {
+		document.body.innerHTML = `<table><tr><td>${ toggle( 'restrict_email_domain', '1', false ) }</td></tr><tr data-esg-shown-by="restrict_email_domain"><td>domains</td></tr><tr data-esg-hidden-by="restrict_email_domain"><td>refused</td></tr></table>`;
+		boot( { success: false, data: { message: 'No' } } );
+		const box = document.querySelector( 'input' );
+		const row = document.querySelector( '[data-esg-shown-by]' );
+		const other = document.querySelector( '[data-esg-hidden-by]' );
+		expect( row.hidden ).toBe( true );
+		expect( other.hidden ).toBe( false );
+
+		box.checked = true;
+		box.dispatchEvent( new Event( 'change' ) );
+		expect( row.hidden ).toBe( false );
+		expect( other.hidden ).toBe( true );
+
+		await flush();
+		expect( box.checked ).toBe( false );
+		expect( row.hidden ).toBe( true );
+		expect( other.hidden ).toBe( false );
+	} );
+
 	it( 'posts every ticked model and shows the stored list', async () => {
 		document.body.innerHTML = `<p>${ toggle( 'models', 'a' ) }</p><p>${ toggle( 'models', 'b', false ) }</p>`;
 		boot( { success: true, data: { value: [ 'a', 'b' ] } } );
