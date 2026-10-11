@@ -3,7 +3,7 @@ Contributors: rpgmem
 Tags: email signature, signature generator, outlook, shortcode
 Requires at least: 6.8
 Tested up to: 7.1.3
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 Requires PHP: 8.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -81,6 +81,13 @@ Updates then arrive through the normal WordPress update screen, straight from th
 
 The full history of every release is in [CHANGELOG.md](https://github.com/rpgmem/email-signature-generator/blob/main/CHANGELOG.md).
 
+= 1.1.0 =
+* New: the latest standalone generator on GitHub Pages at a stable address.
+* New: optional Google Analytics (GA4), recording only when a signature is generated, copied or downloaded; nothing typed is sent.
+* New: a Design tab for the form's colours, corners and font, with a contrast warning.
+* Changed: each field shows its own error, and the form says nothing typed is sent to the site.
+* Fixed: the split email field keeps the domain whole, and the form's lists no longer look disabled.
+
 = 1.0.0 =
 * New: the email signature generator as a WordPress plugin, placed with the [email_signature] shortcode.
 * New: Settings → Email Signature for the models offered, access, remembered values, the allowed or refused email domains, the form width, the logo and its alternative text, the image format and resolution, the units and the default one, and per field the label, default, required, locked and capitals, with a Documentation tab explaining each.
@@ -91,5 +98,5 @@ The full history of every release is in [CHANGELOG.md](https://github.com/rpgmem
 
 == Upgrade Notice ==
 
-= 1.0.0 =
-First release as a WordPress plugin: the [email_signature] shortcode, settings for models, access, email domains, layout, units and fields, and updates from GitHub. Details in CHANGELOG.md.
+= 1.1.0 =
+Optional Google Analytics and a Design tab for the form's colours, corners and font, both off by default; errors under each field; a fixed email field; the standalone HTML on GitHub Pages. Details in CHANGELOG.md.
