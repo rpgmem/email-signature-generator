@@ -109,7 +109,7 @@ final class Shortcode {
 	 * from render(), so they load only on pages that show the generator.
 	 */
 	private static function enqueue(): void {
-		wp_enqueue_style( self::STYLE_HANDLE, Plugin::url() . 'assets/css/signature-generator.css', array(), Plugin::VERSION );
+		wp_enqueue_style( self::STYLE_HANDLE, Plugin::url() . 'assets/css/signature-generator.css', array(), Plugin::assetVersion( 'assets/css/signature-generator.css' ) );
 		wp_enqueue_script(
 			self::HTML2CANVAS_HANDLE,
 			Plugin::url() . 'assets/vendor/html2canvas-' . self::HTML2CANVAS_VERSION . '.min.js',
@@ -121,7 +121,7 @@ final class Shortcode {
 			self::SCRIPT_HANDLE,
 			Plugin::url() . 'assets/js/signature-generator.js',
 			array( self::HTML2CANVAS_HANDLE ),
-			Plugin::VERSION,
+			Plugin::assetVersion( 'assets/js/signature-generator.js' ),
 			array( 'in_footer' => true )
 		);
 	}
