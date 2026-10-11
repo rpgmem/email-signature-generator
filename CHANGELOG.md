@@ -5,6 +5,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **The latest standalone generator has a stable address** (#48). Each release publishes its HTML on GitHub Pages at https://rpgmem.github.io/email-signature-generator/, for a link or an `<iframe>`, byte-for-byte the file the release offers.
+
 ### Fixed
 
 - **The split email field keeps the domain whole and the typed part usable** (#46). The domain stays on one line at its own width, the part before the "@" never gets narrower than 14 characters, and the domain moves under the field when the form's column is narrow, not only on a small screen.
