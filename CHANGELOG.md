@@ -9,6 +9,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - **The latest standalone generator has a stable address** (#48). Each release publishes its HTML on GitHub Pages at https://rpgmem.github.io/email-signature-generator/, for a link or an `<iframe>`, byte-for-byte the file the release offers.
 - **Optional Google Analytics** (#50). Off by default; switched on with a GA4 measurement ID, pages with the form load Google's tag and record when a signature is generated, copied or downloaded, with only the model and the image format. Nothing typed is ever sent.
+- **A Design tab for the form's colours, corners and font** (#51). Off by default; switched on, five colours, the corner radius and the theme's font reach the form, and colour pairs below WCAG's 4.5:1 are saved with a warning. The signature and the standalone HTML keep their own look.
 
 ### Changed
 
