@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ESG\Tests\Functional;
 
 use EmailSignatureGenerator\Plugin;
+use EmailSignatureGenerator\Settings;
 use EmailSignatureGenerator\Shortcode;
 use WP_UnitTestCase;
 
@@ -22,11 +23,17 @@ final class ShortcodeTest extends WP_UnitTestCase {
 	public function test_it_prints_a_container_with_the_configuration(): void {
 		$html = do_shortcode( '[email_signature]' );
 
-		self::assertSame( 1, preg_match( '/<div class="esg-generator" data-esg-config="([^"]+)">/', $html, $m ) );
+		self::assertSame( 1, preg_match( '/<div class="esg-generator" style="max-width:640px" data-esg-config="([^"]+)">/', $html, $m ) );
 		$config = json_decode( html_entity_decode( $m[1], ENT_QUOTES, 'UTF-8' ), true );
 		self::assertIsArray( $config );
 		self::assertSame( Plugin::url() . 'assets/img/default-logo.png', $config['logo']['url'] );
 		self::assertCount( 3, $config['models'] );
+	}
+
+	public function test_the_form_width_comes_from_the_settings(): void {
+		update_option( Settings::OPTION, array( 'form_width' => 900 ) );
+
+		self::assertStringContainsString( 'style="max-width:900px"', do_shortcode( '[email_signature]' ) );
 	}
 
 	public function test_the_models_attribute_limits_the_form(): void {

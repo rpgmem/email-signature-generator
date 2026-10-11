@@ -244,6 +244,20 @@ final class SettingsPage {
 
 		// Layout: the logo and the space around the signature.
 		self::openPanel( 'layout', $active );
+		self::openCard( __( 'Form on the page', 'email-signature-generator' ), 'layout' );
+		echo '<table class="form-table" role="presentation"><tbody>';
+		printf(
+			'<tr><th scope="row"><label for="esg-form-width">%1$s</label></th><td><input type="number" id="esg-form-width" class="small-text" name="%2$s[form_width]" value="%3$d" min="%4$d" max="%5$d" required> px<p class="description">%6$s</p></td></tr>',
+			esc_html__( 'Form width', 'email-signature-generator' ),
+			esc_attr( $name ),
+			(int) $settings['form_width'],
+			(int) Settings::FORM_WIDTH_MIN,
+			(int) Settings::FORM_WIDTH_MAX,
+			/* translators: %d: default width, in pixels. */
+			esc_html( sprintf( __( 'The widest the form gets on the page; on a narrower screen it shrinks to fit. Default: %d px.', 'email-signature-generator' ), Config::FORM_WIDTH ) )
+		);
+		echo '</tbody></table></div>';
+
 		self::openCard( __( 'Logo', 'email-signature-generator' ), 'image' );
 		echo '<table class="form-table" role="presentation"><tbody>';
 		printf(

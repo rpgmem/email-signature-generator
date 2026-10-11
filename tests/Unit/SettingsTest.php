@@ -337,6 +337,21 @@ final class SettingsTest extends TestCase {
 		self::assertFalse( Settings::apply( Config::defaults( '' ), Settings::sanitize( array( 'offer_download' => '0' ) ) )['offerDownload'] );
 	}
 
+	public function test_the_form_width_is_clamped_and_defaults_to_640(): void {
+		self::assertSame( 640, Settings::sanitize( array() )['form_width'] );
+		self::assertSame( Settings::FORM_WIDTH_MIN, Settings::sanitize( array( 'form_width' => '100' ) )['form_width'] );
+		self::assertSame( Settings::FORM_WIDTH_MAX, Settings::sanitize( array( 'form_width' => '5000' ) )['form_width'] );
+		self::assertSame( Settings::FORM_WIDTH_MIN, Settings::sanitize( array( 'form_width' => 'wide' ) )['form_width'], 'Garbage floors instead of failing.' );
+		self::assertSame( 800, Settings::sanitize( array( 'form_width' => '800' ) )['form_width'] );
+		self::assertSame( Config::SIGNATURE_WIDTH, Settings::FORM_WIDTH_MIN, 'The form never gets narrower than the signature.' );
+	}
+
+	public function test_the_standalone_width_matches_the_default_form_width(): void {
+		$css = (string) file_get_contents( dirname( __DIR__, 2 ) . '/assets/css/signature-generator.css' );
+		self::assertSame( 1, preg_match( '/^\.esg-generator \{[^}]*max-width: (\d+)px;/m', $css, $m ) );
+		self::assertSame( (string) Config::FORM_WIDTH, $m[1] );
+	}
+
 	public function test_the_top_space_is_clamped_and_defaults_to_4(): void {
 		self::assertSame( 4, Settings::sanitize( array() )['top_space'] );
 		self::assertSame( 0, Settings::sanitize( array( 'top_space' => '-3' ) )['top_space'] );

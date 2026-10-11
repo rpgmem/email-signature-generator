@@ -14,6 +14,7 @@
 	--esg-error: #b32d2e;
 	--esg-preview-bg: #ffffff;
 
+	/* The shortcode sets the configured width inline; this is the standalone HTML's. */
 	max-width: 640px;
 	font-family: Arial, sans-serif;
 }
