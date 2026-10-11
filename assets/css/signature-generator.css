@@ -13,10 +13,12 @@
 	--esg-accent-text: #ffffff;
 	--esg-error: #b32d2e;
 	--esg-preview-bg: #ffffff;
+	--esg-radius: 4px;
+	--esg-font: arial, sans-serif;
 
 	/* The shortcode sets the configured width inline; this is the standalone HTML's. */
 	max-width: 640px;
-	font-family: Arial, sans-serif;
+	font-family: var(--esg-font);
 }
 
 .esg-generator .esg-field {
@@ -35,7 +37,7 @@
 	width: 100%;
 	padding: 6px 8px;
 	border: 1px solid var(--esg-border);
-	border-radius: 4px;
+	border-radius: var(--esg-radius);
 	font: inherit;
 }
 
@@ -83,7 +85,7 @@
 	padding: 6px 8px;
 	border: 1px solid var(--esg-border);
 	border-left: 0;
-	border-radius: 0 4px 4px 0;
+	border-radius: 0 var(--esg-radius) var(--esg-radius) 0;
 	background: #f0f0f1;
 	color: var(--esg-muted);
 	white-space: nowrap;
@@ -99,13 +101,13 @@
 	}
 
 	.esg-generator .esg-email-group input {
-		border-radius: 4px 4px 0 0;
+		border-radius: var(--esg-radius) var(--esg-radius) 0 0;
 	}
 
 	.esg-generator .esg-email-group .esg-email-domain {
 		border-top: 0;
 		border-left: 1px solid var(--esg-border);
-		border-radius: 0 0 4px 4px;
+		border-radius: 0 0 var(--esg-radius) var(--esg-radius);
 		white-space: normal;
 		overflow-wrap: anywhere;
 	}
@@ -138,7 +140,7 @@
 .esg-generator .esg-button {
 	padding: 8px 16px;
 	border: 1px solid var(--esg-accent);
-	border-radius: 4px;
+	border-radius: var(--esg-radius);
 	background: var(--esg-accent-text);
 	color: var(--esg-accent);
 	font: inherit;

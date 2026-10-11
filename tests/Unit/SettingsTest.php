@@ -45,6 +45,53 @@ final class SettingsTest extends TestCase {
 		self::assertTrue( Settings::analyticsOn( Settings::sanitize( array( 'analytics' => '1', 'analytics_id' => 'G-ABC1234' ) ) ) );
 	}
 
+	public function test_the_design_is_off_by_default_and_clears_when_switched_off(): void {
+		$defaults = Settings::defaults();
+		self::assertFalse( $defaults['custom_style'] );
+		self::assertSame( Config::COLORS, $defaults['colors'] );
+		self::assertSame( '', Settings::styleVars( $defaults ) );
+
+		$off = Settings::sanitize( array( 'custom_style' => '0', 'colors' => array( 'accent' => '#aa0000' ), 'radius' => 0, 'font' => 'theme' ) );
+		self::assertSame( Config::COLORS, $off['colors'] );
+		self::assertSame( Config::RADIUS, $off['radius'] );
+		self::assertSame( 'form', $off['font'] );
+	}
+
+	public function test_a_custom_design_keeps_only_valid_values(): void {
+		$on = Settings::sanitize(
+			array(
+				'custom_style' => '1',
+				'colors'       => array( 'accent' => ' #AA0000 ', 'border' => 'red', 'muted' => 'javascript:x' ),
+				'radius'       => 99,
+				'font'         => 'comic',
+			)
+		);
+		self::assertSame( '#aa0000', $on['colors']['accent'] );
+		self::assertSame( Config::COLORS['border'], $on['colors']['border'] );
+		self::assertSame( Config::COLORS['muted'], $on['colors']['muted'] );
+		self::assertSame( Settings::RADIUS_MAX, $on['radius'] );
+		self::assertSame( 'form', $on['font'] );
+	}
+
+	public function test_style_vars_carry_the_colours_the_radius_and_the_font(): void {
+		$vars = Settings::styleVars( Settings::sanitize( array( 'custom_style' => '1', 'colors' => array( 'accent' => '#aa0000' ), 'radius' => 0, 'font' => 'theme' ) ) );
+		self::assertStringStartsWith( '--esg-accent: #aa0000; --esg-accent-text: #ffffff; ', $vars );
+		self::assertStringEndsWith( '--esg-radius: 0px; --esg-font: inherit', $vars );
+		self::assertStringNotContainsString( '"', $vars );
+	}
+
+	public function test_contrast_follows_wcag(): void {
+		self::assertEqualsWithDelta( 21.0, Settings::contrast( '#000000', '#ffffff' ), 0.01 );
+		self::assertEqualsWithDelta( 1.0, Settings::contrast( '#777777', '#777777' ), 0.01 );
+		self::assertSame( array(), Settings::weakContrasts( Config::COLORS ), 'The built-in colours read well.' );
+	}
+
+	public function test_weak_pairs_are_named(): void {
+		Functions\when( 'number_format_i18n' )->alias( static fn( $n, $d = 0 ) => number_format( (float) $n, (int) $d ) );
+		$weak = Settings::weakContrasts( array_merge( Config::COLORS, array( 'accent' => '#ffff00' ) ) );
+		self::assertCount( 2, $weak, 'White on yellow, and yellow on white.' );
+	}
+
 	public function test_garbage_input_gives_the_defaults(): void {
 		self::assertSame( Settings::defaults(), Settings::sanitize( 'not an array' ) );
 	}

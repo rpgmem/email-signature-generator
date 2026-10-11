@@ -31,6 +31,7 @@ final class Icons {
 		'book'     => '<path d="M4 5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h8"/>',
 		'info'     => '<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7.5" r="1.1" fill="currentColor" stroke="none"/>',
 		'shield'   => '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+		'brush'    => '<path d="M14 4l6 6-8 8-6-6z"/><path d="M6 12l-3 7 7-3"/>',
 		'chart'    => '<path d="M3 20h18M6 20v-6M11 20V8M16 20v-9M21 20V4"/>',
 		'sync'     => '<path d="M20 11a8 8 0 0 0-14.3-4.9L4 8M4 4v4h4M4 13a8 8 0 0 0 14.3 4.9L20 16M20 20v-4h-4"/>',
 	);

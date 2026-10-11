@@ -46,6 +46,8 @@ Settings → Email Signature sets, for every form on the site:
 * the downloaded image's format (PNG by default, or JPG with its quality) and resolution (1×, 2× or 3×);
 * the units, each with a name and a unique acronym, and the one the form starts on;
 * per field: the label the form shows, a default value, whether it is required, whether it is locked to that default, and whether it is printed in capitals.
+* optional Google Analytics, with a GA4 measurement ID (off by default);
+* the form's colours, rounded corners and font, to match the site (off by default; the signature keeps its own look).
 
 A Documentation tab on the same screen explains every setting, how the form behaves, privacy and updates.
 

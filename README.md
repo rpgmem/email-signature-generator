@@ -28,6 +28,7 @@ In **Settings → Email Signature** an administrator sets, for every form on the
 - **Downloaded image:** whether and how the download is offered, and the image's format (PNG or JPG) and resolution.
 - **Units:** the units people choose from (name and acronym), and which one the form starts on.
 - **Fields:** per field, the label the form shows, a default, and whether it is required, locked or printed in capitals.
+- **Design:** off by default; switched on, the form's colours (accent, text on it, borders, notes, errors), rounded corners and font (its own or the theme's). Colour pairs below WCAG's 4.5:1 are saved with a warning. The signature itself keeps its look.
 - **Documentation:** what every setting does, how the form behaves, privacy and updates, inside WordPress.
 
 The on/off settings save the moment they are flipped; the rest saves with **Save Changes**.
