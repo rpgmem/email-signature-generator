@@ -43,6 +43,12 @@
 	background: #f0f0f1;
 }
 
+/* A select paints like the text fields, not like a button; a locked one keeps the browser's disabled look. */
+.esg-generator .esg-field select:not(:disabled) {
+	background-color: Field;
+	color: FieldText;
+}
+
 .esg-generator .esg-field [aria-invalid="true"] {
 	border-color: var(--esg-error);
 }
@@ -103,6 +109,13 @@
 		white-space: normal;
 		overflow-wrap: anywhere;
 	}
+}
+
+/* A field's own error, under it. */
+.esg-generator .esg-field-error {
+	display: block;
+	margin-top: 4px;
+	color: var(--esg-error);
 }
 
 .esg-generator .esg-errors {
@@ -219,7 +232,8 @@
 }
 
 /* "This browser remembers…" and its link to forget. */
-.esg-generator .esg-remember {
+.esg-generator .esg-remember,
+.esg-generator .esg-privacy {
 	margin: 0 0 12px;
 	color: var(--esg-muted);
 	font-size: 0.875em;

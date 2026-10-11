@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Email Signature Generator 1.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
-"POT-Creation-Date: 2026-10-11 02:31+0000\n"
+"POT-Creation-Date: 2026-10-11 23:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -117,7 +117,7 @@ msgstr ""
 msgid "Phone numbers"
 msgstr ""
 
-#: src/admin/documentation.php:51 src/config.php:367
+#: src/admin/documentation.php:51 src/config.php:369
 msgid "See it in dark mode"
 msgstr ""
 
@@ -129,7 +129,7 @@ msgstr ""
 msgid "A collapsed section with the steps for Outlook on the web, classic Outlook, Gmail and phones."
 msgstr ""
 
-#: src/admin/documentation.php:52 src/config.php:368
+#: src/admin/documentation.php:52 src/config.php:370
 msgid "How to add the signature to your email"
 msgstr ""
 
@@ -802,72 +802,80 @@ msgid "Forget it"
 msgstr ""
 
 #: src/config.php:366
+msgid "The signature is built in your browser: nothing you type is sent to the site."
+msgstr ""
+
+#: src/config.php:367
+msgid "Check the marked fields."
+msgstr ""
+
+#: src/config.php:368
 msgid "This browser no longer keeps what you typed."
 msgstr ""
 
-#: src/config.php:369
+#: src/config.php:371
 msgid "Outlook on the web and the new Outlook for Windows: Settings (gear) → Account → Signatures. Create a signature, paste with Ctrl+V, choose it for new messages and replies, and save."
 msgstr ""
 
-#: src/config.php:370
+#: src/config.php:372
 msgid "Classic Outlook for Windows: File → Options → Mail → Signatures → New. Paste with Ctrl+V, choose it for new messages and replies, and select OK."
 msgstr ""
 
-#: src/config.php:371
+#: src/config.php:373
 msgid "Gmail: Settings (gear) → See all settings → General → Signature → Create new. Paste with Ctrl+V, choose it in \"Signature defaults\", and select \"Save changes\" at the bottom of the page."
 msgstr ""
 
-#: src/config.php:372
+#: src/config.php:374
 msgid "Phone apps: most accept only plain text. Set the signature on the web or on the computer; messages sent from there carry it."
 msgstr ""
 
 #. translators: %s: a field's label.
-#: src/config.php:374
+#: src/config.php:376
 #, php-format
 msgid "%s is required."
 msgstr ""
 
-#: src/config.php:375
+#: src/config.php:377
 msgid "Enter a valid email address."
 msgstr ""
 
 #. translators: %s: the allowed email domains, such as example.org, separated by commas.
-#: src/config.php:377
+#: src/config.php:379
 #, php-format
 msgid "Use an address at %s."
 msgstr ""
 
-#: src/config.php:378
+#: src/config.php:380
 msgid "Email domain"
 msgstr ""
 
-#: src/config.php:379
+#: src/config.php:381
 msgid "Type only the part before the \"@\": the domain is already beside the field."
 msgstr ""
 
 #. translators: %s: an email domain, such as test.com.
-#: src/config.php:381
+#: src/config.php:383
 #, php-format
 msgid "Addresses at %s are not accepted. Use your real email address."
 msgstr ""
 
-#: src/config.php:382
-msgid "Enter the phone number as 55 XX XXXX-XXXX or 55 XX XXXXX-XXXX. For two numbers, separate them with \" | \"."
-msgstr ""
-
-#. translators: %s: a field's label.
 #: src/config.php:384
-#, php-format
-msgid "%s is not a valid address."
+msgid "Enter the phone number as 55 XX XXXX-XXXX or 55 XX XXXXX-XXXX. For two numbers, separate them with \" | \"."
 msgstr ""
 
 #. translators: %s: a field's label.
 #: src/config.php:386
 #, php-format
+msgid "%s is not a valid address."
+msgstr ""
+
+#. translators: %s: a field's label.
+#: src/config.php:388
+#, php-format
 msgid "%s cannot contain a slash: the acronym is added on its own."
 msgstr ""
 
-#: src/config.php:387
+#: src/config.php:389
 msgid "Role takes a single role, without slashes."
 msgstr ""
 
