@@ -5,7 +5,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-## [1.1.0] (2026-10-11)
+## [1.1.0] (2026-10-11) — `e540c1c`
 
 The form gets clearer errors and a sturdier email field, and the plugin gains optional analytics and a design of its own; the standalone page gets a stable address.
 
