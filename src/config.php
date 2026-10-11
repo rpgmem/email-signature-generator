@@ -48,13 +48,17 @@ final class Config {
 		'fakemail.com',
 		'mailinator.com',
 		'yopmail.com',
+		'yopmail.fr',
 		'guerrillamail.com',
+		'guerrillamailblock.com',
 		'sharklasers.com',
 		'10minutemail.com',
 		'tempmail.com',
 		'temp-mail.org',
 		'trashmail.com',
+		'trashmail.de',
 		'dispostable.com',
+		'maildrop.cc',
 	);
 
 	/**
