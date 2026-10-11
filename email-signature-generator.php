@@ -21,6 +21,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /*
+ * The plugin version, beside the header WordPress reads as text. The two are
+ * bumped together; readme.txt's Stable tag is the third site.
+ */
+define( 'EMAIL_SIGNATURE_GENERATOR_VERSION', '1.0.0' );
+
+/*
  * Inline autoloader for the EmailSignatureGenerator\ namespace, so the plugin
  * ships no Composer runtime. A class maps to a kebab-case file under src/:
  *

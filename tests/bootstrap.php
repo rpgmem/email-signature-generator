@@ -16,3 +16,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', __DIR__ . '/' );
 }
+
+// The main plugin file is never included here (see above), so its version
+// constant is read from the file's text: one literal, never a copy.
+if ( ! defined( 'EMAIL_SIGNATURE_GENERATOR_VERSION' ) ) {
+	$esg_main = (string) file_get_contents( __DIR__ . '/../email-signature-generator.php' );
+	if ( 1 !== preg_match( "/define\\( 'EMAIL_SIGNATURE_GENERATOR_VERSION', '([^']+)' \\);/", $esg_main, $esg_match ) ) {
+		throw new RuntimeException( 'The main plugin file defines no EMAIL_SIGNATURE_GENERATOR_VERSION.' );
+	}
+	define( 'EMAIL_SIGNATURE_GENERATOR_VERSION', $esg_match[1] );
+	unset( $esg_main, $esg_match );
+}
