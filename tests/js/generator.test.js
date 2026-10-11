@@ -473,6 +473,22 @@ describe( 'settings in the configuration', () => {
 		expect( document.querySelector( '.esg-status' ).textContent ).toBe( config.strings.forgotten );
 	} );
 
+	it( 'lets a default set later show in a field the person left empty', () => {
+		window.localStorage.clear();
+		const cfg = { ...config, rememberValues: true };
+		document.body.innerHTML = '<div id="c"></div>';
+		let ui = gen.mount( document.getElementById( 'c' ), cfg );
+		fill( { ...valid, link2: '' } );
+		expect( ui.generate() ).toBe( true );
+
+		const later = JSON.parse( JSON.stringify( cfg ) );
+		later.models[ 0 ].fields.find( ( f ) => 'link2' === f.key ).default = 'exemplo.sp.gov.br';
+		document.body.innerHTML = '<div id="c"></div>';
+		ui = gen.mount( document.getElementById( 'c' ), later );
+		expect( document.querySelector( '[name="link2"]' ).value ).toBe( 'exemplo.sp.gov.br' );
+		expect( document.querySelector( '[name="name"]' ).value ).toBe( 'Maria da Silva' );
+	} );
+
 	it( 'shows the preview in dark mode without touching what is copied', () => {
 		document.body.innerHTML = '<div id="c"></div>';
 		const ui = gen.mount( document.getElementById( 'c' ), config );
