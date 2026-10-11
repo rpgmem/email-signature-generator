@@ -26,6 +26,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **What a browser remembers expires after 60 minutes** (#35). The kept values carry the time the signature was last generated and are dropped once they are older than that, so a shared computer does not hand one person's details to the next; an entry with no time, or one from the future, is dropped too.
 - **README and readme.txt describe every setting, with screenshots** (#36). Seven screenshots of the form, the dark preview and each settings tab, taken from fictitious details, and a privacy section on what a browser remembers and for how long.
 - **A Documentation tab in the settings** (#37). One card per topic, with a contents list: the overview and shortcode, using the form, each settings tab, privacy and updates. A test fails when a settings tab has no topic, and the limits it quotes are read from the code that enforces them.
+- **The Documentation tab credits the author and links the repository** (#39), as Free Form Certificate's does. Both are read from the plugin header, so they say what the Plugins screen says.
 
 ### Changed
 

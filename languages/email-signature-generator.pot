@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Email Signature Generator 1.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
-"POT-Creation-Date: 2026-10-11 02:21+0000\n"
+"POT-Creation-Date: 2026-10-11 02:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,344 +53,356 @@ msgstr ""
 msgid "Type a default and save the page before locking this field."
 msgstr ""
 
-#: src/admin/documentation.php:32
+#: src/admin/documentation.php:33
 msgid "Overview"
 msgstr ""
 
-#: src/admin/documentation.php:34
+#: src/admin/documentation.php:35
 msgid "A form that builds the same HTML email signature for everyone in the organisation. The signature is built in the visitor's browser, so nothing typed reaches the site."
 msgstr ""
 
-#: src/admin/documentation.php:36
+#: src/admin/documentation.php:37
 msgid "Place the form on any page or post with this shortcode. The Copy button on the General tab copies it."
 msgstr ""
 
-#: src/admin/documentation.php:37
+#: src/admin/documentation.php:38
 msgid "Offers only the models listed, in that order: staff_regional, staff_school and department. With one model, the form does not ask which."
 msgstr ""
 
-#: src/admin/documentation.php:38
+#: src/admin/documentation.php:39
 msgid "Every release also publishes a single HTML file with the same form, for use without WordPress. It uses the built-in defaults, not these settings."
 msgstr ""
 
-#: src/admin/documentation.php:38
+#: src/admin/documentation.php:39
 msgid "Standalone HTML"
 msgstr ""
 
-#: src/admin/documentation.php:42
+#: src/admin/documentation.php:43
 msgid "Using the form"
 msgstr ""
 
-#: src/admin/documentation.php:44
+#: src/admin/documentation.php:45
 msgid "What a person sees on the page."
 msgstr ""
 
-#: src/admin/documentation.php:46
+#: src/admin/documentation.php:47
 msgid "Checks the fields and draws the preview. Changing a field afterwards hides the result until it is generated again."
 msgstr ""
 
-#: src/admin/documentation.php:46 src/config.php:349
+#: src/admin/documentation.php:47 src/config.php:349
 msgid "Generate signature"
 msgstr ""
 
-#: src/admin/documentation.php:47 src/config.php:350
+#: src/admin/documentation.php:48 src/config.php:350
 msgid "Copy HTML"
 msgstr ""
 
-#: src/admin/documentation.php:47
+#: src/admin/documentation.php:48
 msgid "The recommended way to use the signature: the text stays sharp at any size and the links work. Paste it into the email program's signature settings."
 msgstr ""
 
-#: src/admin/documentation.php:48 src/config.php:351
+#: src/admin/documentation.php:49 src/config.php:351
 msgid "Download image"
 msgstr ""
 
-#: src/admin/documentation.php:48
+#: src/admin/documentation.php:49
 msgid "For email programs that do not accept an HTML signature, when the Downloaded image tab offers it."
 msgstr ""
 
-#: src/admin/documentation.php:49
+#: src/admin/documentation.php:50
 msgid "Formatted as the person leaves the field, and each number becomes a link that dials it."
 msgstr ""
 
-#: src/admin/documentation.php:49
+#: src/admin/documentation.php:50
 msgid "Phone numbers"
 msgstr ""
 
-#: src/admin/documentation.php:50 src/config.php:367
+#: src/admin/documentation.php:51 src/config.php:367
 msgid "See it in dark mode"
 msgstr ""
 
-#: src/admin/documentation.php:50
+#: src/admin/documentation.php:51
 msgid "Shows the preview as an email program's dark theme would. It changes only the preview, never what is copied."
 msgstr ""
 
-#: src/admin/documentation.php:51
+#: src/admin/documentation.php:52
 msgid "A collapsed section with the steps for Outlook on the web, classic Outlook, Gmail and phones."
 msgstr ""
 
-#: src/admin/documentation.php:51 src/config.php:368
+#: src/admin/documentation.php:52 src/config.php:368
 msgid "How to add the signature to your email"
 msgstr ""
 
-#: src/admin/documentation.php:55 src/admin/settings-page.php:572
+#: src/admin/documentation.php:56 src/admin/settings-page.php:572
 msgid "General"
 msgstr ""
 
-#: src/admin/documentation.php:58
+#: src/admin/documentation.php:59
 msgid "Who sees the form, what it offers, and which addresses it accepts."
 msgstr ""
 
-#: src/admin/documentation.php:60 src/admin/settings-page.php:160
+#: src/admin/documentation.php:61 src/admin/settings-page.php:160
 msgid "Models offered"
 msgstr ""
 
-#: src/admin/documentation.php:60
+#: src/admin/documentation.php:61
 msgid "The models every form on the site may offer. A shortcode's models=\"…\" can narrow this list, never widen it."
 msgstr ""
 
-#: src/admin/documentation.php:62 src/admin/settings-page.php:179
+#: src/admin/documentation.php:63 src/admin/settings-page.php:179
 msgid "Remember what was typed"
 msgstr ""
 
 #. translators: %d: minutes.
-#: src/admin/documentation.php:65
+#: src/admin/documentation.php:66
 #, php-format
 msgid "Off by default. When on, each browser keeps what its user typed and fills the form again the next time, for %d minutes after the signature was last generated. The form has a \"Forget it\" link that clears it at once."
 msgstr ""
 
-#: src/admin/documentation.php:69
+#: src/admin/documentation.php:70
 msgid "Everyone who can see the page, or logged-in users only; the others see a link to log in."
 msgstr ""
 
-#: src/admin/documentation.php:69 src/admin/settings-page.php:198
+#: src/admin/documentation.php:70 src/admin/settings-page.php:198
 msgid "Who can use the form"
 msgstr ""
 
-#: src/admin/documentation.php:70 src/admin/settings-page.php:219
+#: src/admin/documentation.php:71 src/admin/settings-page.php:219
 msgid "Allowed email domain"
 msgstr ""
 
-#: src/admin/documentation.php:70
+#: src/admin/documentation.php:71
 msgid "On: the person types only the part before the \"@\" and the domain is shown beside the field, as a list when there is more than one. Off: any valid address is accepted, except the refused domains, a list of placeholder and disposable domains such as test.com that you can edit."
 msgstr ""
 
-#: src/admin/documentation.php:72
+#: src/admin/documentation.php:73
 msgid "The on/off switches save as soon as they are flipped. Everything else saves with \"Save Changes\"."
 msgstr ""
 
-#: src/admin/documentation.php:75 src/admin/settings-page.php:576
+#: src/admin/documentation.php:76 src/admin/settings-page.php:576
 msgid "Layout"
 msgstr ""
 
-#: src/admin/documentation.php:78
+#: src/admin/documentation.php:79
 msgid "How the form sits on the page, and how the signature looks."
 msgstr ""
 
-#: src/admin/documentation.php:81 src/admin/settings-page.php:257
+#: src/admin/documentation.php:82 src/admin/settings-page.php:257
 msgid "Form width"
 msgstr ""
 
 #. translators: 1: minimum, 2: maximum, 3: default, all in pixels.
-#: src/admin/documentation.php:84
+#: src/admin/documentation.php:85
 #, php-format
 msgid "The widest the form gets, from %1$d to %2$d px (%3$d px by default). On a narrower screen it shrinks to fit."
 msgstr ""
 
-#: src/admin/documentation.php:90
+#: src/admin/documentation.php:91
 msgid "Chosen from the media library; \"Use the bundled logo\" goes back to the default. The signature links to the image, so it must stay in the library. A square image works best."
 msgstr ""
 
-#: src/admin/documentation.php:90 src/admin/settings-page.php:267
+#: src/admin/documentation.php:91 src/admin/settings-page.php:267
 msgid "Logo"
 msgstr ""
 
-#: src/admin/documentation.php:91 src/admin/settings-page.php:281
+#: src/admin/documentation.php:92 src/admin/settings-page.php:281
 msgid "Alternative text"
 msgstr ""
 
-#: src/admin/documentation.php:91
+#: src/admin/documentation.php:92
 msgid "What the logo shows, in words, for screen readers and for email programs that block images. Empty uses the bundled logo's text, or the chosen image's own alternative text."
 msgstr ""
 
-#: src/admin/documentation.php:92
+#: src/admin/documentation.php:93
 msgid "Keeps the signature slightly apart from the text above it. It adds to the height, never to the width."
 msgstr ""
 
-#: src/admin/documentation.php:92 src/admin/settings-page.php:302
+#: src/admin/documentation.php:93 src/admin/settings-page.php:302
 msgid "Space above the signature"
 msgstr ""
 
-#: src/admin/documentation.php:96 src/admin/settings-page.php:312
+#: src/admin/documentation.php:97 src/admin/settings-page.php:312
 #: src/admin/settings-page.php:580
 msgid "Downloaded image"
 msgstr ""
 
-#: src/admin/documentation.php:99
+#: src/admin/documentation.php:100
 msgid "The image is the fallback for email programs that do not accept an HTML signature."
 msgstr ""
 
-#: src/admin/documentation.php:101
+#: src/admin/documentation.php:102
 msgid "Off leaves only Copy HTML."
 msgstr ""
 
-#: src/admin/documentation.php:101 src/admin/settings-page.php:317
+#: src/admin/documentation.php:102 src/admin/settings-page.php:317
 msgid "Offer the download"
 msgstr ""
 
-#: src/admin/documentation.php:102
+#: src/admin/documentation.php:103
 msgid "A button with a note recommending Copy HTML after each download, the same inside a collapsed \"More options\", or a plain button."
 msgstr ""
 
-#: src/admin/documentation.php:102 src/admin/settings-page.php:329
+#: src/admin/documentation.php:103 src/admin/settings-page.php:329
 msgid "How to offer it"
 msgstr ""
 
-#: src/admin/documentation.php:103
+#: src/admin/documentation.php:104
 msgid "Format and quality"
 msgstr ""
 
-#: src/admin/documentation.php:103
+#: src/admin/documentation.php:104
 msgid "PNG keeps small letters clean. JPG makes a smaller file, at a quality you choose, but leaves compression noise around the text."
 msgstr ""
 
-#: src/admin/documentation.php:104
+#: src/admin/documentation.php:105
 msgid "1× is the signature's size in an email. 2× and 3× are sharper, but an email program may show them larger unless the image is resized."
 msgstr ""
 
-#: src/admin/documentation.php:104 src/admin/settings-page.php:362
+#: src/admin/documentation.php:105 src/admin/settings-page.php:362
 msgid "Resolution"
 msgstr ""
 
-#: src/admin/documentation.php:108 src/admin/settings-page.php:384
+#: src/admin/documentation.php:109 src/admin/settings-page.php:384
 #: src/admin/settings-page.php:584
 msgid "Units"
 msgstr ""
 
-#: src/admin/documentation.php:111
+#: src/admin/documentation.php:112
 msgid "The units people choose from in the form, such as the regional education offices."
 msgstr ""
 
-#: src/admin/documentation.php:113
+#: src/admin/documentation.php:114
 msgid "Name and acronym"
 msgstr ""
 
-#: src/admin/documentation.php:113
+#: src/admin/documentation.php:114
 msgid "The signature prints a unit as \"Name / ACRONYM\", or adds its acronym to the department or the school. An acronym is capitals and digits, up to 12, and each is used once."
 msgstr ""
 
-#: src/admin/documentation.php:114 src/admin/documentation.php:131
+#: src/admin/documentation.php:115 src/admin/documentation.php:132
 #: src/admin/settings-page.php:387 src/admin/settings-page.php:420
 msgid "Default"
 msgstr ""
 
-#: src/admin/documentation.php:114
+#: src/admin/documentation.php:115
 msgid "The unit the form starts on, in every model."
 msgstr ""
 
-#: src/admin/documentation.php:118 src/admin/settings-page.php:406
+#: src/admin/documentation.php:119 src/admin/settings-page.php:406
 #: src/admin/settings-page.php:588
 msgid "Fields"
 msgstr ""
 
-#: src/admin/documentation.php:121
+#: src/admin/documentation.php:122
 msgid "Per model and per field, what the form asks and how."
 msgstr ""
 
-#: src/admin/documentation.php:124 src/admin/settings-page.php:419
+#: src/admin/documentation.php:125 src/admin/settings-page.php:419
 msgid "Label in the form"
 msgstr ""
 
 #. translators: %d: maximum number of characters.
-#: src/admin/documentation.php:127
+#: src/admin/documentation.php:128
 #, php-format
 msgid "What the form calls the field, up to %d characters. Empty shows the built-in label."
 msgstr ""
 
-#: src/admin/documentation.php:131
+#: src/admin/documentation.php:132
 msgid "Pre-fills the field. The unit fields take their default from the Units tab."
 msgstr ""
 
-#: src/admin/documentation.php:132 src/admin/settings-page.php:421
+#: src/admin/documentation.php:133 src/admin/settings-page.php:421
 msgid "Required"
 msgstr ""
 
-#: src/admin/documentation.php:132
+#: src/admin/documentation.php:133
 msgid "The form will not generate a signature without it. The name and the unit are always required."
 msgstr ""
 
-#: src/admin/documentation.php:133 src/admin/settings-page.php:422
+#: src/admin/documentation.php:134 src/admin/settings-page.php:422
 msgid "Locked"
 msgstr ""
 
-#: src/admin/documentation.php:133
+#: src/admin/documentation.php:134
 msgid "Shows the default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked."
 msgstr ""
 
-#: src/admin/documentation.php:134 src/admin/settings-page.php:423
+#: src/admin/documentation.php:135 src/admin/settings-page.php:423
 msgid "Capitals"
 msgstr ""
 
-#: src/admin/documentation.php:134
+#: src/admin/documentation.php:135
 msgid "Prints the field in capital letters, however it was typed. The email is always printed in lower case."
 msgstr ""
 
-#: src/admin/documentation.php:138
+#: src/admin/documentation.php:139
 msgid "Privacy"
 msgstr ""
 
-#: src/admin/documentation.php:140
+#: src/admin/documentation.php:141
 msgid "Nothing typed in the form is sent to the site, and the plugin stores no personal data."
 msgstr ""
 
-#: src/admin/documentation.php:142
+#: src/admin/documentation.php:143
 msgid "In the browser"
 msgstr ""
 
-#: src/admin/documentation.php:142
+#: src/admin/documentation.php:143
 msgid "With \"Remember what was typed\" on, the values stay in the visitor's own browser until they expire or the visitor forgets them. Leave it off where computers are shared."
 msgstr ""
 
-#: src/admin/documentation.php:143
+#: src/admin/documentation.php:144
 msgid "On the site"
 msgstr ""
 
-#: src/admin/documentation.php:143
+#: src/admin/documentation.php:144
 msgid "Only these settings are stored, in one option that is deleted when the plugin is."
 msgstr ""
 
-#: src/admin/documentation.php:147
+#: src/admin/documentation.php:148
 msgid "Updates"
 msgstr ""
 
-#: src/admin/documentation.php:149
+#: src/admin/documentation.php:150
 msgid "New versions arrive through the normal WordPress update screen, from the plugin's GitHub releases."
 msgstr ""
 
-#: src/admin/documentation.php:151
+#: src/admin/documentation.php:152
 msgid "Checked package"
 msgstr ""
 
-#: src/admin/documentation.php:151
+#: src/admin/documentation.php:152
 msgid "Each package is checked against its published SHA-256 before it is installed."
 msgstr ""
 
-#: src/admin/documentation.php:152
+#: src/admin/documentation.php:153
 msgid "Automatic updates"
 msgstr ""
 
-#: src/admin/documentation.php:152
+#: src/admin/documentation.php:153
 msgid "Turned on or off with WordPress's own link on the Plugins screen."
 msgstr ""
 
-#: src/admin/documentation.php:164
+#: src/admin/documentation.php:165
 msgid "Contents"
 msgstr ""
 
 #. translators: %s: settings tab name.
-#: src/admin/documentation.php:189
+#: src/admin/documentation.php:192
 #, php-format
 msgid "Open the %s tab"
+msgstr ""
+
+#. translators: %s: plugin author's name, linked to the author's page.
+#: src/admin/documentation.php:218
+#, php-format
+msgid "Developed by %s."
+msgstr ""
+
+#. translators: %s: link to the plugin's source repository.
+#: src/admin/documentation.php:224
+#, php-format
+msgid "Source code and issue tracker: %s"
 msgstr ""
 
 #: src/admin/settings-page.php:60 src/admin/settings-page.php:61

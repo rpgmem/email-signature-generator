@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace EmailSignatureGenerator\Admin;
 
 use EmailSignatureGenerator\Config;
+use EmailSignatureGenerator\Plugin;
 use EmailSignatureGenerator\Settings;
 
 /**
@@ -165,7 +166,9 @@ final class Documentation {
 		foreach ( $topics as $id => $topic ) {
 			printf( '<li><a href="#esg-doc-%1$s">%2$s</a></li>', esc_attr( $id ), esc_html( $topic['title'] ) );
 		}
-		echo '</ul></div>';
+		echo '</ul>';
+		self::credits();
+		echo '</div>';
 
 		foreach ( $topics as $id => $topic ) {
 			printf(
@@ -194,5 +197,33 @@ final class Documentation {
 			}
 			echo '</div>';
 		}
+	}
+
+	/**
+	 * The author and the repository, read from the plugin header: the lines
+	 * WordPress shows on the Plugins screen, so the two cannot disagree.
+	 */
+	private static function credits(): void {
+		$meta = get_file_data(
+			Plugin::file(),
+			array(
+				'author'     => 'Author',
+				'author_uri' => 'Author URI',
+				'plugin_uri' => 'Plugin URI',
+			)
+		);
+		echo '<p class="esg-doc-credits">';
+		printf(
+			/* translators: %s: plugin author's name, linked to the author's page. */
+			esc_html__( 'Developed by %s.', 'email-signature-generator' ),
+			'<a href="' . esc_url( $meta['author_uri'] ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $meta['author'] ) . '</a>'
+		);
+		echo ' ';
+		printf(
+			/* translators: %s: link to the plugin's source repository. */
+			esc_html__( 'Source code and issue tracker: %s', 'email-signature-generator' ),
+			'<a href="' . esc_url( $meta['plugin_uri'] ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( (string) preg_replace( '#^https?://#', '', $meta['plugin_uri'] ) ) . '</a>'
+		);
+		echo '</p>';
 	}
 }
