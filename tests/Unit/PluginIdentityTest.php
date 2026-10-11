@@ -20,6 +20,8 @@ final class PluginIdentityTest extends TestCase {
 
 	public function test_the_version_agrees_everywhere(): void {
 		self::assertSame( Plugin::VERSION, $this->header( 'Version' ), 'Plugin header Version.' );
+		self::assertSame( 1, preg_match( "/^define\\( 'EMAIL_SIGNATURE_GENERATOR_VERSION', '([^']+)' \\);$/m", (string) file_get_contents( self::ROOT . '/' . Plugin::SLUG . '.php' ), $m ), 'The main file defines the version constant once.' );
+		self::assertSame( $this->header( 'Version' ), $m[1], 'The constant beside the header.' );
 		self::assertSame( Plugin::VERSION, $this->readme( 'Stable tag' ), 'readme.txt Stable tag.' );
 	}
 

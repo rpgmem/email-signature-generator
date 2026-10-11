@@ -59,7 +59,7 @@ Force push stays allowed on `develop`, because the post-release sync is a reset.
 
 - **The version** lives in three places, all updated in the same commit:
   - the `Version:` header in `email-signature-generator.php`;
-  - `Plugin::VERSION` in `src/plugin.php`;
+  - `EMAIL_SIGNATURE_GENERATOR_VERSION`, defined just below it in the same file (as Free Form Certificate does with `FFC_VERSION`). `Plugin::VERSION` reads it, and the unit bootstrap reads it from the file's text;
   - `Stable tag` in `readme.txt`.
 - **The floors** (PHP 8.3, WordPress 6.8, the same as Free Form Certificate's) live in the plugin header, `readme.txt`, `Plugin::REQUIRES_PHP` / `REQUIRES_WP` and `phpcs.xml.dist`. `composer.json` also declares the PHP floor.
 - **`PluginIdentityTest`** fails when any of those disagree.
