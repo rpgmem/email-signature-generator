@@ -1,0 +1,386 @@
+/* Settings → Email Signature. Scoped to the screen's wrap.
+   The layout follows Free Form Certificate's settings: a vertical tab menu
+   with icons, and each section of a tab in a box whose heading carries the
+   icon of its subject. Colours come from the admin colour scheme. */
+
+.esg-settings {
+	max-width: 1500px;
+}
+
+/* Vertical tabs. Every panel is in the one form; without JavaScript they all
+   show, one after the other. */
+.esg-settings .esg-tabs {
+	display: flex;
+	align-items: stretch;
+	margin-top: 16px;
+	overflow: hidden;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	background: #ffffff;
+	box-shadow: 0 1px 1px rgb(0 0 0 / 4%);
+}
+
+.esg-settings .esg-tabs__nav {
+	flex: 0 0 220px;
+	margin: 0;
+	padding: 0;
+	border-right: 1px solid #c3c4c7;
+	background: #f6f7f7;
+	list-style: none;
+}
+
+.esg-settings .esg-tabs__nav li {
+	margin: 0;
+}
+
+.esg-settings .esg-tabs__tab {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 12px 16px;
+	border-left: 4px solid transparent;
+	color: #1d2327;
+	line-height: 1.3;
+	text-decoration: none;
+	transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.esg-settings .esg-tabs__tab:hover,
+.esg-settings .esg-tabs__tab:focus {
+	background: #f0f6fc;
+	color: var(--wp-admin-theme-color, #2271b1);
+	box-shadow: none;
+}
+
+.esg-settings .esg-tabs__tab:focus-visible {
+	outline: 2px solid var(--wp-admin-theme-color, #2271b1);
+	outline-offset: -2px;
+}
+
+.esg-settings .esg-tabs.is-ready .esg-tabs__tab.is-active {
+	border-left-color: var(--wp-admin-theme-color, #2271b1);
+	background: #ffffff;
+	color: var(--wp-admin-theme-color, #2271b1);
+	font-weight: 600;
+}
+
+.esg-settings .esg-tabs__panels {
+	flex: 1 1 auto;
+	min-width: 0;
+	padding: 20px 24px 24px;
+}
+
+.esg-settings .esg-tabs.is-ready .esg-tabs__panel:not(.is-active) {
+	display: none;
+}
+
+.esg-settings .esg-tabs__panel + .esg-tabs__panel {
+	margin-top: 24px;
+}
+
+.esg-settings .esg-tabs.is-ready .esg-tabs__panel + .esg-tabs__panel {
+	margin-top: 0;
+}
+
+.esg-settings .esg-icon {
+	flex: 0 0 auto;
+}
+
+/* Boxed sections. */
+.esg-settings .card {
+	min-width: 255px;
+	max-width: none;
+	margin: 0 0 24px;
+	padding: 24px;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	background: #ffffff;
+	box-shadow: 0 1px 1px rgb(0 0 0 / 4%);
+}
+
+.esg-settings .card:last-child {
+	margin-bottom: 0;
+}
+
+.esg-settings .card h2 {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0 0 16px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid #f0f0f1;
+	font-size: 18px;
+	font-weight: 600;
+}
+
+.esg-settings .card h2 .esg-icon {
+	color: var(--wp-admin-theme-color, #2271b1);
+}
+
+.esg-settings .card h3 {
+	margin: 24px 0 12px;
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.esg-settings .card > p.description {
+	margin-top: 0;
+}
+
+.esg-settings .card .form-table {
+	margin-top: 0;
+}
+
+/* Narrow screens: the menu becomes a strip above the panel. */
+@media screen and (max-width: 782px) {
+	.esg-settings .esg-tabs {
+		flex-direction: column;
+	}
+
+	.esg-settings .esg-tabs__nav {
+		display: flex;
+		flex: 0 0 auto;
+		flex-wrap: wrap;
+		border-right: 0;
+		border-bottom: 1px solid #c3c4c7;
+	}
+
+	.esg-settings .esg-tabs__tab {
+		padding: 8px 12px;
+		border-bottom: 3px solid transparent;
+		border-left: 0;
+	}
+
+	.esg-settings .esg-tabs.is-ready .esg-tabs__tab.is-active {
+		border-bottom-color: var(--wp-admin-theme-color, #2271b1);
+	}
+
+	.esg-settings .esg-tabs__panels {
+		padding: 16px;
+	}
+
+	.esg-settings .card {
+		padding: 16px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.esg-settings .esg-tabs__tab {
+		transition: none;
+	}
+}
+
+.esg-settings .esg-logo-preview {
+	display: block;
+	max-width: 120px;
+	height: auto;
+	border: 1px solid #c3c4c7;
+	background: #ffffff;
+}
+
+/* Documentation tab. */
+.esg-settings .esg-doc-contents ul {
+	margin: 0;
+	columns: 2 16em;
+}
+
+.esg-settings .esg-doc-credits {
+	margin: 16px 0 0;
+	padding-top: 12px;
+	border-top: 1px solid #f0f0f1;
+	color: #50575e;
+}
+
+.esg-settings .esg-doc dl {
+	margin: 0;
+}
+
+.esg-settings .esg-doc dt {
+	margin-top: 12px;
+	font-weight: 600;
+}
+
+.esg-settings .esg-doc dd {
+	margin: 4px 0 0;
+}
+
+.esg-settings .esg-doc-goto {
+	margin-bottom: 0;
+}
+
+/* Wherever the columns still do not fit, the table scrolls inside its card. */
+.esg-settings .esg-table-scroll {
+	max-width: 960px;
+	margin-bottom: 16px;
+	overflow-x: auto;
+}
+
+.esg-settings .esg-fields-table {
+	min-width: 640px;
+}
+
+.esg-settings .esg-fields-table td {
+	vertical-align: middle;
+}
+
+/*
+ * The text boxes follow their column instead of WordPress's fixed 25em, so
+ * the switch columns stay inside the card on a laptop screen.
+ */
+.esg-settings .esg-fields-table input[type="text"],
+.esg-settings .esg-fields-table select {
+	width: 100%;
+	min-width: 6em;
+	max-width: 100%;
+}
+
+/* On/off switch: a real checkbox, hidden but focusable, drawn as a track. */
+.esg-settings .esg-toggle {
+	display: inline-flex;
+	position: relative;
+	align-items: center;
+	gap: 8px;
+	margin: 0;
+	line-height: 1.3;
+	cursor: pointer;
+	user-select: none;
+}
+
+.esg-settings .esg-toggle input[type="checkbox"] {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.esg-settings .esg-toggle-track {
+	position: relative;
+	flex: 0 0 auto;
+	width: 38px;
+	height: 22px;
+	border-radius: 11px;
+	background: #8c8f94;
+	transition: background-color 0.15s ease;
+}
+
+.esg-settings .esg-toggle-track::after {
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: #ffffff;
+	box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
+	content: "";
+	transition: transform 0.15s ease;
+}
+
+.esg-settings .esg-toggle input:checked + .esg-toggle-track {
+	background: var(--wp-admin-theme-color, #2271b1);
+}
+
+.esg-settings .esg-toggle input:checked + .esg-toggle-track::after {
+	transform: translateX(16px);
+}
+
+.esg-settings .esg-toggle input:focus-visible + .esg-toggle-track {
+	outline: 2px solid var(--wp-admin-theme-color, #2271b1);
+	outline-offset: 2px;
+}
+
+.esg-settings .esg-toggle input:disabled + .esg-toggle-track {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* Forced colors drop backgrounds; keep the track and the knob visible. */
+@media (forced-colors: active) {
+	.esg-settings .esg-toggle-track {
+		border: 1px solid CanvasText;
+	}
+
+	.esg-settings .esg-toggle-track::after {
+		background: CanvasText;
+	}
+
+	.esg-settings .esg-toggle input:checked + .esg-toggle-track {
+		background: Highlight;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.esg-settings .esg-toggle-track,
+	.esg-settings .esg-toggle-track::after {
+		transition: none;
+	}
+}
+
+/* Save state beside a toggle. */
+.esg-settings .esg-autosave-badge {
+	display: inline-block;
+	margin-left: 8px;
+	padding: 2px 8px;
+	border-radius: 10px;
+	font-size: 12px;
+	font-weight: 500;
+	vertical-align: middle;
+}
+
+.esg-settings .esg-autosave-badge[hidden] {
+	display: none;
+}
+
+.esg-settings .esg-autosave-badge--saving {
+	background: #f0f0f1;
+	color: #50575e;
+}
+
+.esg-settings .esg-autosave-badge--saved {
+	background: #edfaef;
+	color: #00632b;
+}
+
+.esg-settings .esg-autosave-badge--error {
+	background: #fcf0f1;
+	color: #a00;
+}
+
+/* Regional offices: name, acronym, remove. */
+.esg-settings .esg-regions-table {
+	max-width: 960px;
+	margin-bottom: 8px;
+}
+
+.esg-settings .esg-regions-table td {
+	vertical-align: middle;
+}
+
+.esg-settings .esg-regions-acronym {
+	width: 180px;
+}
+
+/* The default-unit radio: a narrow centred column. */
+.esg-settings .esg-regions-default {
+	width: 60px;
+	text-align: center;
+}
+
+/* Wide enough for the longest acronym, 12 characters. */
+.esg-settings .esg-regions-table .esg-acronym {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 160px;
+	text-transform: uppercase;
+}
+
+.esg-settings .esg-regions-remove {
+	width: 80px;
+	text-align: right;
+}
+
+.esg-settings .esg-regions-delete {
+	color: #b32d2e;
+}

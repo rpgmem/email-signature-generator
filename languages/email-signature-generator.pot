@@ -1,0 +1,900 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Email Signature Generator package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Email Signature Generator 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
+"POT-Creation-Date: 2026-10-11 02:31+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bin/build-standalone.php:109
+msgid "Email Signature Generator"
+msgstr ""
+
+#: bin/build-standalone.php:126 src/shortcode.php:76
+msgid "The signature generator needs JavaScript."
+msgstr ""
+
+#: src/admin/autosave.php:39
+msgid "The page expired. Reload it and try again."
+msgstr ""
+
+#: src/admin/autosave.php:42
+msgid "You are not allowed to change these settings."
+msgstr ""
+
+#: src/admin/autosave.php:81
+msgid "This setting cannot be saved on its own. Use \"Save Changes\"."
+msgstr ""
+
+#: src/admin/autosave.php:86
+msgid "This field is always required."
+msgstr ""
+
+#: src/admin/autosave.php:89
+msgid "This field is not free text, so it has no capitals setting."
+msgstr ""
+
+#: src/admin/autosave.php:92
+msgid "The name and the email cannot be locked."
+msgstr ""
+
+#: src/admin/autosave.php:106
+msgid "Type a default and save the page before locking this field."
+msgstr ""
+
+#: src/admin/documentation.php:33
+msgid "Overview"
+msgstr ""
+
+#: src/admin/documentation.php:35
+msgid "A form that builds the same HTML email signature for everyone in the organisation. The signature is built in the visitor's browser, so nothing typed reaches the site."
+msgstr ""
+
+#: src/admin/documentation.php:37
+msgid "Place the form on any page or post with this shortcode. The Copy button on the General tab copies it."
+msgstr ""
+
+#: src/admin/documentation.php:38
+msgid "Offers only the models listed, in that order: staff_regional, staff_school and department. With one model, the form does not ask which."
+msgstr ""
+
+#: src/admin/documentation.php:39
+msgid "Every release also publishes a single HTML file with the same form, for use without WordPress. It uses the built-in defaults, not these settings."
+msgstr ""
+
+#: src/admin/documentation.php:39
+msgid "Standalone HTML"
+msgstr ""
+
+#: src/admin/documentation.php:43
+msgid "Using the form"
+msgstr ""
+
+#: src/admin/documentation.php:45
+msgid "What a person sees on the page."
+msgstr ""
+
+#: src/admin/documentation.php:47
+msgid "Checks the fields and draws the preview. Changing a field afterwards hides the result until it is generated again."
+msgstr ""
+
+#: src/admin/documentation.php:47 src/config.php:349
+msgid "Generate signature"
+msgstr ""
+
+#: src/admin/documentation.php:48 src/config.php:350
+msgid "Copy HTML"
+msgstr ""
+
+#: src/admin/documentation.php:48
+msgid "The recommended way to use the signature: the text stays sharp at any size and the links work. Paste it into the email program's signature settings."
+msgstr ""
+
+#: src/admin/documentation.php:49 src/config.php:351
+msgid "Download image"
+msgstr ""
+
+#: src/admin/documentation.php:49
+msgid "For email programs that do not accept an HTML signature, when the Downloaded image tab offers it."
+msgstr ""
+
+#: src/admin/documentation.php:50
+msgid "Formatted as the person leaves the field, and each number becomes a link that dials it."
+msgstr ""
+
+#: src/admin/documentation.php:50
+msgid "Phone numbers"
+msgstr ""
+
+#: src/admin/documentation.php:51 src/config.php:367
+msgid "See it in dark mode"
+msgstr ""
+
+#: src/admin/documentation.php:51
+msgid "Shows the preview as an email program's dark theme would. It changes only the preview, never what is copied."
+msgstr ""
+
+#: src/admin/documentation.php:52
+msgid "A collapsed section with the steps for Outlook on the web, classic Outlook, Gmail and phones."
+msgstr ""
+
+#: src/admin/documentation.php:52 src/config.php:368
+msgid "How to add the signature to your email"
+msgstr ""
+
+#: src/admin/documentation.php:56 src/admin/settings-page.php:572
+msgid "General"
+msgstr ""
+
+#: src/admin/documentation.php:59
+msgid "Who sees the form, what it offers, and which addresses it accepts."
+msgstr ""
+
+#: src/admin/documentation.php:61 src/admin/settings-page.php:160
+msgid "Models offered"
+msgstr ""
+
+#: src/admin/documentation.php:61
+msgid "The models every form on the site may offer. A shortcode's models=\"…\" can narrow this list, never widen it."
+msgstr ""
+
+#: src/admin/documentation.php:63 src/admin/settings-page.php:179
+msgid "Remember what was typed"
+msgstr ""
+
+#. translators: %d: minutes.
+#: src/admin/documentation.php:66
+#, php-format
+msgid "Off by default. When on, each browser keeps what its user typed and fills the form again the next time, for %d minutes after the signature was last generated. The form has a \"Forget it\" link that clears it at once."
+msgstr ""
+
+#: src/admin/documentation.php:70
+msgid "Everyone who can see the page, or logged-in users only; the others see a link to log in."
+msgstr ""
+
+#: src/admin/documentation.php:70 src/admin/settings-page.php:198
+msgid "Who can use the form"
+msgstr ""
+
+#: src/admin/documentation.php:71 src/admin/settings-page.php:219
+msgid "Allowed email domain"
+msgstr ""
+
+#: src/admin/documentation.php:71
+msgid "On: the person types only the part before the \"@\" and the domain is shown beside the field, as a list when there is more than one. Off: any valid address is accepted, except the refused domains, a list of placeholder and disposable domains such as test.com that you can edit."
+msgstr ""
+
+#: src/admin/documentation.php:73
+msgid "The on/off switches save as soon as they are flipped. Everything else saves with \"Save Changes\"."
+msgstr ""
+
+#: src/admin/documentation.php:76 src/admin/settings-page.php:576
+msgid "Layout"
+msgstr ""
+
+#: src/admin/documentation.php:79
+msgid "How the form sits on the page, and how the signature looks."
+msgstr ""
+
+#: src/admin/documentation.php:82 src/admin/settings-page.php:257
+msgid "Form width"
+msgstr ""
+
+#. translators: 1: minimum, 2: maximum, 3: default, all in pixels.
+#: src/admin/documentation.php:85
+#, php-format
+msgid "The widest the form gets, from %1$d to %2$d px (%3$d px by default). On a narrower screen it shrinks to fit."
+msgstr ""
+
+#: src/admin/documentation.php:91
+msgid "Chosen from the media library; \"Use the bundled logo\" goes back to the default. The signature links to the image, so it must stay in the library. A square image works best."
+msgstr ""
+
+#: src/admin/documentation.php:91 src/admin/settings-page.php:267
+msgid "Logo"
+msgstr ""
+
+#: src/admin/documentation.php:92 src/admin/settings-page.php:281
+msgid "Alternative text"
+msgstr ""
+
+#: src/admin/documentation.php:92
+msgid "What the logo shows, in words, for screen readers and for email programs that block images. Empty uses the bundled logo's text, or the chosen image's own alternative text."
+msgstr ""
+
+#: src/admin/documentation.php:93
+msgid "Keeps the signature slightly apart from the text above it. It adds to the height, never to the width."
+msgstr ""
+
+#: src/admin/documentation.php:93 src/admin/settings-page.php:302
+msgid "Space above the signature"
+msgstr ""
+
+#: src/admin/documentation.php:97 src/admin/settings-page.php:312
+#: src/admin/settings-page.php:580
+msgid "Downloaded image"
+msgstr ""
+
+#: src/admin/documentation.php:100
+msgid "The image is the fallback for email programs that do not accept an HTML signature."
+msgstr ""
+
+#: src/admin/documentation.php:102
+msgid "Off leaves only Copy HTML."
+msgstr ""
+
+#: src/admin/documentation.php:102 src/admin/settings-page.php:317
+msgid "Offer the download"
+msgstr ""
+
+#: src/admin/documentation.php:103
+msgid "A button with a note recommending Copy HTML after each download, the same inside a collapsed \"More options\", or a plain button."
+msgstr ""
+
+#: src/admin/documentation.php:103 src/admin/settings-page.php:329
+msgid "How to offer it"
+msgstr ""
+
+#: src/admin/documentation.php:104
+msgid "Format and quality"
+msgstr ""
+
+#: src/admin/documentation.php:104
+msgid "PNG keeps small letters clean. JPG makes a smaller file, at a quality you choose, but leaves compression noise around the text."
+msgstr ""
+
+#: src/admin/documentation.php:105
+msgid "1× is the signature's size in an email. 2× and 3× are sharper, but an email program may show them larger unless the image is resized."
+msgstr ""
+
+#: src/admin/documentation.php:105 src/admin/settings-page.php:362
+msgid "Resolution"
+msgstr ""
+
+#: src/admin/documentation.php:109 src/admin/settings-page.php:384
+#: src/admin/settings-page.php:584
+msgid "Units"
+msgstr ""
+
+#: src/admin/documentation.php:112
+msgid "The units people choose from in the form, such as the regional education offices."
+msgstr ""
+
+#: src/admin/documentation.php:114
+msgid "Name and acronym"
+msgstr ""
+
+#: src/admin/documentation.php:114
+msgid "The signature prints a unit as \"Name / ACRONYM\", or adds its acronym to the department or the school. An acronym is capitals and digits, up to 12, and each is used once."
+msgstr ""
+
+#: src/admin/documentation.php:115 src/admin/documentation.php:132
+#: src/admin/settings-page.php:387 src/admin/settings-page.php:420
+msgid "Default"
+msgstr ""
+
+#: src/admin/documentation.php:115
+msgid "The unit the form starts on, in every model."
+msgstr ""
+
+#: src/admin/documentation.php:119 src/admin/settings-page.php:406
+#: src/admin/settings-page.php:588
+msgid "Fields"
+msgstr ""
+
+#: src/admin/documentation.php:122
+msgid "Per model and per field, what the form asks and how."
+msgstr ""
+
+#: src/admin/documentation.php:125 src/admin/settings-page.php:419
+msgid "Label in the form"
+msgstr ""
+
+#. translators: %d: maximum number of characters.
+#: src/admin/documentation.php:128
+#, php-format
+msgid "What the form calls the field, up to %d characters. Empty shows the built-in label."
+msgstr ""
+
+#: src/admin/documentation.php:132
+msgid "Pre-fills the field. The unit fields take their default from the Units tab."
+msgstr ""
+
+#: src/admin/documentation.php:133 src/admin/settings-page.php:421
+msgid "Required"
+msgstr ""
+
+#: src/admin/documentation.php:133
+msgid "The form will not generate a signature without it. The name and the unit are always required."
+msgstr ""
+
+#: src/admin/documentation.php:134 src/admin/settings-page.php:422
+msgid "Locked"
+msgstr ""
+
+#: src/admin/documentation.php:134
+msgid "Shows the default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked."
+msgstr ""
+
+#: src/admin/documentation.php:135 src/admin/settings-page.php:423
+msgid "Capitals"
+msgstr ""
+
+#: src/admin/documentation.php:135
+msgid "Prints the field in capital letters, however it was typed. The email is always printed in lower case."
+msgstr ""
+
+#: src/admin/documentation.php:139
+msgid "Privacy"
+msgstr ""
+
+#: src/admin/documentation.php:141
+msgid "Nothing typed in the form is sent to the site, and the plugin stores no personal data."
+msgstr ""
+
+#: src/admin/documentation.php:143
+msgid "In the browser"
+msgstr ""
+
+#: src/admin/documentation.php:143
+msgid "With \"Remember what was typed\" on, the values stay in the visitor's own browser until they expire or the visitor forgets them. Leave it off where computers are shared."
+msgstr ""
+
+#: src/admin/documentation.php:144
+msgid "On the site"
+msgstr ""
+
+#: src/admin/documentation.php:144
+msgid "Only these settings are stored, in one option that is deleted when the plugin is."
+msgstr ""
+
+#: src/admin/documentation.php:148
+msgid "Updates"
+msgstr ""
+
+#: src/admin/documentation.php:150
+msgid "New versions arrive through the normal WordPress update screen, from the plugin's GitHub releases."
+msgstr ""
+
+#: src/admin/documentation.php:152
+msgid "Checked package"
+msgstr ""
+
+#: src/admin/documentation.php:152
+msgid "Each package is checked against its published SHA-256 before it is installed."
+msgstr ""
+
+#: src/admin/documentation.php:153
+msgid "Automatic updates"
+msgstr ""
+
+#: src/admin/documentation.php:153
+msgid "Turned on or off with WordPress's own link on the Plugins screen."
+msgstr ""
+
+#: src/admin/documentation.php:165
+msgid "Contents"
+msgstr ""
+
+#. translators: %s: settings tab name.
+#: src/admin/documentation.php:192
+#, php-format
+msgid "Open the %s tab"
+msgstr ""
+
+#. translators: %s: plugin author's name, linked to the author's page.
+#: src/admin/documentation.php:218
+#, php-format
+msgid "Developed by %s."
+msgstr ""
+
+#. translators: %s: link to the plugin's source repository.
+#: src/admin/documentation.php:224
+#, php-format
+msgid "Source code and issue tracker: %s"
+msgstr ""
+
+#: src/admin/settings-page.php:60 src/admin/settings-page.php:61
+#: src/admin/settings-page.php:128
+msgid "Email Signature"
+msgstr ""
+
+#: src/admin/settings-page.php:77
+msgid "Settings"
+msgstr ""
+
+#: src/admin/settings-page.php:99
+msgid "Choose the logo"
+msgstr ""
+
+#: src/admin/settings-page.php:100
+msgid "Use this image"
+msgstr ""
+
+#: src/admin/settings-page.php:104
+msgid "Saving…"
+msgstr ""
+
+#: src/admin/settings-page.php:105
+msgid "Saved"
+msgstr ""
+
+#: src/admin/settings-page.php:106
+msgid "Not saved"
+msgstr ""
+
+#: src/admin/settings-page.php:107
+msgid "Copied"
+msgstr ""
+
+#: src/admin/settings-page.php:129
+msgid "These settings apply to every form on the site."
+msgstr ""
+
+#: src/admin/settings-page.php:141
+msgid "Form"
+msgstr ""
+
+#: src/admin/settings-page.php:146
+msgid "Shortcode"
+msgstr ""
+
+#: src/admin/settings-page.php:148
+msgid "Copy"
+msgstr ""
+
+#. translators: 1: an example shortcode, 2: the model ids, separated by commas.
+#: src/admin/settings-page.php:152
+#, php-format
+msgid "Paste it into any page or post. To offer only some models, in the order given, list them: %1$s. Model ids: %2$s."
+msgstr ""
+
+#: src/admin/settings-page.php:174
+msgid "With one model, the form does not ask which. With none ticked, every model is offered."
+msgstr ""
+
+#: src/admin/settings-page.php:186
+msgid "Each browser keeps what its user typed, to fill the form the next time"
+msgstr ""
+
+#. translators: %d: minutes.
+#: src/admin/settings-page.php:193
+#, php-format
+msgid "Kept only in that browser, never sent to the site, and forgotten %d minutes after the signature was last generated; the form also offers a link to forget it at once."
+msgstr ""
+
+#: src/admin/settings-page.php:200
+msgid "Everyone who can see the page"
+msgstr ""
+
+#: src/admin/settings-page.php:201
+msgid "Logged-in users only"
+msgstr ""
+
+#: src/admin/settings-page.php:214 src/config.php:205
+msgid "Email"
+msgstr ""
+
+#: src/admin/settings-page.php:226
+msgid "Accept only addresses at the domains below"
+msgstr ""
+
+#: src/admin/settings-page.php:230
+msgid "Off, the form accepts any valid address outside the refused domains."
+msgstr ""
+
+#: src/admin/settings-page.php:234
+msgid "Domains"
+msgstr ""
+
+#: src/admin/settings-page.php:237
+msgid "One per line. The form shows the domain beside the field, so a person types only the part before the \"@\"; with more than one, they pick it from a list, and the first is preselected. With none, any address is accepted."
+msgstr ""
+
+#: src/admin/settings-page.php:242
+msgid "Refused domains"
+msgstr ""
+
+#: src/admin/settings-page.php:245
+msgid "While any address is accepted, addresses at these domains are refused: placeholders and throwaway inboxes people type to get past the field. One per line; a subdomain of one is refused too."
+msgstr ""
+
+#: src/admin/settings-page.php:253
+msgid "Form on the page"
+msgstr ""
+
+#. translators: %d: default width, in pixels.
+#: src/admin/settings-page.php:263
+#, php-format
+msgid "The widest the form gets on the page; on a narrower screen it shrinks to fit. Default: %d px."
+msgstr ""
+
+#: src/admin/settings-page.php:271
+msgid "Image"
+msgstr ""
+
+#: src/admin/settings-page.php:275
+msgid "Choose from the media library"
+msgstr ""
+
+#: src/admin/settings-page.php:276
+msgid "Use the bundled logo"
+msgstr ""
+
+#: src/admin/settings-page.php:277
+msgid "The signature links to this image, so it must stay in the media library. A square image works best."
+msgstr ""
+
+#: src/admin/settings-page.php:286
+msgid "What the logo shows, in words: screen readers read it, and email programs that block images show it instead. Leave it empty to use the bundled logo's text, or the alternative text the chosen image has in the media library."
+msgstr ""
+
+#: src/admin/settings-page.php:290
+msgid "Width"
+msgstr ""
+
+#: src/admin/settings-page.php:298
+msgid "Spacing"
+msgstr ""
+
+#: src/admin/settings-page.php:306
+msgid "Keeps the signature slightly apart from the text above it, in the copied HTML and in the image. It adds to the height, never to the width."
+msgstr ""
+
+#: src/admin/settings-page.php:313
+msgid "Copying the HTML is the recommended way to use a signature: the text stays sharp at any size. The image is for email programs that do not accept an HTML signature."
+msgstr ""
+
+#: src/admin/settings-page.php:324
+msgid "Show the \"Download image\" button on the form"
+msgstr ""
+
+#: src/admin/settings-page.php:328
+msgid "Turn it off to offer only Copy HTML. The options below apply while it is on."
+msgstr ""
+
+#: src/admin/settings-page.php:331
+msgid "A button, and a note recommending Copy HTML after each download (recommended)"
+msgstr ""
+
+#: src/admin/settings-page.php:332
+msgid "Inside a collapsed \"More options\", with the same note"
+msgstr ""
+
+#: src/admin/settings-page.php:333
+msgid "A button, with no note"
+msgstr ""
+
+#: src/admin/settings-page.php:344
+msgid "Format"
+msgstr ""
+
+#: src/admin/settings-page.php:347
+msgid "PNG (recommended)"
+msgstr ""
+
+#: src/admin/settings-page.php:348
+msgid "JPG"
+msgstr ""
+
+#: src/admin/settings-page.php:352
+msgid "PNG keeps small letters clean. JPG makes a smaller file but leaves compression noise around the text."
+msgstr ""
+
+#: src/admin/settings-page.php:355
+msgid "JPG quality"
+msgstr ""
+
+#: src/admin/settings-page.php:360
+msgid "Only for JPG. Higher keeps the text sharper and makes the file larger."
+msgstr ""
+
+#. translators: 1: pixel density, such as 2; 2: image width in pixels.
+#: src/admin/settings-page.php:372
+#, php-format
+msgid "%1$d× (%2$d px wide)"
+msgstr ""
+
+#: src/admin/settings-page.php:379
+msgid "1× is the size of the signature in an email. 2× and 3× are sharper, but an email client may show them larger unless the image is resized."
+msgstr ""
+
+#: src/admin/settings-page.php:385
+msgid "The units people choose from in the signature form. The signature prints a unit as \"Name / ACRONYM\", or adds its acronym to the department or the school. The acronym identifies the unit: capitals and digits, up to 12, each used once."
+msgstr ""
+
+#: src/admin/settings-page.php:388 src/admin/settings-page.php:539
+#: src/config.php:307
+msgid "Name"
+msgstr ""
+
+#: src/admin/settings-page.php:389 src/admin/settings-page.php:542
+msgid "Acronym"
+msgstr ""
+
+#: src/admin/settings-page.php:401
+msgid "Add a unit"
+msgstr ""
+
+#: src/admin/settings-page.php:407
+msgid "A default pre-fills the field. A locked field shows its default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked. Capitals prints the field in capital letters, however it was typed. The label is what the form calls the field; leave it empty for the one shown."
+msgstr ""
+
+#: src/admin/settings-page.php:418
+msgid "Field"
+msgstr ""
+
+#. translators: %s: a field's generic name.
+#: src/admin/settings-page.php:437
+#, php-format
+msgid "Label of %s in the form"
+msgstr ""
+
+#: src/admin/settings-page.php:451
+msgid "Set on the Units tab"
+msgstr ""
+
+#. translators: %s: field label.
+#: src/admin/settings-page.php:468
+#, php-format
+msgid "%s is required"
+msgstr ""
+
+#. translators: %s: field label.
+#: src/admin/settings-page.php:483
+#, php-format
+msgid "%s is locked"
+msgstr ""
+
+#. translators: %s: field label.
+#: src/admin/settings-page.php:497
+#, php-format
+msgid "%s in capital letters"
+msgstr ""
+
+#: src/admin/settings-page.php:535
+msgid "Default unit of the form"
+msgstr ""
+
+#: src/admin/settings-page.php:543
+msgid "Remove this unit"
+msgstr ""
+
+#: src/admin/settings-page.php:544
+msgid "Remove"
+msgstr ""
+
+#: src/admin/settings-page.php:592
+msgid "Documentation"
+msgstr ""
+
+#: src/config.php:126
+msgid "Regional office"
+msgstr ""
+
+#: src/config.php:198
+msgid "Full name"
+msgstr ""
+
+#: src/config.php:201
+msgid "Type your full name"
+msgstr ""
+
+#: src/config.php:213
+msgid "Phone number(s)"
+msgstr ""
+
+#: src/config.php:219
+msgid "Address | Floor | Room"
+msgstr ""
+
+#: src/config.php:224
+msgid "Postal code | City | State"
+msgstr ""
+
+#: src/config.php:229
+msgid "Link 1"
+msgstr ""
+
+#: src/config.php:236
+msgid "Unit"
+msgstr ""
+
+#: src/config.php:244
+msgid "Link 2"
+msgstr ""
+
+#: src/config.php:247
+msgid "Type a second link, if needed"
+msgstr ""
+
+#: src/config.php:253
+msgid "Staff - Regional office"
+msgstr ""
+
+#: src/config.php:258
+msgid "Department"
+msgstr ""
+
+#: src/config.php:275
+msgid "Staff - School"
+msgstr ""
+
+#: src/config.php:280
+msgid "Role"
+msgstr ""
+
+#: src/config.php:290
+msgid "School"
+msgstr ""
+
+#: src/config.php:303
+msgid "Department or school building"
+msgstr ""
+
+#: src/config.php:308
+msgid "Department or school"
+msgstr ""
+
+#: src/config.php:316
+msgid "Unit, full name"
+msgstr ""
+
+#: src/config.php:317
+msgid "Regional office or central"
+msgstr ""
+
+#: src/config.php:348
+msgid "Signature model"
+msgstr ""
+
+#: src/config.php:352
+msgid "Preview"
+msgstr ""
+
+#: src/config.php:353
+msgid "Tel.:"
+msgstr ""
+
+#: src/config.php:354
+msgid "Signature copied. Paste it into your email signature settings."
+msgstr ""
+
+#: src/config.php:355
+msgid "The signature could not be copied. Select it in the preview and copy it by hand."
+msgstr ""
+
+#: src/config.php:356
+msgid "The image could not be created. Try again."
+msgstr ""
+
+#: src/config.php:357
+msgid "More options"
+msgstr ""
+
+#: src/config.php:358
+msgid "Image downloaded. Links in an image cannot be clicked and small text loses sharpness: if your email program accepts it, prefer Copy HTML."
+msgstr ""
+
+#: src/config.php:359
+msgid "Recommended: copy the HTML and paste it into your email program's signature settings. The text stays sharp at any size and the links work. Use the image only where a signature cannot be HTML."
+msgstr ""
+
+#. translators: %d: minutes.
+#: src/config.php:362
+#, php-format
+msgid "This browser remembers what you type here for %d minutes after you generate the signature. Nothing is sent to the site."
+msgstr ""
+
+#: src/config.php:365
+msgid "Forget it"
+msgstr ""
+
+#: src/config.php:366
+msgid "This browser no longer keeps what you typed."
+msgstr ""
+
+#: src/config.php:369
+msgid "Outlook on the web and the new Outlook for Windows: Settings (gear) → Account → Signatures. Create a signature, paste with Ctrl+V, choose it for new messages and replies, and save."
+msgstr ""
+
+#: src/config.php:370
+msgid "Classic Outlook for Windows: File → Options → Mail → Signatures → New. Paste with Ctrl+V, choose it for new messages and replies, and select OK."
+msgstr ""
+
+#: src/config.php:371
+msgid "Gmail: Settings (gear) → See all settings → General → Signature → Create new. Paste with Ctrl+V, choose it in \"Signature defaults\", and select \"Save changes\" at the bottom of the page."
+msgstr ""
+
+#: src/config.php:372
+msgid "Phone apps: most accept only plain text. Set the signature on the web or on the computer; messages sent from there carry it."
+msgstr ""
+
+#. translators: %s: a field's label.
+#: src/config.php:374
+#, php-format
+msgid "%s is required."
+msgstr ""
+
+#: src/config.php:375
+msgid "Enter a valid email address."
+msgstr ""
+
+#. translators: %s: the allowed email domains, such as example.org, separated by commas.
+#: src/config.php:377
+#, php-format
+msgid "Use an address at %s."
+msgstr ""
+
+#: src/config.php:378
+msgid "Email domain"
+msgstr ""
+
+#: src/config.php:379
+msgid "Type only the part before the \"@\": the domain is already beside the field."
+msgstr ""
+
+#. translators: %s: an email domain, such as test.com.
+#: src/config.php:381
+#, php-format
+msgid "Addresses at %s are not accepted. Use your real email address."
+msgstr ""
+
+#: src/config.php:382
+msgid "Enter the phone number as 55 XX XXXX-XXXX or 55 XX XXXXX-XXXX. For two numbers, separate them with \" | \"."
+msgstr ""
+
+#. translators: %s: a field's label.
+#: src/config.php:384
+#, php-format
+msgid "%s is not a valid address."
+msgstr ""
+
+#. translators: %s: a field's label.
+#: src/config.php:386
+#, php-format
+msgid "%s cannot contain a slash: the acronym is added on its own."
+msgstr ""
+
+#: src/config.php:387
+msgid "Role takes a single role, without slashes."
+msgstr ""
+
+#. translators: %s: the offices left out, separated by commas.
+#: src/settings.php:212
+#, php-format
+msgid "These units were not saved, because each needs a name and a unique acronym of capitals and digits: %s"
+msgstr ""
+
+#. translators: %s: the domains left out, separated by commas.
+#: src/settings.php:228
+#, php-format
+msgid "These email domains were not saved, because they are not domain names: %s"
+msgstr ""
+
+#: src/shortcode.php:59
+msgid "Log in to create your email signature."
+msgstr ""
+
+#: src/shortcode.php:61
+msgid "Log in"
+msgstr ""
+
+#: src/update/github-updater.php:197
+msgid "Update package integrity check (SHA-256) failed. Installation aborted."
+msgstr ""
+
+#. Plugin header: Description
+msgid "A form, placed with a shortcode, that builds a consistent HTML email signature for your organisation and copies it to Outlook or downloads it as an image."
+msgstr ""

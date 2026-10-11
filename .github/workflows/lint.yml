@@ -1,0 +1,103 @@
+name: Lint
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  js:
+    name: ESLint (assets/js)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint:js
+
+  js-tests:
+    name: JS tests (Vitest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+      # The tests read the real configuration through bin/build-standalone.php.
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+      - run: npm ci
+      - run: npm test
+
+  css:
+    name: Stylelint (assets/css)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint:css
+
+  composer:
+    name: Composer validate and audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer:v2
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+      - name: Audit dependencies for known vulnerabilities
+        run: composer audit --locked
+
+  release-build:
+    name: Release build (latest tag)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # The build checks the tag out in a worktree, so it needs the tags.
+          fetch-depth: 0
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Build the latest tag's zip and notes with this branch's files
+        # The same script release.yml runs, so a broken .distignore, script
+        # or CHANGELOG section fails here instead of at the next release.
+        run: |
+          tag=$(git tag -l 'v*' --sort=-v:refname | head -1)
+          if [ -z "$tag" ]; then
+            echo "No release tag yet; nothing to build."
+            exit 0
+          fi
+          bin/build-release-zip.sh "$tag" build
+          # A tag from before the plugin is released as its page alone.
+          if ! git cat-file -e "$tag:email-signature-generator.php" 2>/dev/null; then
+            test -s "build/email-signature-generator-${tag#v}.html"
+            exit 0
+          fi
+          unzip -Z1 "build/email-signature-generator-${tag#v}.zip" | grep -qx 'email-signature-generator/email-signature-generator.php'
+          if unzip -Z1 "build/email-signature-generator-${tag#v}.zip" | grep -E '^email-signature-generator/(tests|bin|vendor|node_modules)/'; then
+            echo "::error::The zip carries development files."
+            exit 1
+          fi
+          if [ -f bin/build-standalone.php ] && git cat-file -e "$tag:bin/build-standalone.php" 2>/dev/null; then
+            test -s "build/email-signature-generator-${tag#v}.html"
+          fi

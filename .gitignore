@@ -1,0 +1,15 @@
+/vendor/
+/wordpress/
+/node_modules/
+/.phpunit.cache/
+/.phpunit.result.cache
+/phpunit.xml
+/phpunit.functional.xml
+/.phpcs.cache
+/phpcs.xml
+/phpstan.neon
+/wp-tests-config.php
+/.idea/
+/.vscode/
+.DS_Store
+/build/

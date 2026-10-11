@@ -1,0 +1,23 @@
+{
+  "name": "email-signature-generator",
+  "private": true,
+  "description": "Dev tooling for Email Signature Generator (linting, tests and builds; nothing here ships in the plugin).",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "lint:js": "eslint --no-error-on-unmatched-pattern \"assets/js/**/*.js\"",
+    "lint:js:fix": "eslint --no-error-on-unmatched-pattern \"assets/js/**/*.js\" --fix",
+    "lint:css": "stylelint --allow-empty-input \"assets/css/*.css\"",
+    "lint:css:fix": "stylelint --allow-empty-input \"assets/css/*.css\" --fix",
+    "lint": "npm run lint:js && npm run lint:css",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "eslint": "^10.11.0",
+    "globals": "^17.13.0",
+    "jsdom": "^26.1.0",
+    "stylelint": "^17.16.0",
+    "stylelint-config-recommended": "^18.0.0",
+    "vitest": "^3.2.7"
+  }
+}

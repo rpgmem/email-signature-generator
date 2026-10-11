@@ -1,0 +1,54 @@
+# Files & directories excluded from the distribution zip and the testes deploy.
+# Used by bin/build-release-zip.sh and .github/workflows/deploy-develop.yml
+# (rsync --exclude-from).
+
+# VCS / project metadata
+/.git
+/.github
+/.gitignore
+/.gitattributes
+/.distignore
+
+# Dev tooling (the plugin ships no Composer or npm runtime dependency:
+# the autoloader is inline in email-signature-generator.php)
+/composer.json
+/composer.lock
+/vendor
+/package.json
+/package-lock.json
+/node_modules
+/eslint.config.mjs
+/vitest.config.mjs
+/.stylelintrc.json
+/phpcs.xml
+/phpcs.xml.dist
+/.phpcs.cache
+/phpstan.neon
+/phpstan.neon.dist
+/phpunit.xml
+/phpunit.xml.dist
+/phpunit.functional.xml
+/phpunit.functional.xml.dist
+/.phpunit.cache
+/.phpunit.result.cache
+/wp-tests-config.php
+/wordpress
+
+# Tests, scripts and docs not shipped to users
+/tests
+/bin
+/build
+/docs
+/CHANGELOG.md
+/README.md
+/CLAUDE.md
+/.claude
+
+
+# Editor/OS junk
+*.swp
+*~
+.DS_Store
+Thumbs.db
+.vscode
+.idea

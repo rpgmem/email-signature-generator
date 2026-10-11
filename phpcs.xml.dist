@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<ruleset name="Email Signature Generator">
+    <description>The full WordPress coding standard, with the PSR-style naming of the namespaced classes under src/.</description>
+
+    <file>email-signature-generator.php</file>
+    <file>uninstall.php</file>
+    <file>src/</file>
+
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
+
+    <arg name="extensions" value="php"/>
+    <arg name="colors"/>
+    <arg name="cache" value=".phpcs.cache"/>
+    <arg value="ps"/>
+
+    <rule ref="WordPress">
+        <!-- The main file is named after the slug, not after a class. -->
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+        <!-- Long lines in inline markup are intentional. -->
+        <exclude name="Generic.Files.LineLength"/>
+    </rule>
+
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="email-signature-generator"/>
+            </property>
+        </properties>
+    </rule>
+
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+        <properties>
+            <property name="prefixes" type="array">
+                <element value="email_signature_generator"/>
+                <element value="EmailSignatureGenerator"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- The PHP floor, kept in step with the Requires PHP header. -->
+    <config name="testVersion" value="8.3-"/>
+    <rule ref="PHPCompatibilityWP"/>
+
+    <!-- The WordPress floor, kept in step with the Requires at least header. -->
+    <config name="minimum_wp_version" value="6.8"/>
+
+    <!-- The namespaced classes under src/ follow PSR naming: kebab-case files
+         mapped by the inline autoloader, camelCase methods, no global prefix. -->
+    <rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
+        <exclude-pattern>src/*</exclude-pattern>
+    </rule>
+    <rule ref="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid">
+        <exclude-pattern>src/*</exclude-pattern>
+    </rule>
+    <rule ref="WordPress.Security.EscapeOutput.ExceptionNotEscaped">
+        <exclude-pattern>src/*</exclude-pattern>
+    </rule>
+</ruleset>

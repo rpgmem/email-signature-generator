@@ -1,0 +1,244 @@
+/*
+ * Email Signature Generator: the form.
+ *
+ * Every rule is scoped under .esg-generator, because the form lives inside
+ * someone else's theme. The signature itself carries inline styles only, so
+ * nothing here reaches what is copied.
+ */
+
+.esg-generator {
+	--esg-border: #8c8f94;
+	--esg-muted: #50575e;
+	--esg-accent: #2271b1;
+	--esg-accent-text: #ffffff;
+	--esg-error: #b32d2e;
+	--esg-preview-bg: #ffffff;
+
+	/* The shortcode sets the configured width inline; this is the standalone HTML's. */
+	max-width: 640px;
+	font-family: Arial, sans-serif;
+}
+
+.esg-generator .esg-field {
+	margin: 0 0 12px;
+}
+
+.esg-generator .esg-field label {
+	display: block;
+	margin-bottom: 4px;
+	font-weight: 600;
+}
+
+.esg-generator .esg-field input,
+.esg-generator .esg-field select {
+	box-sizing: border-box;
+	width: 100%;
+	padding: 6px 8px;
+	border: 1px solid var(--esg-border);
+	border-radius: 4px;
+	font: inherit;
+}
+
+.esg-generator .esg-field input[readonly] {
+	background: #f0f0f1;
+}
+
+.esg-generator .esg-field [aria-invalid="true"] {
+	border-color: var(--esg-error);
+}
+
+/* The email field joined to its fixed or chosen domain. */
+.esg-generator .esg-email-group {
+	display: flex;
+}
+
+.esg-generator .esg-email-group input {
+	flex: 1 1 10em;
+	width: auto;
+	min-width: 0;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.esg-generator .esg-email-group .esg-email-domain {
+	box-sizing: border-box;
+	flex: 0 1 auto;
+	width: auto;
+	max-width: 100%;
+	padding: 6px 8px;
+	border: 1px solid var(--esg-border);
+	border-left: 0;
+	border-radius: 0 4px 4px 0;
+	background: #f0f0f1;
+	color: var(--esg-muted);
+	overflow-wrap: anywhere;
+}
+
+/* Too narrow for both on one line: the domain goes under the field. */
+@media (max-width: 480px) {
+	.esg-generator .esg-email-group {
+		flex-direction: column;
+	}
+
+	.esg-generator .esg-email-group input {
+		flex: 0 0 auto;
+		width: 100%;
+		border-radius: 4px 4px 0 0;
+	}
+
+	.esg-generator .esg-email-group .esg-email-domain {
+		width: 100%;
+		border-top: 0;
+		border-left: 1px solid var(--esg-border);
+		border-radius: 0 0 4px 4px;
+	}
+}
+
+.esg-generator .esg-errors {
+	margin: 0 0 12px;
+	padding: 0;
+	list-style: none;
+	color: var(--esg-error);
+}
+
+.esg-generator .esg-errors:empty {
+	display: none;
+}
+
+.esg-generator .esg-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.esg-generator .esg-button {
+	padding: 8px 16px;
+	border: 1px solid var(--esg-accent);
+	border-radius: 4px;
+	background: var(--esg-accent-text);
+	color: var(--esg-accent);
+	font: inherit;
+	cursor: pointer;
+}
+
+.esg-generator .esg-generate {
+	background: var(--esg-accent);
+	color: var(--esg-accent-text);
+}
+
+/* Copying the HTML is the recommended way: its button is filled like the
+   main action, and the note under the buttons says why. The image keeps a
+   full button, in grey. */
+.esg-generator .esg-copy {
+	background: var(--esg-accent);
+	color: var(--esg-accent-text);
+	font-weight: 600;
+}
+
+.esg-generator .esg-download {
+	border-color: var(--esg-border);
+	color: var(--esg-muted);
+}
+
+/* A theme's display rule must not reveal the buttons before a signature
+   exists. */
+.esg-generator .esg-output[hidden] {
+	display: none;
+}
+
+.esg-generator .esg-output .esg-actions {
+	margin-top: 0;
+}
+
+.esg-generator .esg-more {
+	margin: 8px 0 0;
+}
+
+.esg-generator .esg-more summary {
+	color: var(--esg-muted);
+	cursor: pointer;
+}
+
+.esg-generator .esg-more .esg-actions {
+	margin: 8px 0 0;
+}
+
+.esg-generator .esg-hint {
+	margin: 8px 0 0;
+	font-size: 0.9em;
+	opacity: 0.85;
+}
+
+.esg-generator .esg-status:empty {
+	display: none;
+}
+
+.esg-generator .esg-preview {
+	box-sizing: border-box;
+	max-width: 450px;
+	min-height: 100px;
+	padding: 10px;
+	border: 1px solid var(--esg-border);
+	background: var(--esg-preview-bg);
+}
+
+@media (max-width: 600px) {
+	.esg-generator .esg-button {
+		width: 100%;
+	}
+}
+
+/* Where to paste the signature, collapsed until asked for. */
+.esg-generator .esg-howto {
+	margin: 0 0 12px;
+}
+
+.esg-generator .esg-howto summary {
+	cursor: pointer;
+	color: var(--esg-accent);
+}
+
+.esg-generator .esg-howto ul {
+	margin: 8px 0 0;
+	padding-left: 20px;
+}
+
+.esg-generator .esg-howto li {
+	margin-bottom: 6px;
+}
+
+/* "This browser remembers…" and its link to forget. */
+.esg-generator .esg-remember {
+	margin: 0 0 12px;
+	color: var(--esg-muted);
+	font-size: 0.875em;
+}
+
+.esg-generator .esg-forget {
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--esg-accent);
+	font: inherit;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+/* The preview's title and its dark-mode switch on one line. */
+.esg-generator .esg-preview-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.esg-generator .esg-dark {
+	color: var(--esg-muted);
+	font-size: 0.875em;
+}
+
+/* Email programs in dark mode invert text and backgrounds. */
+.esg-generator .esg-preview--dark {
+	filter: invert(1) hue-rotate(180deg);
+}
