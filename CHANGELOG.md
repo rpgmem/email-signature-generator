@@ -25,6 +25,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **The form's width is a setting** (#34). Settings → Layout → "Form on the page" sets how wide the form gets, from the signature's 450 px up to 1200 px; the default stays 640 px, and on a narrower screen the form still shrinks to fit. It is set inline because a block theme's constrained layout was overriding the stylesheet's width.
 - **What a browser remembers expires after 60 minutes** (#35). The kept values carry the time the signature was last generated and are dropped once they are older than that, so a shared computer does not hand one person's details to the next; an entry with no time, or one from the future, is dropped too.
 - **README and readme.txt describe every setting, with screenshots** (#36). Seven screenshots of the form, the dark preview and each settings tab, taken from fictitious details, and a privacy section on what a browser remembers and for how long.
+- **A Documentation tab in the settings** (#37). One card per topic, with a contents list: the overview and shortcode, using the form, each settings tab, privacy and updates. A test fails when a settings tab has no topic, and the limits it quotes are read from the code that enforces them.
 
 ### Changed
 

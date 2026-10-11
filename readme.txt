@@ -47,6 +47,8 @@ Settings → Email Signature sets, for every form on the site:
 * the units, each with a name and a unique acronym, and the one the form starts on;
 * per field: the label the form shows, a default value, whether it is required, whether it is locked to that default, and whether it is printed in capitals.
 
+A Documentation tab on the same screen explains every setting, how the form behaves, privacy and updates.
+
 On/off settings are switches that save as soon as they are flipped. Text fields, the logo and the lists save with "Save Changes".
 
 == Privacy ==
@@ -69,6 +71,7 @@ Updates then arrive through the normal WordPress update screen, straight from th
 5. Settings, Downloaded image tab.
 6. Settings, Units tab, with the unit the form starts on.
 7. Settings, Fields tab: label, default, required, locked and capitals per field.
+8. Settings, Documentation tab.
 
 == Changelog ==
 

@@ -196,6 +196,11 @@
 			tabs.querySelectorAll( '.esg-tabs__panel' ).forEach( function ( p ) {
 				p.classList.toggle( 'is-active', p === panel );
 			} );
+			// The documentation has nothing to save.
+			var submit = document.querySelector( '.esg-settings .esg-submit' );
+			if ( submit ) {
+				submit.hidden = 'documentation' === id;
+			}
 			var url = new window.URL( window.location.href );
 			url.searchParams.set( 'tab', id );
 			if ( window.history && window.history.replaceState ) {

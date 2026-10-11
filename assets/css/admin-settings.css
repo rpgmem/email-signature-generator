@@ -178,6 +178,29 @@
 	background: #ffffff;
 }
 
+/* Documentation tab. */
+.esg-settings .esg-doc-contents ul {
+	margin: 0;
+	columns: 2 16em;
+}
+
+.esg-settings .esg-doc dl {
+	margin: 0;
+}
+
+.esg-settings .esg-doc dt {
+	margin-top: 12px;
+	font-weight: 600;
+}
+
+.esg-settings .esg-doc dd {
+	margin: 4px 0 0;
+}
+
+.esg-settings .esg-doc-goto {
+	margin-bottom: 0;
+}
+
 /* Wherever the columns still do not fit, the table scrolls inside its card. */
 .esg-settings .esg-table-scroll {
 	max-width: 960px;

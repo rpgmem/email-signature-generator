@@ -159,7 +159,7 @@ final class SettingsTest extends WP_UnitTestCase {
 		foreach ( $headings[1] as $heading ) {
 			self::assertStringStartsWith( '<svg class="esg-icon"', $heading );
 		}
-		self::assertSame( count( $headings[1] ), substr_count( $html, '<div class="card"><h2>' ) );
+		self::assertSame( count( $headings[1] ), preg_match_all( '/<div class="card[^"]*"><h2[ >]/', $html ) );
 
 		// Every tab carries an icon.
 		self::assertSame( count( SettingsPage::tabs() ), preg_match_all( '/data-esg-tab="[a-z]+"><svg class="esg-icon"/', $html ) );
@@ -174,6 +174,19 @@ final class SettingsTest extends WP_UnitTestCase {
 		$_GET['tab'] = '<script>';
 		self::assertStringContainsString( 'class="esg-tabs__panel is-active" id="esg-panel-general"', $this->renderScreen() );
 		unset( $_GET['tab'] );
+	}
+
+	public function test_the_documentation_tab_has_nothing_to_save(): void {
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+
+		$_GET['tab'] = 'documentation';
+		$html        = $this->renderScreen();
+		self::assertStringContainsString( 'class="esg-tabs__panel is-active" id="esg-panel-documentation"', $html );
+		self::assertStringContainsString( '<div class="esg-submit" hidden>', $html );
+		self::assertStringContainsString( 'id="esg-doc-overview"', $html );
+
+		unset( $_GET['tab'] );
+		self::assertStringContainsString( '<div class="esg-submit">', $this->renderScreen(), 'The other tabs keep Save Changes.' );
 	}
 
 	private function renderScreen(): string {

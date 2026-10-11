@@ -35,7 +35,7 @@ await page.goto( base + '/wp-login.php' );
 await page.fill( '#user_login', process.env.ESG_USER || 'admin' );
 await page.fill( '#user_pass', process.env.ESG_PASS || 'admin' );
 await Promise.all( [ page.waitForNavigation(), page.click( '#wp-submit' ) ] );
-const tabs = [ [ 'general', '3-general' ], [ 'layout', '4-layout' ], [ 'download', '5-download' ], [ 'regions', '6-units' ], [ 'fields', '7-fields' ] ];
+const tabs = [ [ 'general', '3-general' ], [ 'layout', '4-layout' ], [ 'download', '5-download' ], [ 'regions', '6-units' ], [ 'fields', '7-fields' ], [ 'documentation', '8-documentation' ] ];
 for ( const [ tab, name ] of tabs ) {
 	await page.goto( base + '/wp-admin/options-general.php?page=email-signature-generator&tab=' + tab );
 	await page.locator( '.wrap' ).screenshot( { path: out + name + '.png' } );
