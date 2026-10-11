@@ -88,6 +88,11 @@ jobs:
             exit 0
           fi
           bin/build-release-zip.sh "$tag" build
+          # A tag from before the plugin is released as its page alone.
+          if ! git cat-file -e "$tag:email-signature-generator.php" 2>/dev/null; then
+            test -s "build/email-signature-generator-${tag#v}.html"
+            exit 0
+          fi
           unzip -Z1 "build/email-signature-generator-${tag#v}.zip" | grep -qx 'email-signature-generator/email-signature-generator.php'
           if unzip -Z1 "build/email-signature-generator-${tag#v}.zip" | grep -E '^email-signature-generator/(tests|bin|vendor|node_modules)/'; then
             echo "::error::The zip carries development files."
