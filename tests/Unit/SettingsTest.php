@@ -250,19 +250,37 @@ final class SettingsTest extends TestCase {
 		self::assertSame( '', Settings::sanitize( array( 'default_unit_row' => '9', 'regions' => array( array( 'name' => 'N', 'acronym' => 'A' ) ) ) )['default_unit'] );
 	}
 
-	public function test_the_unit_name_renames_the_unit_field_only(): void {
-		self::assertSame( '', Settings::sanitize( array() )['unit_label'] );
-		self::assertSame( 'Órgão', Settings::sanitize( array( 'unit_label' => ' <b>Órgão</b> ' ) )['unit_label'] );
-		self::assertSame( Settings::UNIT_LABEL_MAX, mb_strlen( Settings::sanitize( array( 'unit_label' => str_repeat( 'á', 60 ) ) )['unit_label'] ) );
-		self::assertSame( '', Settings::sanitize( array( 'unit_label' => array( 'x' ) ) )['unit_label'] );
+	public function test_every_field_takes_its_own_label(): void {
+		$settings = Settings::sanitize(
+			array(
+				'fields' => array(
+					'staff_regional' => array(
+						'sector' => array( 'label' => ' <b>Área</b> ' ),
+						'phone'  => array( 'label' => '' ),
+						'email'  => array( 'label' => str_repeat( 'á', 60 ) ),
+					),
+				),
+			)
+		);
+		self::assertSame( 'Área', $settings['fields']['staff_regional']['sector']['label'] );
+		self::assertArrayNotHasKey( 'label', $settings['fields']['staff_regional']['phone'], 'Empty keeps the built-in label.' );
+		self::assertSame( Settings::LABEL_MAX, mb_strlen( $settings['fields']['staff_regional']['email']['label'] ) );
 
-		$default = Settings::apply( Config::defaults( '' ), Settings::defaults() );
-		self::assertSame( Config::unitLabel(), $this->field( $default, 'staff_school', 'office' )['label'] );
+		$config = Settings::apply( Config::defaults( '' ), $settings );
+		self::assertSame( 'Área', $this->field( $config, 'staff_regional', 'sector' )['label'] );
+		self::assertSame( Config::unitLabel(), $this->field( $config, 'staff_school', 'office' )['label'] );
+	}
 
-		$renamed = Settings::apply( Config::defaults( '' ), Settings::sanitize( array( 'unit_label' => 'Órgão' ) ) );
-		self::assertSame( 'Órgão', $this->field( $renamed, 'staff_regional', 'office' )['label'] );
-		self::assertSame( 'Órgão', $this->field( $renamed, 'staff_school', 'office' )['label'] );
-		self::assertNotSame( 'Órgão', $this->field( $renamed, 'department', 'region' )['label'], 'The department model names its own field.' );
+	public function test_the_old_unit_name_becomes_each_unit_fields_label(): void {
+		$settings = Settings::sanitize( array( 'unit_label' => 'Órgão' ) );
+		self::assertArrayNotHasKey( 'unit_label', $settings );
+		$config = Settings::apply( Config::defaults( '' ), $settings );
+		self::assertSame( 'Órgão', $this->field( $config, 'staff_regional', 'office' )['label'] );
+		self::assertSame( 'Órgão', $this->field( $config, 'staff_school', 'office' )['label'] );
+		self::assertNotSame( 'Órgão', $this->field( $config, 'department', 'region' )['label'], 'The department model names its own field.' );
+
+		$own = Settings::sanitize( array( 'unit_label' => 'Órgão', 'fields' => array( 'staff_school' => array( 'office' => array( 'label' => 'Lotação' ) ) ) ) );
+		self::assertSame( 'Lotação', $own['fields']['staff_school']['office']['label'], 'A field\'s own label wins.' );
 	}
 
 	public function test_access_accepts_only_the_two_modes(): void {

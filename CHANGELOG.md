@@ -40,6 +40,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **The Layout tab, the shortcode to copy, and a default unit** (#26). The Logo tab is now Layout and also holds the space above the signature, which left General. General opens with the shortcode, a Copy button and how to limit the models. The Units table marks the unit the form starts on; the unit fields take it, so the Fields tab only points there.
 - **The logo has real alternative text, and phone numbers format themselves** (#28). The bundled logo is described as "Prefeitura de São Paulo – Secretaria Municipal de Educação" instead of "Logo"; a chosen image takes its media-library text, and Layout has a field to set it. A phone typed as `(11) 3397-1234` or `11933971234` becomes `55 11 3397-1234` when the field is left; several numbers are joined by " | ".
 - **Capitals are a choice of each field** (#30). The Fields tab has a Capitals switch for every free-text field: the name and the department or role start on, the rest off. It replaces the General switch, whose choice carries into the name fields. The signature used to force capitals on the name and the role with CSS whatever the switch said; the text itself is now converted, so turning it off works.
+- **Every field's label can change** (#32). The Fields tab lists each field by a generic name (Unit, Name) and has a "Label in the form" box: what the form shows, the built-in label when empty. The Units tab's "Name in the form" moved there, and a saved one becomes the unit fields' label.
 
 ### Removed
 

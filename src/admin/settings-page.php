@@ -363,17 +363,6 @@ final class SettingsPage {
 		self::openPanel( 'regions', $active );
 		self::openCard( __( 'Units', 'email-signature-generator' ), 'building' );
 		echo '<p class="description">' . esc_html__( 'The units people choose from in the signature form. The signature prints a unit as "Name / ACRONYM", or adds its acronym to the department or the school. The acronym identifies the unit: capitals and digits, up to 12, each used once.', 'email-signature-generator' ) . '</p>';
-		echo '<table class="form-table" role="presentation"><tbody>';
-		printf(
-			'<tr><th scope="row"><label for="esg-unit-label">%1$s</label></th><td><input type="text" id="esg-unit-label" class="regular-text" name="%2$s[unit_label]" value="%3$s" placeholder="%4$s" maxlength="%5$d"><p class="description">%6$s</p></td></tr>',
-			esc_html__( 'Name in the form', 'email-signature-generator' ),
-			esc_attr( $name ),
-			esc_attr( $settings['unit_label'] ),
-			esc_attr( Config::unitLabel() ),
-			(int) Settings::UNIT_LABEL_MAX,
-			esc_html__( 'What the signature form calls the unit it asks for. Leave it empty to use the default shown.', 'email-signature-generator' )
-		);
-		echo '</tbody></table>';
 		echo '<table class="widefat striped esg-regions-table"><thead><tr>';
 		echo '<th scope="col" class="esg-regions-default">' . esc_html__( 'Default', 'email-signature-generator' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Name', 'email-signature-generator' ) . '</th>';
@@ -395,19 +384,38 @@ final class SettingsPage {
 		// Fields.
 		self::openPanel( 'fields', $active );
 		self::openCard( __( 'Fields', 'email-signature-generator' ), 'list' );
-		echo '<p class="description">' . esc_html__( 'A default pre-fills the field. A locked field shows its default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked. Capitals prints the field in capital letters, however it was typed.', 'email-signature-generator' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'A default pre-fills the field. A locked field shows its default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked. Capitals prints the field in capital letters, however it was typed. The label is what the form calls the field; leave it empty for the one shown.', 'email-signature-generator' ) . '</p>';
+		// The built-in fields, for each one's generic name and default label.
+		$builtins = array();
+		foreach ( Config::defaults( '' )['models'] as $model ) {
+			foreach ( $model['fields'] as $field ) {
+				$builtins[ $model['id'] ][ $field['key'] ] = $field;
+			}
+		}
 		foreach ( $config['models'] as $model ) {
 			echo '<h3>' . esc_html( $model['label'] ) . '</h3>';
 			echo '<table class="widefat striped esg-fields-table"><thead><tr>';
 			echo '<th scope="col">' . esc_html__( 'Field', 'email-signature-generator' ) . '</th>';
+			echo '<th scope="col">' . esc_html__( 'Label in the form', 'email-signature-generator' ) . '</th>';
 			echo '<th scope="col">' . esc_html__( 'Default', 'email-signature-generator' ) . '</th>';
 			echo '<th scope="col">' . esc_html__( 'Required', 'email-signature-generator' ) . '</th>';
 			echo '<th scope="col">' . esc_html__( 'Locked', 'email-signature-generator' ) . '</th>';
 			echo '<th scope="col">' . esc_html__( 'Capitals', 'email-signature-generator' ) . '</th>';
 			echo '</tr></thead><tbody>';
 			foreach ( $model['fields'] as $field ) {
-				$base = $name . '[fields][' . $model['id'] . '][' . $field['key'] . ']';
-				echo '<tr><td>' . esc_html( $field['label'] ) . '</td><td>';
+				$base    = $name . '[fields][' . $model['id'] . '][' . $field['key'] . ']';
+				$builtin = $builtins[ $model['id'] ][ $field['key'] ] ?? $field;
+				$custom  = (string) ( $settings['fields'][ $model['id'] ][ $field['key'] ]['label'] ?? '' );
+				printf(
+					'<tr><td>%1$s</td><td><input type="text" class="regular-text" name="%2$s" value="%3$s" placeholder="%4$s" maxlength="%5$d" aria-label="%6$s"></td><td>',
+					esc_html( (string) ( $builtin['title'] ?? $builtin['label'] ) ),
+					esc_attr( $base . '[label]' ),
+					esc_attr( $custom ),
+					esc_attr( (string) $builtin['label'] ),
+					(int) Settings::LABEL_MAX,
+					/* translators: %s: a field's generic name. */
+					esc_attr( sprintf( __( 'Label of %s in the form', 'email-signature-generator' ), (string) ( $builtin['title'] ?? $builtin['label'] ) ) )
+				);
 				if ( 'region' === ( $field['type'] ?? '' ) ) {
 					printf( '<select name="%s">', esc_attr( $base . '[default]' ) );
 					foreach ( Regions::labels( $regions ) as $region ) {
