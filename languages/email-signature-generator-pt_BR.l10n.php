@@ -96,6 +96,8 @@ return array (
     'Turned on or off with WordPress\'s own link on the Plugins screen.' => 'Ligadas ou desligadas pelo próprio link do WordPress na tela de Plugins.',
     'Contents' => 'Sumário',
     'Open the %s tab' => 'Abrir a aba %s',
+    'Developed by %s.' => 'Desenvolvido por %s.',
+    'Source code and issue tracker: %s' => 'Código-fonte e registro de problemas: %s',
     'Email Signature' => 'Assinatura de E-mail',
     'Settings' => 'Configurações',
     'Choose the logo' => 'Escolher o logotipo',

@@ -184,6 +184,13 @@
 	columns: 2 16em;
 }
 
+.esg-settings .esg-doc-credits {
+	margin: 16px 0 0;
+	padding-top: 12px;
+	border-top: 1px solid #f0f0f1;
+	color: #50575e;
+}
+
 .esg-settings .esg-doc dl {
 	margin: 0;
 }

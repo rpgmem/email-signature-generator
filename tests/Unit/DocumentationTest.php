@@ -10,6 +10,7 @@ use EmailSignatureGenerator\Admin\Documentation;
 use EmailSignatureGenerator\Admin\Icons;
 use EmailSignatureGenerator\Admin\SettingsPage;
 use EmailSignatureGenerator\Config;
+use EmailSignatureGenerator\Plugin;
 use EmailSignatureGenerator\Settings;
 use PHPUnit\Framework\TestCase;
 
@@ -21,15 +22,38 @@ use PHPUnit\Framework\TestCase;
  */
 final class DocumentationTest extends TestCase {
 
+	/**
+	 * Plugin::$file before the test, put back after it.
+	 *
+	 * @var string
+	 */
+	private string $plugin_file = '';
+
 	protected function setUp(): void {
 		parent::setUp();
 		Monkey\setUp();
+		// The main file is never included in the unit suite, so the path
+		// Plugin::boot() would record is set here.
+		$property          = new \ReflectionProperty( Plugin::class, 'file' );
+		$this->plugin_file = (string) $property->getValue();
+		$property->setValue( null, dirname( __DIR__, 2 ) . '/' . Plugin::SLUG . '.php' );
 		Functions\stubTranslationFunctions();
 		Functions\stubEscapeFunctions();
+		// The real header, read the way WordPress reads it.
+		Functions\when( 'get_file_data' )->alias(
+			static function ( string $file, array $headers ): array {
+				$text = (string) file_get_contents( $file );
+				return array_map(
+					static fn( string $name ): string => preg_match( '/^[ \t\/*#@]*' . preg_quote( $name, '/' ) . ':(.*)$/mi', $text, $m ) ? trim( $m[1] ) : '',
+					$headers
+				);
+			}
+		);
 		Functions\when( 'add_query_arg' )->alias( static fn( string $key, string $value ): string => '?page=x&' . $key . '=' . $value );
 	}
 
 	protected function tearDown(): void {
+		( new \ReflectionProperty( Plugin::class, 'file' ) )->setValue( null, $this->plugin_file );
 		Monkey\tearDown();
 		parent::tearDown();
 	}
@@ -84,6 +108,19 @@ final class DocumentationTest extends TestCase {
 		self::assertSame( $cards[1], $links[1] );
 		self::assertStringContainsString( 'data-esg-goto="fields"', $html );
 		self::assertStringContainsString( 'Open the Fields tab', $html );
+	}
+
+	/**
+	 * The author and the repository come from the plugin header, so they
+	 * say what the Plugins screen says.
+	 */
+	public function test_it_credits_the_author_and_links_the_repository(): void {
+		ob_start();
+		Documentation::render();
+		$html = (string) ob_get_clean();
+
+		self::assertStringContainsString( 'Developed by <a href="https://github.com/rpgmem" target="_blank" rel="noopener noreferrer">Alex Meusburger</a>.', $html );
+		self::assertStringContainsString( '<a href="https://github.com/rpgmem/email-signature-generator" target="_blank" rel="noopener noreferrer">github.com/rpgmem/email-signature-generator</a>', $html );
 	}
 
 	/**
