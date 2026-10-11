@@ -66,7 +66,7 @@ final class Settings {
 	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -95,6 +95,7 @@ final class Settings {
 			'blocked_email_domains' => Config::BLOCKED_EMAIL_DOMAINS,
 			'regions'               => array(),
 			'unit_label'            => '',
+			'default_unit'          => '',
 			'access'                => self::ACCESS_EVERYONE,
 			'fields'                => array(),
 		);
@@ -106,7 +107,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -133,6 +134,19 @@ final class Settings {
 
 		$regions = Regions::parse( $input['regions'] ?? array() )['regions'];
 
+		// The form marks the default unit by its row, since an acronym can
+		// change in the same save; storage keeps the acronym.
+		$default_unit = is_string( $input['default_unit'] ?? null ) ? $input['default_unit'] : '';
+		$row          = $input['default_unit_row'] ?? null;
+		if ( is_scalar( $row ) && is_array( $input['regions'] ?? null ) && is_array( $input['regions'][ (string) $row ] ?? null ) ) {
+			$default_unit = (string) ( $input['regions'][ (string) $row ]['acronym'] ?? '' );
+		}
+		$default_unit = strtoupper( (string) preg_replace( '/\s+/', '', $default_unit ) );
+		$available    = array_column( array() !== $regions ? $regions : Regions::defaults(), 'acronym' );
+		if ( ! in_array( $default_unit, $available, true ) ) {
+			$default_unit = '';
+		}
+
 		$access = (string) ( $input['access'] ?? self::ACCESS_EVERYONE );
 
 		return array(
@@ -155,6 +169,7 @@ final class Settings {
 			'blocked_email_domains' => array_key_exists( 'blocked_email_domains', $input ) ? self::parseDomains( $input['blocked_email_domains'] )['domains'] : Config::BLOCKED_EMAIL_DOMAINS,
 			'regions'               => $regions,
 			'unit_label'            => mb_substr( sanitize_text_field( is_string( $input['unit_label'] ?? null ) ? $input['unit_label'] : '' ), 0, self::UNIT_LABEL_MAX ),
+			'default_unit'          => $default_unit,
 			'access'                => self::ACCESS_LOGGED_IN === $access ? self::ACCESS_LOGGED_IN : self::ACCESS_EVERYONE,
 			'fields'                => self::sanitizeFields( is_array( $input['fields'] ?? null ) ? $input['fields'] : array() ),
 		);
@@ -292,6 +307,11 @@ final class Settings {
 				// A select must start on one of its options.
 				if ( 'region' === ( $field['type'] ?? '' ) && ! in_array( $field['default'] ?? '', $config['regions'], true ) ) {
 					$field['default'] = $config['regions'][0] ?? '';
+				}
+				// The unit marked default on the Units tab is every unit
+				// field's default.
+				if ( 'office' === ( $field['type'] ?? '' ) && '' !== $settings['default_unit'] ) {
+					$field['default'] = $settings['default_unit'];
 				}
 				if ( 'office' === ( $field['type'] ?? '' ) && ! in_array( $field['default'] ?? '', $acronyms, true ) ) {
 					$field['default'] = $acronyms[0] ?? '';

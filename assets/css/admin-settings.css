@@ -320,6 +320,12 @@
 	width: 180px;
 }
 
+/* The default-unit radio: a narrow centred column. */
+.esg-settings .esg-regions-default {
+	width: 60px;
+	text-align: center;
+}
+
 /* Wide enough for the longest acronym, 12 characters. */
 .esg-settings .esg-regions-table .esg-acronym {
 	box-sizing: border-box;

@@ -179,6 +179,33 @@ final class SettingsTest extends TestCase {
 		self::assertSame( 'DREBT', $this->field( $config, 'staff_school', 'office' )['default'] );
 	}
 
+	public function test_the_default_unit_is_every_unit_fields_default(): void {
+		self::assertSame( '', Settings::sanitize( array() )['default_unit'] );
+
+		$settings = Settings::sanitize( array( 'default_unit' => 'drepe' ) );
+		self::assertSame( 'DREPE', $settings['default_unit'] );
+		$config = Settings::apply( Config::defaults( '' ), $settings );
+		self::assertSame( 'DREPE', $this->field( $config, 'staff_regional', 'office' )['default'] );
+		self::assertSame( 'DREPE', $this->field( $config, 'staff_school', 'office' )['default'] );
+
+		self::assertSame( '', Settings::sanitize( array( 'default_unit' => 'NOPE' ) )['default_unit'], 'Only a unit on the list.' );
+	}
+
+	public function test_the_form_marks_the_default_unit_by_its_row_even_when_renamed(): void {
+		$settings = Settings::sanitize(
+			array(
+				'default_unit'     => 'A',
+				'default_unit_row' => '7',
+				'regions'          => array(
+					'0' => array( 'name' => 'North', 'acronym' => 'A' ),
+					'7' => array( 'name' => 'South', 'acronym' => ' b2 ' ),
+				),
+			)
+		);
+		self::assertSame( 'B2', $settings['default_unit'] );
+		self::assertSame( '', Settings::sanitize( array( 'default_unit_row' => '9', 'regions' => array( array( 'name' => 'N', 'acronym' => 'A' ) ) ) )['default_unit'] );
+	}
+
 	public function test_the_unit_name_renames_the_unit_field_only(): void {
 		self::assertSame( '', Settings::sanitize( array() )['unit_label'] );
 		self::assertSame( 'Órgão', Settings::sanitize( array( 'unit_label' => ' <b>Órgão</b> ' ) )['unit_label'] );
