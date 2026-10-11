@@ -5,6 +5,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **The latest standalone generator has a stable address** (#48). Each release publishes its HTML on GitHub Pages at https://rpgmem.github.io/email-signature-generator/, for a link or an `<iframe>`, byte-for-byte the file the release offers.
+
 ### Changed
 
 - **Each field shows its own error, and the form says what stays private** (#47). A message sits under its field and is read with it; the box above the buttons only says to check the marked fields, and sending the form focuses the first one. The form always says nothing typed is sent to the site.
