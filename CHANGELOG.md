@@ -23,6 +23,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Where to paste the signature** (#29). Under the result, a collapsed "How to add the signature to your email" gives the steps for Outlook on the web and the new Outlook, classic Outlook, Gmail, and phone apps.
 - **The form can remember what was typed, and shows dark mode** (#31). Off by default, a General switch lets each browser keep its person's last model and values, in that browser only, with a link on the form to forget them; a field left empty is not remembered, so a default set later still shows (#33). Beside the preview, "See it in dark mode" inverts text and backgrounds and leaves images alone, as email programs do.
 - **The form's width is a setting** (#34). Settings → Layout → "Form on the page" sets how wide the form gets, from the signature's 450 px up to 1200 px; the default stays 640 px, and on a narrower screen the form still shrinks to fit. It is set inline because a block theme's constrained layout was overriding the stylesheet's width.
+- **What a browser remembers expires after 60 minutes** (#35). The kept values carry the time the signature was last generated and are dropped once they are older than that, so a shared computer does not hand one person's details to the next; an entry with no time, or one from the future, is dropped too.
 
 ### Changed
 

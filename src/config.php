@@ -81,6 +81,12 @@ final class Config {
 	public const TOP_SPACE = 4;
 
 	/**
+	 * How long a browser keeps what was typed, when the site allows it: the
+	 * minutes since the signature was last generated there.
+	 */
+	public const REMEMBER_MINUTES = 60;
+
+	/**
 	 * Widest the form gets on the page, in CSS pixels. Mirrors the max-width
 	 * of .esg-generator in assets/css/signature-generator.css, which is what
 	 * the standalone HTML uses.
@@ -141,6 +147,7 @@ final class Config {
 			'topSpace'            => self::TOP_SPACE,
 			'offerDownload'       => true,
 			'rememberValues'      => false,
+			'rememberMinutes'     => self::REMEMBER_MINUTES,
 			'downloadStyle'       => 'notice',
 			'emailDomains'        => array(),
 			'blockedEmailDomains' => self::BLOCKED_EMAIL_DOMAINS,
@@ -350,7 +357,11 @@ final class Config {
 			'moreOptions'        => __( 'More options', 'email-signature-generator' ),
 			'downloaded'         => __( 'Image downloaded. Links in an image cannot be clicked and small text loses sharpness: if your email program accepts it, prefer Copy HTML.', 'email-signature-generator' ),
 			'copyHint'           => __( 'Recommended: copy the HTML and paste it into your email program\'s signature settings. The text stays sharp at any size and the links work. Use the image only where a signature cannot be HTML.', 'email-signature-generator' ),
-			'remembered'         => __( 'This browser remembers what you type here, for the next time. Nothing is sent to the site.', 'email-signature-generator' ),
+			'remembered'         => sprintf(
+				/* translators: %d: minutes. */
+				__( 'This browser remembers what you type here for %d minutes after you generate the signature. Nothing is sent to the site.', 'email-signature-generator' ),
+				self::REMEMBER_MINUTES
+			),
 			'forget'             => __( 'Forget it', 'email-signature-generator' ),
 			'forgotten'          => __( 'This browser no longer keeps what you typed.', 'email-signature-generator' ),
 			'darkPreview'        => __( 'See it in dark mode', 'email-signature-generator' ),

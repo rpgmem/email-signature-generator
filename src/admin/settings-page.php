@@ -187,7 +187,13 @@ final class SettingsPage {
 				'key'     => 'remember_values',
 			)
 		);
-		echo '<p class="description">' . esc_html__( 'Kept only in that browser, never sent to the site, and the form offers a link to forget it. Leave it off for shared computers.', 'email-signature-generator' ) . '</p></td></tr>';
+		echo '<p class="description">' . esc_html(
+			sprintf(
+				/* translators: %d: minutes. */
+				__( 'Kept only in that browser, never sent to the site, and forgotten %d minutes after the signature was last generated; the form also offers a link to forget it at once.', 'email-signature-generator' ),
+				Config::REMEMBER_MINUTES
+			)
+		) . '</p></td></tr>';
 
 		echo '<tr><th scope="row">' . esc_html__( 'Who can use the form', 'email-signature-generator' ) . '</th><td><fieldset>';
 		foreach ( array(
