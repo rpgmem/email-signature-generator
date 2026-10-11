@@ -60,12 +60,12 @@ final class Autosave {
 	 * Apply one toggle to the settings.
 	 *
 	 * @param array<string, mixed> $settings Sanitized settings.
-	 * @param string               $key      `uppercase_name`, `offer_download`, `restrict_email_domain`, `models`, or `fields.<model>.<field>.<required|locked>`.
+	 * @param string               $key      `offer_download`, `restrict_email_domain`, `models`, or `fields.<model>.<field>.<required|locked|uppercase>`.
 	 * @param mixed                $value    '1' / '0', or the list of model ids for `models`.
 	 * @return array<string, mixed>|WP_Error The sanitized settings, or why the change was refused.
 	 */
 	public static function apply( array $settings, string $key, $value ) {
-		if ( in_array( $key, array( 'uppercase_name', 'offer_download', 'restrict_email_domain' ), true ) ) {
+		if ( in_array( $key, array( 'offer_download', 'restrict_email_domain' ), true ) ) {
 			$settings[ $key ] = self::on( $value );
 			return Settings::sanitize( $settings );
 		}
@@ -77,13 +77,16 @@ final class Autosave {
 
 		$parts = explode( '.', $key );
 		$field = 4 === count( $parts ) && 'fields' === $parts[0] ? self::field( $parts[1], $parts[2] ) : null;
-		if ( null === $field || ! in_array( $parts[3], array( 'required', 'locked' ), true ) ) {
+		if ( null === $field || ! in_array( $parts[3], array( 'required', 'locked', 'uppercase' ), true ) ) {
 			return new WP_Error( 'unknown_key', __( 'This setting cannot be saved on its own. Use "Save Changes".', 'email-signature-generator' ) );
 		}
 		list( , $model, $name, $flag ) = $parts;
 
 		if ( 'required' === $flag && Settings::alwaysRequired( $name ) ) {
 			return new WP_Error( 'always_required', __( 'This field is always required.', 'email-signature-generator' ) );
+		}
+		if ( 'uppercase' === $flag && ! Config::casable( $field ) ) {
+			return new WP_Error( 'not_casable', __( 'This field is not free text, so it has no capitals setting.', 'email-signature-generator' ) );
 		}
 		if ( 'locked' === $flag && ! Settings::lockable( $name ) ) {
 			return new WP_Error( 'not_lockable', __( 'The name and the email cannot be locked.', 'email-signature-generator' ) );
@@ -92,9 +95,10 @@ final class Autosave {
 		// A field never saved before starts from its built-in values, or
 		// locking the link would also blank its default.
 		$override = $settings['fields'][ $model ][ $name ] ?? array(
-			'default'  => (string) ( $field['default'] ?? '' ),
-			'required' => ! empty( $field['required'] ),
-			'locked'   => false,
+			'default'   => (string) ( $field['default'] ?? '' ),
+			'required'  => ! empty( $field['required'] ),
+			'locked'    => false,
+			'uppercase' => ! empty( $field['uppercase'] ),
 		);
 		$on       = self::on( $value );
 
@@ -115,7 +119,7 @@ final class Autosave {
 	 * @return bool|list<string>
 	 */
 	public static function read( array $settings, string $key ) {
-		if ( in_array( $key, array( 'uppercase_name', 'offer_download', 'restrict_email_domain', 'models' ), true ) ) {
+		if ( in_array( $key, array( 'offer_download', 'restrict_email_domain', 'models' ), true ) ) {
 			return $settings[ $key ];
 		}
 		$parts = explode( '.', $key );

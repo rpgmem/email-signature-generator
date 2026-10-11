@@ -31,11 +31,16 @@ final class AutosaveTest extends TestCase {
 		parent::tearDown();
 	}
 
-	public function test_capitals_turn_off_and_on(): void {
-		$off = Autosave::apply( Settings::defaults(), 'uppercase_name', '0' );
+	public function test_capitals_turn_off_and_on_per_field(): void {
+		$off = Autosave::apply( Settings::defaults(), 'fields.staff_regional.sector.uppercase', '0' );
 		self::assertIsArray( $off );
-		self::assertFalse( $off['uppercase_name'] );
-		self::assertTrue( Autosave::apply( $off, 'uppercase_name', '1' )['uppercase_name'] );
+		self::assertFalse( $off['fields']['staff_regional']['sector']['uppercase'] );
+		self::assertFalse( Autosave::read( $off, 'fields.staff_regional.sector.uppercase' ) );
+		self::assertTrue( Autosave::apply( $off, 'fields.staff_regional.sector.uppercase', '1' )['fields']['staff_regional']['sector']['uppercase'] );
+
+		$refused = Autosave::apply( Settings::defaults(), 'fields.staff_regional.email.uppercase', '1' );
+		self::assertInstanceOf( WP_Error::class, $refused );
+		self::assertSame( 'not_casable', $refused->get_error_code() );
 	}
 
 	public function test_the_domain_restriction_turns_on_and_off_and_keeps_the_list(): void {
@@ -121,7 +126,7 @@ final class AutosaveTest extends TestCase {
 
 	public function test_only_a_literal_on_value_turns_a_toggle_on(): void {
 		foreach ( array( '0', '', 'yes', array( '1' ) ) as $value ) {
-			self::assertFalse( Autosave::apply( Settings::defaults(), 'uppercase_name', $value )['uppercase_name'] );
+			self::assertFalse( Autosave::apply( Settings::defaults(), 'offer_download', $value )['offer_download'] );
 		}
 	}
 }

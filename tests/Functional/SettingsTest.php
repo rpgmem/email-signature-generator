@@ -44,7 +44,7 @@ final class SettingsTest extends WP_UnitTestCase {
 
 	public function test_an_install_that_never_saved_gets_the_defaults(): void {
 		self::assertSame( Settings::defaults(), Settings::get() );
-		self::assertTrue( Settings::siteConfig()['uppercaseName'] );
+		self::assertTrue( Settings::siteConfig()['models'][0]['fields'][0]['uppercase'] );
 	}
 
 	public function test_the_form_uses_the_stored_settings(): void {

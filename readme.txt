@@ -37,13 +37,13 @@ The signature is built in the visitor's browser: nothing they type is sent to th
 Settings → Email Signature sets, for every form on the site:
 
 * which models are offered, and whether only logged-in users may use the form;
-* whether the name is printed in capitals, and which email domains are accepted: only the ones listed, or any address except placeholder domains such as test.com;
+* which email domains are accepted: only the ones listed, or any address except placeholder domains such as test.com;
 * the space above the signature (4 px by default);
 * the logo, from the media library (the bundled one is the default), and its width;
 * whether the image can be downloaded at all, and how it is offered: a button that recommends Copy HTML after each download, the same inside a collapsed "More options", or a plain button;
 * the downloaded image's format (PNG by default, or JPG with its quality) and resolution (1×, 2× or 3×);
 * the units, each with a name and a unique acronym, and the name the form gives them ("Regional office" by default);
-* per field: a default value, whether it is required, and whether it is locked to that default.
+* per field: a default value, whether it is required, whether it is locked to that default, and whether it is printed in capitals.
 
 On/off settings are switches that save as soon as they are flipped. Text fields, the logo and the lists save with "Save Changes".
 
@@ -60,7 +60,7 @@ The full history of every release is in [CHANGELOG.md](https://github.com/rpgmem
 
 = 1.0.0 =
 * New: the email signature generator as a WordPress plugin, placed with the [email_signature] shortcode.
-* New: Settings → Email Signature for the models offered, access, the allowed or refused email domains, the logo, the JPG quality and resolution, the regional offices and per-field defaults, required and locked fields.
+* New: Settings → Email Signature for the models offered, access, the allowed or refused email domains, the logo, the JPG quality and resolution, the regional offices and per-field defaults, required, locked and capitalised fields.
 * New: updates from GitHub Releases, each package checked against its SHA-256.
 * New: a standalone HTML version on every release, for use without WordPress.
 * Security: typed values are escaped in the signature, and the logo and html2canvas are bundled instead of loaded from other sites.
