@@ -414,7 +414,7 @@ final class SettingsPage {
 		}
 		foreach ( $config['models'] as $model ) {
 			echo '<h3>' . esc_html( $model['label'] ) . '</h3>';
-			echo '<table class="widefat striped esg-fields-table"><thead><tr>';
+			echo '<div class="esg-table-scroll"><table class="widefat striped esg-fields-table"><thead><tr>';
 			echo '<th scope="col">' . esc_html__( 'Field', 'email-signature-generator' ) . '</th>';
 			echo '<th scope="col">' . esc_html__( 'Label in the form', 'email-signature-generator' ) . '</th>';
 			echo '<th scope="col">' . esc_html__( 'Default', 'email-signature-generator' ) . '</th>';
@@ -501,7 +501,7 @@ final class SettingsPage {
 				}
 				echo '</td></tr>';
 			}
-			echo '</tbody></table>';
+			echo '</tbody></table></div>';
 		}
 		echo '</div></div>';
 

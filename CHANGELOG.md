@@ -24,6 +24,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **The form can remember what was typed, and shows dark mode** (#31). Off by default, a General switch lets each browser keep its person's last model and values, in that browser only, with a link on the form to forget them; a field left empty is not remembered, so a default set later still shows (#33). Beside the preview, "See it in dark mode" inverts text and backgrounds and leaves images alone, as email programs do.
 - **The form's width is a setting** (#34). Settings → Layout → "Form on the page" sets how wide the form gets, from the signature's 450 px up to 1200 px; the default stays 640 px, and on a narrower screen the form still shrinks to fit. It is set inline because a block theme's constrained layout was overriding the stylesheet's width.
 - **What a browser remembers expires after 60 minutes** (#35). The kept values carry the time the signature was last generated and are dropped once they are older than that, so a shared computer does not hand one person's details to the next; an entry with no time, or one from the future, is dropped too.
+- **README and readme.txt describe every setting, with screenshots** (#36). Seven screenshots of the form, the dark preview and each settings tab, taken from fictitious details, and a privacy section on what a browser remembers and for how long.
 
 ### Changed
 
@@ -43,6 +44,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **The logo has real alternative text, and phone numbers format themselves** (#28). The bundled logo is described as "Prefeitura de São Paulo – Secretaria Municipal de Educação" instead of "Logo"; a chosen image takes its media-library text, and Layout has a field to set it. A phone typed as `(11) 3397-1234` or `11933971234` becomes `55 11 3397-1234` when the field is left; several numbers are joined by " | ".
 - **Capitals are a choice of each field** (#30). The Fields tab has a Capitals switch for every free-text field: the name and the department or role start on, the rest off. It replaces the General switch, whose choice carries into the name fields. The signature used to force capitals on the name and the role with CSS whatever the switch said; the text itself is now converted, so turning it off works.
 - **Every field's label can change** (#32). The Fields tab lists each field by a generic name (Unit, Name) and has a "Label in the form" box: what the form shows, the built-in label when empty. The Units tab's "Name in the form" moved there, and a saved one becomes the unit fields' label.
+- **The Fields tab fits a laptop screen** (#36). Its text boxes kept WordPress's fixed width, so at 1280 px the table ran past its card and hid the Required, Locked and Capitals columns; they now follow their column, and a table that still does not fit scrolls inside the card.
 
 ### Removed
 
