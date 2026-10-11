@@ -28,6 +28,7 @@ In **Settings → Email Signature** an administrator sets, for every form on the
 - **Downloaded image:** whether and how the download is offered, and the image's format (PNG or JPG) and resolution.
 - **Units:** the units people choose from (name and acronym), and which one the form starts on.
 - **Fields:** per field, the label the form shows, a default, and whether it is required, locked or printed in capitals.
+- **Documentation:** what every setting does, how the form behaves, privacy and updates, inside WordPress.
 
 The on/off settings save the moment they are flipped; the rest saves with **Save Changes**.
 
@@ -60,7 +61,7 @@ The settings, one tab at a time:
 | --- | --- |
 | ![General](docs/screenshots/3-general.png) **General** | ![Layout](docs/screenshots/4-layout.png) **Layout** |
 | ![Downloaded image](docs/screenshots/5-download.png) **Downloaded image** | ![Units](docs/screenshots/6-units.png) **Units** |
-| ![Fields](docs/screenshots/7-fields.png) **Fields** | |
+| ![Fields](docs/screenshots/7-fields.png) **Fields** | ![Documentation](docs/screenshots/8-documentation.png) **Documentation** |
 
 ## Documentation and contributing
 

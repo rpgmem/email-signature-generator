@@ -505,8 +505,15 @@ final class SettingsPage {
 		}
 		echo '</div></div>';
 
+		// Documentation: nothing to save, so the panel hides the button.
+		self::openPanel( 'documentation', $active );
+		Documentation::render();
+		echo '</div>';
+
 		echo '</div></div>';
+		echo '<div class="esg-submit"' . ( 'documentation' === $active ? ' hidden' : '' ) . '>';
 		submit_button();
+		echo '</div>';
 		echo '</form></div>';
 	}
 
@@ -561,25 +568,29 @@ final class SettingsPage {
 	 */
 	public static function tabs(): array {
 		return array(
-			'general'  => array(
+			'general'       => array(
 				'label' => __( 'General', 'email-signature-generator' ),
 				'icon'  => 'settings',
 			),
-			'layout'   => array(
+			'layout'        => array(
 				'label' => __( 'Layout', 'email-signature-generator' ),
 				'icon'  => 'layout',
 			),
-			'download' => array(
+			'download'      => array(
 				'label' => __( 'Downloaded image', 'email-signature-generator' ),
 				'icon'  => 'download',
 			),
-			'regions'  => array(
+			'regions'       => array(
 				'label' => __( 'Units', 'email-signature-generator' ),
 				'icon'  => 'building',
 			),
-			'fields'   => array(
+			'fields'        => array(
 				'label' => __( 'Fields', 'email-signature-generator' ),
 				'icon'  => 'list',
+			),
+			'documentation' => array(
+				'label' => __( 'Documentation', 'email-signature-generator' ),
+				'icon'  => 'book',
 			),
 		);
 	}
