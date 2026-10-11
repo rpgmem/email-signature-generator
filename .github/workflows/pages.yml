@@ -1,0 +1,51 @@
+name: Pages
+
+# Publishes the standalone generator of the latest release on GitHub Pages, at
+# a stable address for whoever links to it or embeds it in an iframe:
+# https://rpgmem.github.io/email-signature-generator/
+#
+# It serves the release ASSET rather than building from a branch, so the page
+# is always byte-for-byte the file the release offers for download. Release
+# calls it after publishing a latest release (a release created with the
+# workflow token does not fire `release` events), and it can be run by hand.
+# Pages must be enabled with "GitHub Actions" as its source.
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy the standalone generator
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download the latest release's HTML
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p _site
+          tag="$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName)"
+          gh release download "$tag" --repo "$GITHUB_REPOSITORY" \
+            --pattern 'email-signature-generator-*.html' --output _site/index.html
+          echo "Publishing the standalone generator of $tag."
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v5

@@ -6,7 +6,7 @@ Project conventions for Claude (Anthropic CLI / agent sessions) working on this 
 
 **Email Signature Generator** has two deliverables, and both are attached to every GitHub release:
 - **The WordPress plugin** (`email-signature-generator-X.Y.Z.zip`). A shortcode places the form, and an administrator configures it.
-- **The standalone HTML** (`email-signature-generator-X.Y.Z.html`). One self-contained file that needs no WordPress, with the default configuration embedded.
+- **The standalone HTML** (`email-signature-generator-X.Y.Z.html`). One self-contained file that needs no WordPress, with the default configuration embedded. GitHub Pages serves the latest release's copy at a stable URL.
 
 They share one source. The generator is JavaScript driven by a configuration object: the plugin builds that object from its settings, and the standalone build embeds the defaults. Never fix a behaviour in only one of them.
 
@@ -85,6 +85,7 @@ Force push stays allowed on `develop`, because the post-release sync is a reset.
    - checks the tag against the header version;
    - builds the zip through `bin/build-release-zip.sh` and `.distignore`;
    - publishes a GitHub Release whose notes are that CHANGELOG section, marked as the latest. The plugin's updater reads `releases/latest`.
+   - calls `.github/workflows/pages.yml`, which publishes that release's HTML on GitHub Pages.
 
    The Lint workflow runs the same build against the newest tag on every PR, so a broken `.distignore` or CHANGELOG section fails there first.
 
@@ -144,6 +145,8 @@ Every string the browser shows travels in `Config::strings()`, so the JavaScript
 
 The signature links its logo by URL, because email clients drop embedded images. The standalone build points at the bundled logo **at the release tag** on `raw.githubusercontent.com`, which stays valid as long as the tag exists; the plugin points at its own copy.
 
+
+**Pages serves the release asset, not a build from a branch,** so the page at https://rpgmem.github.io/email-signature-generator/ is always the file the release offers for download. `pages.yml` runs from `release.yml` after a tag push (a release created with the workflow token fires no `release` event) and by hand through `workflow_dispatch`; a historical release published by hand never replaces it. Pages must be enabled with **GitHub Actions** as its source.
 ## Settings
 
 `Settings` owns the one option, `email_signature_generator_settings`. Its rules:

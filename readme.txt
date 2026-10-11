@@ -16,7 +16,7 @@ Everyone in an organisation fills in the same form and gets a signature with the
 
 The plugin ships with the São Paulo Municipal Department of Education (SME-SP) layout as its default, and an administrator can adapt it to another organisation.
 
-A standalone HTML version, which needs no WordPress, is published next to the plugin on each GitHub release.
+A standalone HTML version, which needs no WordPress, is published next to the plugin on each GitHub release, and the latest one is served at https://rpgmem.github.io/email-signature-generator/.
 
 == Usage ==
 

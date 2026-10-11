@@ -5,7 +5,7 @@ A form that builds a consistent HTML email signature for everyone in an organisa
 It comes in two forms, both published on every [release](https://github.com/rpgmem/email-signature-generator/releases/latest):
 
 - **WordPress plugin** (`email-signature-generator-X.Y.Z.zip`): place the form on any page with a shortcode. An administrator sets which models are offered, the defaults, the required and locked fields, the allowed or refused email domains and the logo. Updates arrive through the normal WordPress update screen.
-- **Standalone HTML** (`email-signature-generator-X.Y.Z.html`): one self-contained file that needs no WordPress. Open it in a browser or publish it on any web page.
+- **Standalone HTML** (`email-signature-generator-X.Y.Z.html`): one self-contained file that needs no WordPress. Open it in a browser or publish it on any web page. The latest one is served at **https://rpgmem.github.io/email-signature-generator/**.
 
 The default layout and logo are those of the São Paulo Municipal Department of Education (SME-SP), and both can be adapted to another organisation.
 
@@ -32,7 +32,11 @@ In **Settings → Email Signature** an administrator sets, for every form on the
 
 The on/off settings save the moment they are flipped; the rest saves with **Save Changes**.
 
-**Standalone**, open the `.html` file in a browser, or publish it on any web page.
+**Standalone**, open the `.html` file in a browser, publish it on any web page, or embed the latest one:
+
+```html
+<iframe src="https://rpgmem.github.io/email-signature-generator/" style="width:100%;height:1400px;border:0" title="Email signature"></iframe>
+```
 
 Then:
 
