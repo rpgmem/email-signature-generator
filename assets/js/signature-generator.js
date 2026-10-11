@@ -482,6 +482,62 @@
 	}
 
 	/**
+	 * What a person typed, kept in their own browser when the site allows
+	 * it, so updating a signature later does not mean typing it again.
+	 * Nothing is sent anywhere. Storage that is blocked or full is ignored.
+	 */
+	var STORE = 'email-signature-generator:';
+
+	/**
+	 * Inside the preview only, never in what is copied: in the dark-mode
+	 * view, images keep their colours, as email programs keep them.
+	 */
+	var PREVIEW_STYLE = '<style>:host(.esg-preview--dark) img { filter: invert(1) hue-rotate(180deg); }</style>';
+
+	function storage( doc ) {
+		try {
+			return doc.defaultView.localStorage || null;
+		} catch {
+			return null;
+		}
+	}
+
+	function loadSaved( doc, key ) {
+		var store = storage( doc );
+		try {
+			var value = store ? JSON.parse( store.getItem( STORE + key ) || 'null' ) : null;
+			return value && 'object' === typeof value ? value : null;
+		} catch {
+			return null;
+		}
+	}
+
+	function storeSaved( doc, key, value ) {
+		var store = storage( doc );
+		try {
+			if ( store ) {
+				store.setItem( STORE + key, JSON.stringify( value ) );
+			}
+		} catch {
+			// Full or blocked: the form still works, it just forgets.
+		}
+	}
+
+	function forgetSaved( doc, config ) {
+		var store = storage( doc );
+		try {
+			if ( store ) {
+				store.removeItem( STORE + 'model' );
+				config.models.forEach( function ( model ) {
+					store.removeItem( STORE + 'values:' + model.id );
+				} );
+			}
+		} catch {
+			// Nothing to forget.
+		}
+	}
+
+	/**
 	 * Draw the form and wire its buttons inside a container.
 	 *
 	 * @param {Element} container The element that holds the generator.
@@ -500,6 +556,14 @@
 		config.models.forEach( function ( model ) {
 			modelSelect.appendChild( el( doc, 'option', { value: model.id, text: model.label } ) );
 		} );
+		var remember = true === config.rememberValues;
+		if ( remember ) {
+			var savedModel = ( loadSaved( doc, 'model' ) || {} ).id;
+			if ( findModel( config, savedModel ) && findModel( config, savedModel ).id === savedModel ) {
+				current = findModel( config, savedModel );
+				modelSelect.value = savedModel;
+			}
+		}
 		var modelRow = el( doc, 'p', { class: 'esg-field' }, [
 			el( doc, 'label', { for: uid + '-model', text: strings.model } ),
 			modelSelect,
@@ -545,6 +609,14 @@
 			} ) ),
 		] ) );
 
+		var forgetBtn = el( doc, 'button', { type: 'button', class: 'esg-forget', text: strings.forget } );
+		if ( remember ) {
+			form.appendChild( el( doc, 'p', { class: 'esg-remember' }, [
+				el( doc, 'span', { text: strings.remembered + ' ' } ),
+				forgetBtn,
+			] ) );
+		}
+
 		var status = el( doc, 'p', { class: 'esg-status', role: 'status' } );
 		var previewHost = el( doc, 'div', { class: 'esg-preview' } );
 		var previewRoot = previewHost.attachShadow ? previewHost.attachShadow( { mode: 'open' } ) : previewHost;
@@ -552,8 +624,17 @@
 		container.innerHTML = '';
 		container.appendChild( form );
 		container.appendChild( status );
-		container.appendChild( el( doc, 'h3', { class: 'esg-preview-title', text: strings.preview } ) );
+		// How the signature may look in an email program's dark mode, which
+		// inverts the colours of text and backgrounds but not of images.
+		var darkBox = el( doc, 'input', { type: 'checkbox', class: 'esg-dark-toggle' } );
+		container.appendChild( el( doc, 'div', { class: 'esg-preview-head' }, [
+			el( doc, 'h3', { class: 'esg-preview-title', text: strings.preview } ),
+			el( doc, 'label', { class: 'esg-dark' }, [ darkBox, doc.createTextNode( ' ' + strings.darkPreview ) ] ),
+		] ) );
 		container.appendChild( previewHost );
+		darkBox.addEventListener( 'change', function () {
+			previewHost.classList.toggle( 'esg-preview--dark', darkBox.checked );
+		} );
 
 		/**
 		 * The email field when the site accepts only some domains: the person
@@ -655,6 +736,31 @@
 					input,
 				] ) );
 			} );
+		restoreSaved();
+		}
+
+		/**
+		 * Put back what this browser kept for the current model; a locked
+		 * field keeps its fixed value.
+		 */
+		function restoreSaved() {
+			var saved = remember ? loadSaved( doc, 'values:' + current.id ) : null;
+			if ( ! saved ) {
+				return;
+			}
+			current.fields.forEach( function ( field ) {
+				var input = fieldsBox.querySelector( '[name="' + field.key + '"]' );
+				if ( ! input || field.locked || 'string' !== typeof saved[ field.key ] ) {
+					return;
+				}
+				input.value = saved[ field.key ];
+				if ( 'SELECT' === input.tagName && input.value !== saved[ field.key ] ) {
+					// An option the site has since removed: keep its default.
+					input.value = field.default || '';
+				}
+				// The email beside a fixed domain splits a full address.
+				input.dispatchEvent( new doc.defaultView.Event( 'input', { bubbles: true } ) );
+			} );
 		}
 
 		function readValues() {
@@ -707,8 +813,12 @@
 				return false;
 			}
 			html = render( current, values, config );
-			previewRoot.innerHTML = html;
+			previewRoot.innerHTML = PREVIEW_STYLE + html;
 			output.hidden = false;
+			if ( remember ) {
+				storeSaved( doc, 'model', { id: current.id } );
+				storeSaved( doc, 'values:' + current.id, values );
+			}
 			return true;
 		}
 
@@ -799,6 +909,15 @@
 						stage.parentNode.removeChild( stage );
 					}
 				} );
+		} );
+
+		forgetBtn.addEventListener( 'click', function () {
+			forgetSaved( doc, config );
+			html = '';
+			previewRoot.innerHTML = '';
+			output.hidden = true;
+			drawFields();
+			setStatus( strings.forgotten );
 		} );
 
 		drawFields();

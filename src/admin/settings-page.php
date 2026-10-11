@@ -174,6 +174,21 @@ final class SettingsPage {
 		echo '<p class="description">' . esc_html__( 'With one model, the form does not ask which. With none ticked, every model is offered.', 'email-signature-generator' ) . '</p>';
 		echo '</fieldset></td></tr>';
 
+		printf(
+			'<tr><th scope="row">%1$s</th><td><input type="hidden" name="%2$s[remember_values]" value="0">',
+			esc_html__( 'Remember what was typed', 'email-signature-generator' ),
+			esc_attr( $name )
+		);
+		self::toggle(
+			array(
+				'name'    => $name . '[remember_values]',
+				'checked' => $settings['remember_values'],
+				'label'   => __( 'Each browser keeps what its user typed, to fill the form the next time', 'email-signature-generator' ),
+				'key'     => 'remember_values',
+			)
+		);
+		echo '<p class="description">' . esc_html__( 'Kept only in that browser, never sent to the site, and the form offers a link to forget it. Leave it off for shared computers.', 'email-signature-generator' ) . '</p></td></tr>';
+
 		echo '<tr><th scope="row">' . esc_html__( 'Who can use the form', 'email-signature-generator' ) . '</th><td><fieldset>';
 		foreach ( array(
 			Settings::ACCESS_EVERYONE  => __( 'Everyone who can see the page', 'email-signature-generator' ),

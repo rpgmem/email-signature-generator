@@ -68,7 +68,7 @@ final class Settings {
 	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, uppercase_name: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -85,6 +85,7 @@ final class Settings {
 			'models'                => self::modelIds(),
 			'offer_download'        => true,
 			'download_style'        => 'notice',
+			'remember_values'       => false,
 			'uppercase_name'        => true,
 			'logo_id'               => 0,
 			'logo_alt'              => '',
@@ -110,7 +111,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, uppercase_name: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -158,6 +159,7 @@ final class Settings {
 			// hidden 0 before the checkbox, so unticking it is never absent.
 			'offer_download'        => array_key_exists( 'offer_download', $input ) ? ! empty( $input['offer_download'] ) : true,
 			'download_style'        => in_array( $style, self::DOWNLOAD_STYLES, true ) ? $style : 'notice',
+			'remember_values'       => ! empty( $input['remember_values'] ),
 			'uppercase_name'        => array_key_exists( 'uppercase_name', $input ) ? ! empty( $input['uppercase_name'] ) : true,
 			'logo_id'               => max( 0, (int) ( $input['logo_id'] ?? 0 ) ),
 			'logo_alt'              => mb_substr( sanitize_text_field( is_string( $input['logo_alt'] ?? null ) ? $input['logo_alt'] : '' ), 0, self::LOGO_ALT_MAX ),
@@ -278,6 +280,7 @@ final class Settings {
 
 		$config['offerDownload']       = (bool) $settings['offer_download'];
 		$config['downloadStyle']       = (string) $settings['download_style'];
+		$config['rememberValues']      = (bool) $settings['remember_values'];
 		$config['uppercaseName']       = (bool) $settings['uppercase_name'];
 		$config['emailDomains']        = $settings['restrict_email_domain'] ? array_values( $settings['email_domains'] ) : array();
 		$config['blockedEmailDomains'] = array_values( $settings['blocked_email_domains'] );

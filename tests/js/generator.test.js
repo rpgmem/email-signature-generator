@@ -429,6 +429,49 @@ describe( 'settings in the configuration', () => {
 		expect( ui.html() ).toContain( 'tel:+5511933975678' );
 	} );
 
+	it( 'remembers nothing unless the site allows it', () => {
+		window.localStorage.clear();
+		document.body.innerHTML = '<div id="c"></div>';
+		const ui = gen.mount( document.getElementById( 'c' ), config );
+		fill( valid );
+		expect( ui.generate() ).toBe( true );
+		expect( window.localStorage.length ).toBe( 0 );
+		expect( document.querySelector( '.esg-forget' ) ).toBeNull();
+	} );
+
+	it( 'fills the form again from this browser, and forgets on request', () => {
+		window.localStorage.clear();
+		const cfg = { ...config, rememberValues: true };
+		document.body.innerHTML = '<div id="c"></div>';
+		let ui = gen.mount( document.getElementById( 'c' ), cfg );
+		ui.select( 'staff_school' );
+		fill( { ...valid, role: 'Professora' } );
+		expect( ui.generate() ).toBe( true );
+
+		document.body.innerHTML = '<div id="c"></div>';
+		ui = gen.mount( document.getElementById( 'c' ), cfg );
+		expect( document.querySelector( '.esg-model' ).value ).toBe( 'staff_school' );
+		expect( document.querySelector( '[name="name"]' ).value ).toBe( 'Maria da Silva' );
+		expect( document.querySelector( '[name="role"]' ).value ).toBe( 'Professora' );
+
+		document.querySelector( '.esg-forget' ).click();
+		expect( window.localStorage.length ).toBe( 0 );
+		expect( document.querySelector( '[name="name"]' ).value ).toBe( '' );
+		expect( document.querySelector( '.esg-status' ).textContent ).toBe( config.strings.forgotten );
+	} );
+
+	it( 'shows the preview in dark mode without touching what is copied', () => {
+		document.body.innerHTML = '<div id="c"></div>';
+		const ui = gen.mount( document.getElementById( 'c' ), config );
+		fill( valid );
+		ui.generate();
+		const box = document.querySelector( '.esg-dark-toggle' );
+		box.checked = true;
+		box.dispatchEvent( new window.Event( 'change' ) );
+		expect( document.querySelector( '.esg-preview' ).classList.contains( 'esg-preview--dark' ) ).toBe( true );
+		expect( ui.html() ).not.toContain( '<style>' );
+	} );
+
 	it( 'leaves the email field free when no domain is set', () => {
 		document.body.innerHTML = '<div id="c"></div>';
 		gen.mount( document.getElementById( 'c' ), config );

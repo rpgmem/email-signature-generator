@@ -179,6 +179,13 @@ final class SettingsTest extends TestCase {
 		self::assertSame( 'DREBT', $this->field( $config, 'staff_school', 'office' )['default'] );
 	}
 
+	public function test_remembering_is_off_unless_turned_on(): void {
+		self::assertFalse( Settings::sanitize( array() )['remember_values'] );
+		self::assertTrue( Settings::sanitize( array( 'remember_values' => '1' ) )['remember_values'] );
+		self::assertFalse( Settings::apply( Config::defaults( '' ), Settings::defaults() )['rememberValues'] );
+		self::assertTrue( Settings::apply( Config::defaults( '' ), Settings::sanitize( array( 'remember_values' => '1' ) ) )['rememberValues'] );
+	}
+
 	public function test_the_logo_text_describes_the_image(): void {
 		self::assertSame( Config::LOGO_ALT, Settings::apply( Config::defaults( '' ), Settings::defaults() )['logo']['alt'] );
 
