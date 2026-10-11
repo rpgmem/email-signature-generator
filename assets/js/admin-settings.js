@@ -140,6 +140,25 @@
 	} );
 	syncShown();
 
+	// Switching the design off clears it: its fields go back to their
+	// defaults, which the next save stores.
+	var design = document.querySelector( 'input[type="checkbox"][data-esg-autosave="custom_style"]' );
+	if ( design ) {
+		design.addEventListener( 'change', function () {
+			if ( design.checked ) {
+				return;
+			}
+			document.querySelectorAll( '[data-esg-shown-by="custom_style"] [data-esg-default]' ).forEach( function ( field ) {
+				var initial = field.getAttribute( 'data-esg-default' );
+				if ( 'radio' === field.type ) {
+					field.checked = field.value === initial;
+				} else {
+					field.value = initial;
+				}
+			} );
+		} );
+	}
+
 	/**
 	 * Copy buttons: the field named by `data-esg-copy` goes to the
 	 * clipboard, and the button says so for a moment.

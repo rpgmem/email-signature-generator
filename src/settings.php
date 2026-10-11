@@ -52,6 +52,16 @@ final class Settings {
 	 */
 	public const ANALYTICS_ID_PATTERN = '/^G-[A-Z0-9]{4,20}$/';
 
+	/**
+	 * The roundest the form's corners get, in pixels.
+	 */
+	public const RADIUS_MAX = 24;
+
+	/**
+	 * The contrast WCAG asks of normal text (level AA).
+	 */
+	public const MIN_CONTRAST = 4.5;
+
 	public const IMAGE_QUALITY_MIN = 50;
 
 	public const IMAGE_QUALITY_MAX = 100;
@@ -80,7 +90,7 @@ final class Settings {
 	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, custom_style: bool, colors: array<string, string>, radius: int, font: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -114,6 +124,10 @@ final class Settings {
 			'access'                => self::ACCESS_EVERYONE,
 			'analytics'             => false,
 			'analytics_id'          => '',
+			'custom_style'          => false,
+			'colors'                => Config::COLORS,
+			'radius'                => Config::RADIUS,
+			'font'                  => Config::FONTS[0],
 			'fields'                => array(),
 		);
 	}
@@ -124,7 +138,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, custom_style: bool, colors: array<string, string>, radius: int, font: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -166,6 +180,9 @@ final class Settings {
 		}
 
 		$access = (string) ( $input['access'] ?? self::ACCESS_EVERYONE );
+		// Off, the look goes back to the stylesheet's: switching it off
+		// clears the customisation rather than hiding it.
+		$custom = ! empty( $input['custom_style'] );
 
 		return array(
 			'models'                => $models,
@@ -192,6 +209,10 @@ final class Settings {
 			'access'                => self::ACCESS_LOGGED_IN === $access ? self::ACCESS_LOGGED_IN : self::ACCESS_EVERYONE,
 			'analytics'             => ! empty( $input['analytics'] ),
 			'analytics_id'          => self::analyticsId( $input['analytics_id'] ?? '' ),
+			'custom_style'          => $custom,
+			'colors'                => $custom ? self::colors( $input['colors'] ?? array() ) : Config::COLORS,
+			'radius'                => $custom ? min( self::RADIUS_MAX, max( 0, (int) ( $input['radius'] ?? Config::RADIUS ) ) ) : Config::RADIUS,
+			'font'                  => $custom && in_array( $input['font'] ?? '', Config::FONTS, true ) ? (string) $input['font'] : Config::FONTS[0],
 			'fields'                => self::sanitizeFields( self::legacyUnitLabel( $input, self::legacyCapitals( $input ) ) ),
 		);
 	}
@@ -210,6 +231,7 @@ final class Settings {
 		static $reported         = false;
 		static $reported_domains = false;
 		static $reported_id      = false;
+		static $reported_colors  = false;
 		$input                   = is_array( $input ) ? $input : array();
 		$rejected                = Regions::parse( $input['regions'] ?? array() )['rejected'];
 		if ( ! $reported && array() !== $rejected && function_exists( 'add_settings_error' ) ) {
@@ -253,7 +275,118 @@ final class Settings {
 				)
 			);
 		}
-		return self::sanitize( $input );
+		$clean = self::sanitize( $input );
+		$weak  = $clean['custom_style'] ? self::weakContrasts( $clean['colors'] ) : array();
+		if ( ! $reported_colors && array() !== $weak && function_exists( 'add_settings_error' ) ) {
+			$reported_colors = true;
+			add_settings_error(
+				self::OPTION,
+				'weak_contrast',
+				sprintf(
+					/* translators: %s: the colour pairs, separated by semicolons. */
+					__( 'The colours were saved, but some pairs are hard to read (WCAG asks for at least 4.5:1): %s', 'email-signature-generator' ),
+					implode( '; ', $weak )
+				),
+				'warning'
+			);
+		}
+		return $clean;
+	}
+
+	/**
+	 * The colour pairs the form draws text with that fall short of
+	 * MIN_CONTRAST, each described with its ratio.
+	 *
+	 * @param array<string, string> $colors Sanitized colours.
+	 * @return list<string>
+	 */
+	public static function weakContrasts( array $colors ): array {
+		$pairs = array(
+			array( 'accent_text', 'accent', __( 'button text on the accent', 'email-signature-generator' ) ),
+			array( 'accent', '#ffffff', __( 'accent on white', 'email-signature-generator' ) ),
+			array( 'muted', '#ffffff', __( 'notes on white', 'email-signature-generator' ) ),
+			array( 'error', '#ffffff', __( 'errors on white', 'email-signature-generator' ) ),
+		);
+		$weak  = array();
+		foreach ( $pairs as $pair ) {
+			$front = $colors[ $pair[0] ] ?? '#000000';
+			$back  = '#' === $pair[1][0] ? $pair[1] : ( $colors[ $pair[1] ] ?? '#ffffff' );
+			$ratio = self::contrast( $front, $back );
+			if ( $ratio < self::MIN_CONTRAST ) {
+				$weak[] = sprintf( '%s (%s:1)', $pair[2], number_format_i18n( $ratio, 2 ) );
+			}
+		}
+		return $weak;
+	}
+
+	/**
+	 * The WCAG contrast ratio of two #rrggbb colours, from 1 to 21.
+	 *
+	 * @param string $a A colour.
+	 * @param string $b Another colour.
+	 */
+	public static function contrast( string $a, string $b ): float {
+		$la = self::luminance( $a );
+		$lb = self::luminance( $b );
+		return ( max( $la, $lb ) + 0.05 ) / ( min( $la, $lb ) + 0.05 );
+	}
+
+	/**
+	 * The relative luminance of a #rrggbb colour, as WCAG defines it.
+	 *
+	 * @param string $hex Colour.
+	 */
+	private static function luminance( string $hex ): float {
+		$rgb = array_map( 'hexdec', str_split( substr( $hex, 1, 6 ), 2 ) );
+		$lin = array_map(
+			static function ( $channel ): float {
+				$c = (int) $channel / 255;
+				return $c <= 0.03928 ? $c / 12.92 : ( ( $c + 0.055 ) / 1.055 ) ** 2.4;
+			},
+			$rgb
+		);
+		return 0.2126 * $lin[0] + 0.7152 * $lin[1] + 0.0722 * $lin[2];
+	}
+
+	/**
+	 * The CSS custom properties the container carries when the look is
+	 * customised; '' when it is not, so the stylesheet's own look applies.
+	 *
+	 * Every value is built from validated settings (#rrggbb colours, an
+	 * integer radius, a known font), so it is safe inside a style attribute.
+	 *
+	 * @param array<string, mixed> $settings Sanitized settings.
+	 */
+	public static function styleVars( array $settings ): string {
+		if ( empty( $settings['custom_style'] ) ) {
+			return '';
+		}
+		$vars = array();
+		foreach ( self::colors( $settings['colors'] ?? array() ) as $key => $color ) {
+			$vars[] = '--esg-' . str_replace( '_', '-', $key ) . ': ' . $color;
+		}
+		$vars[] = '--esg-radius: ' . (int) $settings['radius'] . 'px';
+		if ( 'theme' === ( $settings['font'] ?? '' ) ) {
+			$vars[] = '--esg-font: inherit';
+		}
+		return implode( '; ', $vars );
+	}
+
+	/**
+	 * The colours as stored: every known key, a #rrggbb value, the default
+	 * where a value is missing or is not a colour.
+	 *
+	 * @param mixed $input Raw colours, key => value.
+	 * @return array<string, string>
+	 */
+	public static function colors( $input ): array {
+		$input  = is_array( $input ) ? $input : array();
+		$colors = array();
+		foreach ( Config::COLORS as $key => $default ) {
+			$value          = is_scalar( $input[ $key ] ?? null ) ? strtolower( trim( (string) $input[ $key ] ) ) : '';
+			$colors[ $key ] = 1 === preg_match( '/^#[0-9a-f]{6}$/', $value ) ? $value : $default;
+		}
+		return $colors;
 	}
 
 	/**

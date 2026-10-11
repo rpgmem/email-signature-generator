@@ -7,6 +7,7 @@ namespace ESG\Tests\Unit;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EmailSignatureGenerator\Admin\Autosave;
+use EmailSignatureGenerator\Config;
 use EmailSignatureGenerator\Settings;
 use PHPUnit\Framework\TestCase;
 use WP_Error;
@@ -56,6 +57,16 @@ final class AutosaveTest extends TestCase {
 		self::assertTrue( Autosave::read( $on, 'analytics' ) );
 		self::assertSame( 'G-ABC1234', $on['analytics_id'] );
 		self::assertFalse( Autosave::apply( $on, 'analytics', '0' )['analytics'] );
+	}
+
+	public function test_the_design_switch_saves_on_its_own_and_off_clears_the_colours(): void {
+		$on = Autosave::apply( Settings::defaults(), 'custom_style', '1' );
+		self::assertIsArray( $on );
+		self::assertTrue( Autosave::read( $on, 'custom_style' ) );
+		$on['colors']['accent'] = '#aa0000';
+		$off                    = Autosave::apply( $on, 'custom_style', '0' );
+		self::assertFalse( $off['custom_style'] );
+		self::assertSame( Config::COLORS, $off['colors'] );
 	}
 
 	public function test_the_domain_restriction_turns_on_and_off_and_keeps_the_list(): void {

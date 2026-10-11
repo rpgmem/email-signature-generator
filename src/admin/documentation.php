@@ -136,6 +136,27 @@ final class Documentation {
 					array( __( 'Capitals', 'email-signature-generator' ), __( 'Prints the field in capital letters, however it was typed. The email is always printed in lower case.', 'email-signature-generator' ) ),
 				),
 			),
+			'design'   => array(
+				'title' => __( 'Design', 'email-signature-generator' ),
+				'icon'  => 'brush',
+				'tab'   => 'design',
+				'intro' => __( 'The form\'s colours, corners and font, to match the site. The signature keeps its own look, since that is what email programs receive.', 'email-signature-generator' ),
+				'items' => array(
+					array( __( 'Customise', 'email-signature-generator' ), __( 'Off by default, and the form keeps its own look. Switching it off again puts every value back to its default.', 'email-signature-generator' ) ),
+					array( __( 'Colours', 'email-signature-generator' ), __( 'The accent of the buttons and links, the text on it, the field borders, the notes and the errors. A pair hard to read (below 4.5:1, as WCAG asks) is saved with a warning naming it.', 'email-signature-generator' ) ),
+					array(
+						__( 'Rounded corners', 'email-signature-generator' ),
+						sprintf(
+							/* translators: 1: default, 2: maximum, in pixels. */
+							__( 'Of the fields, the buttons and the lists, from 0 (square) to %2$d px; %1$d px by default.', 'email-signature-generator' ),
+							Config::RADIUS,
+							Settings::RADIUS_MAX
+						),
+					),
+					array( __( 'Font', 'email-signature-generator' ), __( 'The form\'s own (Arial) or the site theme\'s.', 'email-signature-generator' ) ),
+					array( __( 'Standalone HTML', 'email-signature-generator' ), __( 'Always keeps the form\'s own look: it never reads these settings.', 'email-signature-generator' ) ),
+				),
+			),
 			'privacy'  => array(
 				'title' => __( 'Privacy', 'email-signature-generator' ),
 				'icon'  => 'shield',

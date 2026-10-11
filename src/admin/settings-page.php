@@ -530,6 +530,69 @@ final class SettingsPage {
 		}
 		echo '</div></div>';
 
+		// Design: the form's colours, corners and font.
+		self::openPanel( 'design', $active );
+		self::openCard( __( 'Design', 'email-signature-generator' ), 'brush' );
+		echo '<table class="form-table" role="presentation"><tbody>';
+		printf(
+			'<tr><th scope="row">%1$s</th><td><input type="hidden" name="%2$s[custom_style]" value="0">',
+			esc_html__( 'Customise', 'email-signature-generator' ),
+			esc_attr( $name )
+		);
+		self::toggle(
+			array(
+				'name'    => $name . '[custom_style]',
+				'checked' => $settings['custom_style'],
+				'label'   => __( 'Use the colours, corners and font below', 'email-signature-generator' ),
+				'key'     => 'custom_style',
+			)
+		);
+		echo '<p class="description">' . esc_html__( 'Off, the form keeps its own look, and the values below go back to their defaults: switching it off clears the customisation. Only the form changes: the signature keeps its own look, since that is what email programs receive. The standalone HTML always keeps the form\'s own look.', 'email-signature-generator' ) . '</p></td></tr>';
+		foreach ( self::colorLabels() as $key => $label ) {
+			printf(
+				'<tr data-esg-shown-by="custom_style"%7$s><th scope="row"><label for="esg-color-%1$s">%2$s</label></th><td><input type="color" id="esg-color-%1$s" name="%3$s[colors][%1$s]" value="%4$s" data-esg-default="%6$s"> <code>%5$s</code></td></tr>',
+				esc_attr( $key ),
+				esc_html( $label ),
+				esc_attr( $name ),
+				esc_attr( $settings['colors'][ $key ] ),
+				/* translators: %s: the default colour, #rrggbb. */
+				esc_html( sprintf( __( 'Default: %s', 'email-signature-generator' ), Config::COLORS[ $key ] ) ),
+				esc_attr( Config::COLORS[ $key ] ),
+				$settings['custom_style'] ? '' : ' hidden'
+			);
+		}
+		printf(
+			'<tr data-esg-shown-by="custom_style"%7$s><th scope="row"><label for="esg-radius">%1$s</label></th><td><input type="number" id="esg-radius" class="small-text" name="%2$s[radius]" value="%3$d" data-esg-default="%6$d" min="0" max="%4$d" required> px<p class="description">%5$s</p></td></tr>',
+			esc_html__( 'Rounded corners', 'email-signature-generator' ),
+			esc_attr( $name ),
+			(int) $settings['radius'],
+			(int) Settings::RADIUS_MAX,
+			/* translators: %d: the default radius, in pixels. */
+			esc_html( sprintf( __( 'Of the fields, the buttons and the lists; 0 makes them square. Default: %d px.', 'email-signature-generator' ), Config::RADIUS ) ),
+			(int) Config::RADIUS,
+			$settings['custom_style'] ? '' : ' hidden'
+		);
+		printf(
+			'<tr data-esg-shown-by="custom_style"%1$s><th scope="row">%2$s</th><td><fieldset>',
+			$settings['custom_style'] ? '' : ' hidden',
+			esc_html__( 'Font', 'email-signature-generator' )
+		);
+		foreach ( array(
+			'form'  => __( 'The form\'s own (Arial)', 'email-signature-generator' ),
+			'theme' => __( 'The site theme\'s', 'email-signature-generator' ),
+		) as $value => $label ) {
+			printf(
+				'<label><input type="radio" name="%1$s[font]" value="%2$s" data-esg-default="%5$s"%3$s> %4$s</label><br>',
+				esc_attr( $name ),
+				esc_attr( $value ),
+				checked( $settings['font'], $value, false ),
+				esc_html( $label ),
+				esc_attr( Config::FONTS[0] )
+			);
+		}
+		echo '</fieldset><p class="description">' . esc_html__( 'Colours whose text would be hard to read are saved anyway, with a warning naming them.', 'email-signature-generator' ) . '</p></td></tr>';
+		echo '</tbody></table></div></div>';
+
 		// Documentation: nothing to save, so the panel hides the button.
 		self::openPanel( 'documentation', $active );
 		Documentation::render();
@@ -587,6 +650,21 @@ final class SettingsPage {
 	}
 
 	/**
+	 * The colours the Design tab offers, key => label, in the order shown.
+	 *
+	 * @return array<string, string>
+	 */
+	private static function colorLabels(): array {
+		return array(
+			'accent'      => __( 'Accent (buttons and links)', 'email-signature-generator' ),
+			'accent_text' => __( 'Text on the accent', 'email-signature-generator' ),
+			'border'      => __( 'Field borders', 'email-signature-generator' ),
+			'muted'       => __( 'Notes and hints', 'email-signature-generator' ),
+			'error'       => __( 'Errors', 'email-signature-generator' ),
+		);
+	}
+
+	/**
 	 * The tabs, in order: id => label and icon.
 	 *
 	 * @return array<string, array{label: string, icon: string}>
@@ -612,6 +690,10 @@ final class SettingsPage {
 			'fields'        => array(
 				'label' => __( 'Fields', 'email-signature-generator' ),
 				'icon'  => 'list',
+			),
+			'design'        => array(
+				'label' => __( 'Design', 'email-signature-generator' ),
+				'icon'  => 'brush',
 			),
 			'documentation' => array(
 				'label' => __( 'Documentation', 'email-signature-generator' ),

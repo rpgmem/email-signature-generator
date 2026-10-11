@@ -75,11 +75,15 @@ final class Shortcode {
 		// configuration. It is inline because a block theme's constrained
 		// layout sets max-width on every child of the content at the same
 		// specificity as the stylesheet, and loads later.
+		// The Design tab's colours, corners and font ride on the same
+		// attribute, as custom properties the stylesheet reads.
+		$settings = Settings::get();
+		$vars     = Settings::styleVars( $settings );
 		return sprintf(
-			'<div class="esg-generator" style="max-width:%3$dpx" data-esg-config="%1$s"><noscript>%2$s</noscript></div>',
+			'<div class="esg-generator" style="%3$s" data-esg-config="%1$s"><noscript>%2$s</noscript></div>',
 			esc_attr( (string) wp_json_encode( $config ) ),
 			esc_html__( 'The signature generator needs JavaScript.', 'email-signature-generator' ),
-			(int) Settings::get()['form_width']
+			esc_attr( 'max-width:' . (int) $settings['form_width'] . 'px' . ( '' !== $vars ? '; ' . $vars : '' ) )
 		);
 	}
 
