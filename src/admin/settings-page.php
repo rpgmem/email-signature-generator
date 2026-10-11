@@ -256,6 +256,15 @@ final class SettingsPage {
 			esc_html__( 'The signature links to this image, so it must stay in the media library. A square image works best.', 'email-signature-generator' )
 		);
 		printf(
+			'<tr><th scope="row"><label for="esg-logo-alt">%1$s</label></th><td><input type="text" id="esg-logo-alt" class="large-text" name="%2$s[logo_alt]" value="%3$s" placeholder="%4$s" maxlength="%5$d"><p class="description">%6$s</p></td></tr>',
+			esc_html__( 'Alternative text', 'email-signature-generator' ),
+			esc_attr( $name ),
+			esc_attr( $settings['logo_alt'] ),
+			esc_attr( $settings['logo_id'] > 0 ? '' : Config::LOGO_ALT ),
+			(int) Settings::LOGO_ALT_MAX,
+			esc_html__( 'What the logo shows, in words: screen readers read it, and email programs that block images show it instead. Leave it empty to use the bundled logo\'s text, or the alternative text the chosen image has in the media library.', 'email-signature-generator' )
+		);
+		printf(
 			'<tr><th scope="row"><label for="esg-logo-width">%1$s</label></th><td><input type="number" id="esg-logo-width" class="small-text" name="%2$s[logo_width]" value="%3$d" min="%4$d" max="%5$d" required> px</td></tr>',
 			esc_html__( 'Width', 'email-signature-generator' ),
 			esc_attr( $name ),

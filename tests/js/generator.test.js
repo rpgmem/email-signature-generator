@@ -27,6 +27,26 @@ function model( id ) {
 	return gen.findModel( config, id );
 }
 
+describe( 'formatPhone', () => {
+	it( 'writes a number the way the signature prints it', () => {
+		expect( gen.formatPhone( '(11) 3397-1234' ) ).toBe( '55 11 3397-1234' );
+		expect( gen.formatPhone( '11933971234' ) ).toBe( '55 11 93397-1234' );
+		expect( gen.formatPhone( '+55 (11) 93397-1234' ) ).toBe( '55 11 93397-1234' );
+		expect( gen.formatPhone( '55 11 3397-1234' ) ).toBe( '55 11 3397-1234' );
+	} );
+
+	it( 'joins several numbers with a bar', () => {
+		expect( gen.formatPhone( '11 3397-1234 / 11 93397-5678' ) ).toBe( '55 11 3397-1234 | 55 11 93397-5678' );
+		expect( gen.formatPhone( '1133971234;11933975678' ) ).toBe( '55 11 3397-1234 | 55 11 93397-5678' );
+	} );
+
+	it( 'leaves what is not a number with its area code as typed, for the check to name', () => {
+		expect( gen.formatPhone( '3397-1234' ) ).toBe( '3397-1234' );
+		expect( gen.formatPhone( '1 800 123 4567' ) ).toBe( '1 800 123 4567' );
+		expect( gen.formatPhone( '' ) ).toBe( '' );
+	} );
+} );
+
 describe( 'escapeHtml', () => {
 	it( 'escapes every character that can open markup or end an attribute', () => {
 		expect( gen.escapeHtml( `<a href="x" onclick='y'>&</a>` ) ).toBe( '&lt;a href=&quot;x&quot; onclick=&#39;y&#39;&gt;&amp;&lt;/a&gt;' );
@@ -394,6 +414,19 @@ describe( 'settings in the configuration', () => {
 			config.strings.howToGmail,
 			config.strings.howToPhone,
 		] );
+	} );
+
+	it( 'formats the phone on leaving the field and when generating', () => {
+		document.body.innerHTML = '<div id="c"></div>';
+		const ui = gen.mount( document.getElementById( 'c' ), config );
+		fill( { ...valid, phone: '(11) 3397-1234' } );
+		const phone = document.querySelector( '[name="phone"]' );
+		phone.dispatchEvent( new window.Event( 'blur' ) );
+		expect( phone.value ).toBe( '55 11 3397-1234' );
+
+		phone.value = '11933975678';
+		expect( ui.generate() ).toBe( true );
+		expect( ui.html() ).toContain( 'tel:+5511933975678' );
 	} );
 
 	it( 'leaves the email field free when no domain is set', () => {

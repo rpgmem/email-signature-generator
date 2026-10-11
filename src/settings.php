@@ -32,6 +32,8 @@ final class Settings {
 
 	public const UNIT_LABEL_MAX = 40;
 
+	public const LOGO_ALT_MAX = 150;
+
 	/**
 	 * A domain name: dot-separated labels of letters, digits and inner
 	 * hyphens, ending in a top-level label of two letters or more.
@@ -66,7 +68,7 @@ final class Settings {
 	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -85,6 +87,7 @@ final class Settings {
 			'download_style'        => 'notice',
 			'uppercase_name'        => true,
 			'logo_id'               => 0,
+			'logo_alt'              => '',
 			'logo_width'            => Config::LOGO_WIDTH,
 			'top_space'             => Config::TOP_SPACE,
 			'image_format'          => Config::IMAGE_FORMAT,
@@ -107,7 +110,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, uppercase_name: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, unit_label: string, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, required?: bool, locked?: bool}>>}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -157,6 +160,7 @@ final class Settings {
 			'download_style'        => in_array( $style, self::DOWNLOAD_STYLES, true ) ? $style : 'notice',
 			'uppercase_name'        => array_key_exists( 'uppercase_name', $input ) ? ! empty( $input['uppercase_name'] ) : true,
 			'logo_id'               => max( 0, (int) ( $input['logo_id'] ?? 0 ) ),
+			'logo_alt'              => mb_substr( sanitize_text_field( is_string( $input['logo_alt'] ?? null ) ? $input['logo_alt'] : '' ), 0, self::LOGO_ALT_MAX ),
 			'logo_width'            => min( self::LOGO_WIDTH_MAX, max( self::LOGO_WIDTH_MIN, $width ) ),
 			'top_space'             => min( self::TOP_SPACE_MAX, max( 0, $space ) ),
 			'image_format'          => in_array( $format, self::IMAGE_FORMATS, true ) ? $format : Config::IMAGE_FORMAT,
@@ -286,6 +290,11 @@ final class Settings {
 		);
 		if ( '' !== $logo_url ) {
 			$config['logo']['url'] = $logo_url;
+			// The bundled logo's description does not fit another image.
+			$config['logo']['alt'] = '';
+		}
+		if ( '' !== $settings['logo_alt'] ) {
+			$config['logo']['alt'] = (string) $settings['logo_alt'];
 		}
 		if ( array() !== $settings['regions'] ) {
 			$config['regions'] = Regions::labels( $settings['regions'] );
@@ -338,6 +347,11 @@ final class Settings {
 		$logo_url = '';
 		if ( $settings['logo_id'] > 0 ) {
 			$logo_url = (string) wp_get_attachment_image_url( $settings['logo_id'], 'medium' );
+			if ( '' !== $logo_url && '' === $settings['logo_alt'] ) {
+				// Without its own text, the image's from the media library.
+				$alt                  = trim( (string) get_post_meta( $settings['logo_id'], '_wp_attachment_image_alt', true ) );
+				$settings['logo_alt'] = '' !== $alt ? $alt : trim( (string) get_the_title( $settings['logo_id'] ) );
+			}
 		}
 		return self::apply( Config::defaults( Config::bundledLogoUrl() ), $settings, $logo_url );
 	}

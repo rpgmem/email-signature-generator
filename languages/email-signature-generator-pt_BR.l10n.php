@@ -46,6 +46,8 @@ return array (
     'Choose from the media library' => 'Escolher na biblioteca de mídia',
     'Use the bundled logo' => 'Usar o logotipo padrão',
     'The signature links to this image, so it must stay in the media library. A square image works best.' => 'A assinatura aponta para esta imagem, por isso ela precisa continuar na biblioteca de mídia. Uma imagem quadrada funciona melhor.',
+    'Alternative text' => 'Texto alternativo',
+    'What the logo shows, in words: screen readers read it, and email programs that block images show it instead. Leave it empty to use the bundled logo\'s text, or the alternative text the chosen image has in the media library.' => 'O que o logotipo mostra, em palavras: leitores de tela leem esse texto, e programas de e-mail que bloqueiam imagens o exibem no lugar. Deixe vazio para usar o texto do logotipo padrão, ou o texto alternativo que a imagem escolhida tem na biblioteca de mídia.',
     'Width' => 'Largura',
     'Spacing' => 'Espaçamento',
     'Space above the signature' => 'Espaço acima da assinatura',

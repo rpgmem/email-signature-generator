@@ -90,6 +90,37 @@
 	}
 
 	/**
+	 * Write phone numbers the way the signature prints them, so a person can
+	 * type them any way: "(11) 3397-1234" and "11933971234" become
+	 * "55 11 3397-1234" and "55 11 93397-1234". Numbers are separated by
+	 * "|", "/", ";" or ",", and come back joined by " | ". A part that is
+	 * not a Brazilian number with its area code is left as typed, so the
+	 * check still names it.
+	 *
+	 * @param {string} value Typed text.
+	 * @return {string} The formatted text.
+	 */
+	function formatPhone( value ) {
+		var parts = String( value || '' ).split( /[|/;,]/ ).map( function ( part ) {
+			var digits = part.replace( /\D/g, '' );
+			if ( 10 === digits.length || 11 === digits.length ) {
+				digits = '55' + digits;
+			}
+			var local = digits.slice( 4 );
+			// A mobile number has nine digits and starts with 9; a landline
+			// has eight and starts with 2 to 5.
+			var plausible = 13 === digits.length ? /^9/.test( local ) : 12 === digits.length && /^[2-5]/.test( local );
+			if ( ! plausible || '55' !== digits.slice( 0, 2 ) || /^0|^.0/.test( digits.slice( 2, 4 ) ) ) {
+				return part.trim();
+			}
+			return '55 ' + digits.slice( 2, 4 ) + ' ' + local.slice( 0, -4 ) + '-' + local.slice( -4 );
+		} );
+		return parts.filter( function ( part ) {
+			return '' !== part;
+		} ).join( ' | ' );
+	}
+
+	/**
 	 * The email domains the site accepts; empty when any address is.
 	 *
 	 * @param {Object} config The configuration.
@@ -607,6 +638,17 @@
 						'aria-required': field.required ? 'true' : undefined,
 					} );
 					input.value = field.default || '';
+					if ( 'phone' === field.rule && ! field.locked ) {
+						// On leaving the field, not while typing, so the
+						// cursor never jumps.
+						input.addEventListener( 'blur', function () {
+							var formatted = formatPhone( input.value );
+							if ( formatted !== input.value ) {
+								input.value = formatted;
+								input.dispatchEvent( new doc.defaultView.Event( 'input', { bubbles: true } ) );
+							}
+						} );
+					}
 				}
 				fieldsBox.appendChild( el( doc, 'p', { class: 'esg-field' }, [
 					el( doc, 'label', { for: id, text: field.label + ( field.required ? ' *' : '' ) } ),
@@ -620,6 +662,10 @@
 			current.fields.forEach( function ( field ) {
 				var input = fieldsBox.querySelector( '[name="' + field.key + '"]' );
 				values[ field.key ] = field.locked ? ( field.default || '' ) : ( input ? input.value : '' );
+				if ( 'phone' === field.rule && ! field.locked ) {
+					// Also when the form is sent with Enter, before any blur.
+					values[ field.key ] = formatPhone( values[ field.key ] );
+				}
 				var domain = input && input.parentNode && input.parentNode.querySelector( '.esg-email-domain' );
 				var local = values[ field.key ].trim();
 				if ( domain && ! field.locked && '' !== local ) {
@@ -786,6 +832,7 @@
 
 	var api = {
 		escapeHtml: escapeHtml,
+		formatPhone: formatPhone,
 		normalizeUrl: normalizeUrl,
 		isValidUrl: isValidUrl,
 		validate: validate,
