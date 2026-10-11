@@ -488,6 +488,10 @@
 	 * What a person typed, kept in their own browser when the site allows
 	 * it, so updating a signature later does not mean typing it again.
 	 * Nothing is sent anywhere. Storage that is blocked or full is ignored.
+	 *
+	 * Each entry carries the time it was written and is dropped once it is
+	 * older than config.rememberMinutes, so a computer left behind does not
+	 * keep someone's details for the next person for long.
 	 */
 	var STORE = 'email-signature-generator:';
 
@@ -505,11 +509,19 @@
 		}
 	}
 
-	function loadSaved( doc, key ) {
+	function loadSaved( doc, key, minutes ) {
 		var store = storage( doc );
 		try {
-			var value = store ? JSON.parse( store.getItem( STORE + key ) || 'null' ) : null;
-			return value && 'object' === typeof value ? value : null;
+			var entry = store ? JSON.parse( store.getItem( STORE + key ) || 'null' ) : null;
+			var age = entry && 'number' === typeof entry.savedAt ? Date.now() - entry.savedAt : NaN;
+			if ( ! ( age >= 0 && age <= minutes * 60000 ) || ! entry.value || 'object' !== typeof entry.value ) {
+				// Expired, from the future, or not ours: nothing to fill in.
+				if ( entry ) {
+					store.removeItem( STORE + key );
+				}
+				return null;
+			}
+			return entry.value;
 		} catch {
 			return null;
 		}
@@ -519,7 +531,7 @@
 		var store = storage( doc );
 		try {
 			if ( store ) {
-				store.setItem( STORE + key, JSON.stringify( value ) );
+				store.setItem( STORE + key, JSON.stringify( { savedAt: Date.now(), value: value } ) );
 			}
 		} catch {
 			// Full or blocked: the form still works, it just forgets.
@@ -560,8 +572,9 @@
 			modelSelect.appendChild( el( doc, 'option', { value: model.id, text: model.label } ) );
 		} );
 		var remember = true === config.rememberValues;
+		var rememberMinutes = Math.max( 1, parseInt( config.rememberMinutes, 10 ) || 60 );
 		if ( remember ) {
-			var savedModel = ( loadSaved( doc, 'model' ) || {} ).id;
+			var savedModel = ( loadSaved( doc, 'model', rememberMinutes ) || {} ).id;
 			if ( findModel( config, savedModel ) && findModel( config, savedModel ).id === savedModel ) {
 				current = findModel( config, savedModel );
 				modelSelect.value = savedModel;
@@ -747,7 +760,7 @@
 		 * field keeps its fixed value, and a field left empty its default.
 		 */
 		function restoreSaved() {
-			var saved = remember ? loadSaved( doc, 'values:' + current.id ) : null;
+			var saved = remember ? loadSaved( doc, 'values:' + current.id, rememberMinutes ) : null;
 			if ( ! saved ) {
 				return;
 			}

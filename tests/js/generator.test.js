@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { loadConfig, loadGenerator } from './helpers.js';
 
 let config;
@@ -471,6 +471,48 @@ describe( 'settings in the configuration', () => {
 		expect( window.localStorage.length ).toBe( 0 );
 		expect( document.querySelector( '[name="name"]' ).value ).toBe( '' );
 		expect( document.querySelector( '.esg-status' ).textContent ).toBe( config.strings.forgotten );
+	} );
+
+	it( 'forgets what was typed once it is older than the configured minutes', () => {
+		window.localStorage.clear();
+		const cfg = { ...config, rememberValues: true, rememberMinutes: 60 };
+		const start = Date.now();
+		const clock = vi.spyOn( Date, 'now' ).mockReturnValue( start );
+		try {
+			document.body.innerHTML = '<div id="c"></div>';
+			const ui = gen.mount( document.getElementById( 'c' ), cfg );
+			fill( valid );
+			expect( ui.generate() ).toBe( true );
+
+			clock.mockReturnValue( start + 60 * 60000 );
+			document.body.innerHTML = '<div id="c"></div>';
+			gen.mount( document.getElementById( 'c' ), cfg );
+			expect( document.querySelector( '[name="name"]' ).value ).toBe( 'Maria da Silva' );
+
+			clock.mockReturnValue( start + 60 * 60000 + 1 );
+			document.body.innerHTML = '<div id="c"></div>';
+			gen.mount( document.getElementById( 'c' ), cfg );
+			expect( document.querySelector( '[name="name"]' ).value ).toBe( '' );
+			expect( window.localStorage.length ).toBe( 0 );
+		} finally {
+			clock.mockRestore();
+		}
+	} );
+
+	it( 'ignores an entry with no time or from the future', () => {
+		window.localStorage.clear();
+		const cfg = { ...config, rememberValues: true, rememberMinutes: 60 };
+		const key = 'email-signature-generator:values:' + config.models[ 0 ].id;
+		window.localStorage.setItem( key, JSON.stringify( { name: 'Maria da Silva' } ) );
+		document.body.innerHTML = '<div id="c"></div>';
+		gen.mount( document.getElementById( 'c' ), cfg );
+		expect( document.querySelector( '[name="name"]' ).value ).toBe( '' );
+		expect( window.localStorage.getItem( key ) ).toBeNull();
+
+		window.localStorage.setItem( key, JSON.stringify( { savedAt: Date.now() + 3600000, value: { name: 'Maria da Silva' } } ) );
+		document.body.innerHTML = '<div id="c"></div>';
+		gen.mount( document.getElementById( 'c' ), cfg );
+		expect( document.querySelector( '[name="name"]' ).value ).toBe( '' );
 	} );
 
 	it( 'lets a default set later show in a field the person left empty', () => {
