@@ -5,6 +5,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **The split email field keeps the domain whole and the typed part usable** (#46). The domain stays on one line at its own width, the part before the "@" never gets narrower than 14 characters, and the domain moves under the field when the form's column is narrow, not only on a small screen.
+
 ## [1.0.0] (2026-10-11) — `4797e9c`
 
 The signature page becomes a WordPress plugin: a form placed with a shortcode, set up from the admin, and a standalone HTML file published beside it on every release.
