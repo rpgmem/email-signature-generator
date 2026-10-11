@@ -35,11 +35,11 @@ final class AutosaveTest extends WP_Ajax_UnitTestCase {
 
 	public function test_an_administrator_turns_capitals_off(): void {
 		$this->_setRole( 'administrator' );
-		$response = $this->post( 'uppercase_name', '0' );
+		$response = $this->post( 'fields.staff_regional.name.uppercase', '0' );
 
 		self::assertTrue( $response['success'] );
 		self::assertFalse( $response['data']['value'] );
-		self::assertFalse( Settings::get()['uppercase_name'] );
+		self::assertFalse( Settings::get()['fields']['staff_regional']['name']['uppercase'] );
 	}
 
 	public function test_models_answer_with_the_stored_list(): void {
@@ -73,18 +73,18 @@ final class AutosaveTest extends WP_Ajax_UnitTestCase {
 
 	public function test_an_editor_is_refused(): void {
 		$this->_setRole( 'editor' );
-		$response = $this->post( 'uppercase_name', '0' );
+		$response = $this->post( 'offer_download', '0' );
 
 		self::assertFalse( $response['success'] );
-		self::assertTrue( Settings::get()['uppercase_name'] );
+		self::assertTrue( Settings::get()['offer_download'] );
 	}
 
 	public function test_a_wrong_nonce_is_refused(): void {
 		$this->_setRole( 'administrator' );
-		$response = $this->post( 'uppercase_name', '0', 'wrong' );
+		$response = $this->post( 'offer_download', '0', 'wrong' );
 
 		self::assertFalse( $response['success'] );
-		self::assertTrue( Settings::get()['uppercase_name'] );
+		self::assertTrue( Settings::get()['offer_download'] );
 	}
 
 	/**

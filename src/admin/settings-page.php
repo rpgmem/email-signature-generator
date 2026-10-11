@@ -190,22 +190,8 @@ final class SettingsPage {
 		echo '</fieldset></td></tr>';
 		echo '</tbody></table></div>';
 
-		self::openCard( __( 'Name and email', 'email-signature-generator' ), 'email' );
+		self::openCard( __( 'Email', 'email-signature-generator' ), 'email' );
 		echo '<table class="form-table" role="presentation"><tbody>';
-		printf(
-			'<tr><th scope="row">%1$s</th><td><input type="hidden" name="%2$s[uppercase_name]" value="0">',
-			esc_html__( 'Name in capitals', 'email-signature-generator' ),
-			esc_attr( $name )
-		);
-		self::toggle(
-			array(
-				'name'    => $name . '[uppercase_name]',
-				'checked' => $settings['uppercase_name'],
-				'label'   => __( 'The name appears in capital letters, however it was typed', 'email-signature-generator' ),
-				'key'     => 'uppercase_name',
-			)
-		);
-		echo '</td></tr>';
 
 		printf(
 			'<tr><th scope="row">%1$s</th><td><input type="hidden" name="%2$s[restrict_email_domain]" value="0">',
@@ -394,7 +380,7 @@ final class SettingsPage {
 		// Fields.
 		self::openPanel( 'fields', $active );
 		self::openCard( __( 'Fields', 'email-signature-generator' ), 'list' );
-		echo '<p class="description">' . esc_html__( 'A default pre-fills the field. A locked field shows its default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked.', 'email-signature-generator' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'A default pre-fills the field. A locked field shows its default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked. Capitals prints the field in capital letters, however it was typed.', 'email-signature-generator' ) . '</p>';
 		foreach ( $config['models'] as $model ) {
 			echo '<h3>' . esc_html( $model['label'] ) . '</h3>';
 			echo '<table class="widefat striped esg-fields-table"><thead><tr>';
@@ -402,6 +388,7 @@ final class SettingsPage {
 			echo '<th scope="col">' . esc_html__( 'Default', 'email-signature-generator' ) . '</th>';
 			echo '<th scope="col">' . esc_html__( 'Required', 'email-signature-generator' ) . '</th>';
 			echo '<th scope="col">' . esc_html__( 'Locked', 'email-signature-generator' ) . '</th>';
+			echo '<th scope="col">' . esc_html__( 'Capitals', 'email-signature-generator' ) . '</th>';
 			echo '</tr></thead><tbody>';
 			foreach ( $model['fields'] as $field ) {
 				$base = $name . '[fields][' . $model['id'] . '][' . $field['key'] . ']';
@@ -452,6 +439,20 @@ final class SettingsPage {
 							/* translators: %s: field label. */
 							'aria'    => sprintf( __( '%s is locked', 'email-signature-generator' ), $field['label'] ),
 							'key'     => 'fields.' . $model['id'] . '.' . $field['key'] . '.locked',
+						)
+					);
+				}
+				echo '</td><td>';
+				if ( Config::casable( $field ) ) {
+					// Unticked posts nothing; the 0 says "no capitals".
+					printf( '<input type="hidden" name="%s" value="0">', esc_attr( $base . '[uppercase]' ) );
+					self::toggle(
+						array(
+							'name'    => $base . '[uppercase]',
+							'checked' => ! empty( $field['uppercase'] ),
+							/* translators: %s: field label. */
+							'aria'    => sprintf( __( '%s in capital letters', 'email-signature-generator' ), $field['label'] ),
+							'key'     => 'fields.' . $model['id'] . '.' . $field['key'] . '.uppercase',
 						)
 					);
 				}

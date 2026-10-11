@@ -138,9 +138,22 @@ describe( 'render', () => {
 		expect( html ).toContain( '</a> | <a href="tel:+5511933975678"' );
 	} );
 
-	it( 'keeps the name as typed when upper-casing is off', () => {
-		const html = gen.render( model( 'staff_regional' ), valid, { ...config, uppercaseName: false } );
+	function withFields( id, changes ) {
+		const m = JSON.parse( JSON.stringify( model( id ) ) );
+		m.fields.forEach( ( f ) => Object.assign( f, changes[ f.key ] || {} ) );
+		return m;
+	}
+
+	it( 'keeps a field as typed when its capitals are off, with no CSS forcing them', () => {
+		const html = gen.render( withFields( 'staff_regional', { name: { uppercase: false }, sector: { uppercase: false } } ), { ...valid, sector: 'Ntic' }, config );
 		expect( html ).toContain( 'Maria da Silva' );
+		expect( html ).toContain( 'Ntic / DREMP' );
+		expect( html ).not.toContain( 'text-transform' );
+	} );
+
+	it( 'prints the department and the role in capitals by default, accents included', () => {
+		expect( gen.render( model( 'staff_regional' ), { ...valid, sector: 'gestão' }, config ) ).toContain( 'GESTÃO / DREMP' );
+		expect( gen.render( model( 'staff_school' ), { ...valid, role: 'Secretária' }, config ) ).toContain( 'SECRETÁRIA' );
 	} );
 
 	it( 'shows a link by its host name and never links a non-http address', () => {
@@ -155,7 +168,7 @@ describe( 'render', () => {
 		expect( regional ).toContain( '>NTIC / DREMP</div>' );
 
 		const school = gen.render( model( 'staff_school' ), { ...valid, office: 'DREPE' }, config );
-		expect( school ).toContain( '>Professora</div>' );
+		expect( school ).toContain( '>PROFESSORA</div>' );
 		expect( school ).toContain( 'EMEF Joaquim José da Silva Xavier / DREPE' );
 		expect( school ).not.toContain( 'NTIC' );
 
