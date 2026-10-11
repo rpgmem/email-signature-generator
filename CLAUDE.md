@@ -94,6 +94,8 @@ Force push stays allowed on `develop`, because the post-release sync is a reset.
    - after a merge commit, fast-forward it.
 5. **Backfill the sha** through a normal PR to `develop`: append `` — `<short-sha>` `` to the new heading. This must come after step 4, which would discard it.
 
+**The 0.x tags are history, not releases of the plugin.** 0.1.0 to 0.3.0 were the single page `assinatura.html` (2025), versioned afterwards (#38) on the commits their CHANGELOG headings name. Pushing them starts no workflow, because those commits have none. To give one a GitHub Release, run `release.yml` by hand (`workflow_dispatch`, the tag as input) once the workflow is on `main`. Its release is that page as `email-signature-generator-X.Y.Z.html`, no zip, and it is never marked latest. `bin/build-release-zip.sh` tells such a tag apart by the missing plugin file.
+
 The zip ships no Composer or npm dependency. The autoloader is inline in the main plugin file, and third-party browser libraries are vendored under `assets/vendor/` with their version in the filename. Anything new at the repository root that should not ship goes into `.distignore`.
 
 ## Deploy to testes

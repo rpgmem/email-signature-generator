@@ -57,6 +57,36 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Typed values are escaped in the signature** (#3). The page inserted them into the signature's HTML as they were, so a copied signature could carry markup or script someone typed. A link must also be `http` or `https`.
 - **The logo and html2canvas are bundled** (#3). The logo was hotlinked from a third-party site and html2canvas came from a CDN. Both now ship with the plugin, and html2canvas is byte-identical to its 1.4.1 release.
 
-## Before 1.0.0
+## [0.3.0] (2025-06-24) — `de27b69`
 
-The project was one page, `assinatura.html`, written between 2025-05-21 and 2025-06-24 and never versioned or tagged. It offered three models for SME-SP staff: staff at a regional office (DRE), staff at a school, and a department or school building. Each model had its own fields, checks on the name, role, email and phone format, a preview, "Copy HTML" for Outlook and a JPG download through html2canvas. 1.0.0 carries all of it over.
+The last version of the single page, `assinatura.html`, before it became a plugin.
+
+### Changed
+
+- **The regional office is picked from a list.** The department or school building model chose among the thirteen regional education offices and the Municipal Department of Education, labelled "Regional ou Central", instead of typing the office's name.
+- **School staff print their role too.** The role line, until then only in the regional office model, is printed in the school model's signature as well.
+- **"Full name" in both staff models.** The regional office model's name field and its message say "Nome Completo", as the school model's did.
+
+## [0.2.0] (2025-06-24) — `b0788a4`
+
+### Added
+
+- **A third model, for a department or a school building.** It signs as the place rather than a person: the department or school, its email and phones, its regional office, address, postal code and links.
+
+### Changed
+
+- **The models are named for who uses them:** "Servidores - DRE" and "Servidores - Escola" instead of "Assinatura DRE" and "Assinatura Escola".
+
+## [0.1.1] (2025-05-27) — `82f675e`
+
+### Changed
+
+- **Phone numbers are checked in one format for both models:** `55 XX XXXX-XXXX` or `55 XX XXXXX-XXXX`, optionally a second number after " | ". The school model accepted one number before.
+
+## [0.1.0] (2025-05-21) — `ff0d5cb`
+
+### Added
+
+- **The first signature page,** one file, `assinatura.html`, with two models: a regional office (DRE) signature and a school signature. Each had its own fields with SME-SP defaults, checks on the name, role or department, email and phone, a preview, "Copiar HTML" for Outlook and "Baixar Imagem", a JPG drawn by html2canvas loaded from a CDN. The logo was linked from the DRE São Miguel site.
+
+These four versions were never tagged at the time: their numbers, dates and commits were assigned afterwards from the repository's history (#38).
