@@ -5,57 +5,41 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-## [1.0.0] (2026-10-10)
+## [1.0.0] (2026-10-11)
+
+The signature page becomes a WordPress plugin: a form placed with a shortcode, set up from the admin, and a standalone HTML file published beside it on every release.
 
 ### Added
 
-- **The generator is a WordPress plugin with a shortcode** (#1, #3). `[email_signature]` places the form on any page, and `models="…"` narrows and orders the models it offers. The signature is built in the visitor's browser, so nothing typed reaches the site and the plugin stores no personal data.
-- **A standalone HTML download on every release** (#3). `email-signature-generator-X.Y.Z.html` is one self-contained file in Brazilian Portuguese, built from the plugin's own sources and defaults at the release tag, so the two cannot drift apart.
-- **Settings → Email Signature** (#4). An administrator chooses the models offered, whether only logged-in users may use the form, capitals for the name, an allowed email domain, the regional offices, and the image's format (PNG by default, which keeps small letters clean; JPG optional, with its quality 50–100%) and resolution (1×–3×, default 1×: the 450 px the page always produced, still drawn at twice that and reduced, so the text stays smooth) (#8, #11, #12). Per field, they set a default and whether it is required or locked. On/off settings are switches that save the moment they are flipped (#9). The screen follows Free Form Certificate's layout: a vertical tab menu with icons, and each section in a box (#10).
-- **Logo from the media library** (#4). The bundled SME-SP logo stays the default. Another image and its width (60–240 px) can be chosen, and a deleted image falls back to the bundled one.
-- **Updates from GitHub Releases** (#5). WordPress offers new versions on its normal update screen and checks the zip's SHA-256 before installing it. The compatibility fields and the upgrade notice come from the release's own `readme.txt`. Ported from Total Mail Queue.
-- **Brazilian Portuguese translation** (#3, #4, #5). Every string the form, the signature, the settings screen and the updater show.
-- **Release packaging, CI and a testes deploy** (#2). Each tag publishes the zip, the standalone HTML and the notes. Every PR runs PHPUnit (also against a real WordPress), Vitest, PHPStan, PHPCS, ESLint, Stylelint and a composer audit. `develop` deploys to the testes site, followed by a smoke check.
-- **The site decides how the image is offered** (#15). The download can be turned off, leaving only Copy HTML, or offered as a button that recommends Copy HTML after each download (the default), the same inside a collapsed "More options", or a plain button.
-- **Space above the signature** (#16). A configurable gap, 4 px by default and up to 20, keeps the signature apart from the text above it in both the copied HTML and the image; it adds to the height, never the width.
-- **Regional offices have a name and an acronym** (#17, #19). Settings → Regional offices is a table of both, with rows to add and remove; the signature still prints "Name / ACRONYM". The acronym is required and unique. A list saved as text before is read into the two parts, and a row that cannot be saved is named in a notice.
-- **Units, with the name the form uses** (#20). The settings call the list Units, so it fits any structure, not only regional offices; a "Name in the form" setting chooses what the signature form calls the field, "Regional office" (pt_BR "Diretoria") by default.
-- **Where to paste the signature** (#29). Under the result, a collapsed "How to add the signature to your email" gives the steps for Outlook on the web and the new Outlook, classic Outlook, Gmail, and phone apps.
-- **The form can remember what was typed, and shows dark mode** (#31). Off by default, a General switch lets each browser keep its person's last model and values, in that browser only, with a link on the form to forget them; a field left empty is not remembered, so a default set later still shows (#33). Beside the preview, "See it in dark mode" inverts text and backgrounds and leaves images alone, as email programs do.
-- **The form's width is a setting** (#34). Settings → Layout → "Form on the page" sets how wide the form gets, from the signature's 450 px up to 1200 px; the default stays 640 px, and on a narrower screen the form still shrinks to fit. It is set inline because a block theme's constrained layout was overriding the stylesheet's width.
-- **What a browser remembers expires after 60 minutes** (#35). The kept values carry the time the signature was last generated and are dropped once they are older than that, so a shared computer does not hand one person's details to the next; an entry with no time, or one from the future, is dropped too.
-- **README and readme.txt describe every setting, with screenshots** (#36). Seven screenshots of the form, the dark preview and each settings tab, taken from fictitious details, and a privacy section on what a browser remembers and for how long.
-- **A Documentation tab in the settings** (#37). One card per topic, with a contents list: the overview and shortcode, using the form, each settings tab, privacy and updates. A test fails when a settings tab has no topic, and the limits it quotes are read from the code that enforces them.
-- **The Documentation tab credits the author and links the repository** (#39), as Free Form Certificate's does. Both are read from the plugin header, so they say what the Plugins screen says.
+- **A WordPress plugin with a shortcode** (#1, #3). `[email_signature]` places the form on any page, and `models="…"` narrows and orders the models it offers. The signature is built in the visitor's browser, so nothing typed reaches the site.
+- **A standalone HTML file on every release** (#3). `email-signature-generator-X.Y.Z.html` is one self-contained page in Brazilian Portuguese, built from the plugin's own sources at the release tag, so the two cannot drift apart.
+- **Settings → Email Signature** (#4, #9, #10, #26, #37, #39). Vertical tabs with icons and boxed sections, as in Free Form Certificate: General, Layout, Downloaded image, Units, Fields and Documentation. Switches save the moment they are flipped. General opens with the shortcode and a Copy button; Documentation explains every setting and credits the author.
+- **Who can use the form and which addresses it takes** (#4, #24, #25). The models offered and whether only logged-in users see the form. Email domains on a switch: on, the person types the part before the "@" beside a fixed domain or a list of them; off, any valid address except an editable list of placeholder and throwaway domains.
+- **Units** (#17, #18, #19, #20, #26). A table of names and unique acronyms, with the one the form starts on. The form offers them as a list, and the signature prints "Name / ACRONYM" or adds the acronym to the department or school.
+- **Per-field control** (#4, #30, #32). For every field of every model: the label the form shows, a default, and whether it is required, locked to that default, or printed in capitals.
+- **Layout** (#4, #16, #28, #34). A logo from the media library, with its width and alternative text (the bundled one by default, and as fallback); the space above the signature; and how wide the form gets on the page.
+- **How the image is offered** (#8, #11, #12, #15). The download can be turned off, leaving only Copy HTML, or offered with a note recommending it. PNG by default, JPG with its quality, and 1× to 3× resolution.
+- **Help while filling in the form** (#23, #28, #29, #31). Phone numbers format themselves and become `tel:` links, a preview shows the signature in dark mode, and a collapsed section explains how to add it in Outlook, Gmail and on a phone.
+- **Remember what was typed** (#31, #33, #35). Off by default. When on, each browser keeps its person's last model and values for 60 minutes after the signature was last generated, with a link to forget them at once; a field left empty does not hide a default set later.
+- **Updates from GitHub Releases** (#5). WordPress offers new versions on its normal update screen and checks each zip's SHA-256 before installing it.
+- **Brazilian Portuguese** (#3, #4, #5). Every string of the form, the signature, the settings and the updater.
+- **Release packaging, CI and a testes deploy** (#2, #21, #22, #38). Each tag publishes the zip, the standalone HTML and the notes; every PR runs PHPUnit (also against a real WordPress), Vitest, PHPStan, PHPCS, ESLint and Stylelint; `develop` deploys to the testes site. Asset URLs carry the file time, so a deploy reaches the browser at once, and the HTML-only history is versioned 0.1.0–0.3.0.
+- **README and readme.txt cover every setting, with screenshots** (#36), and a privacy section on what a browser keeps and for how long.
 
 ### Changed
 
-- **Example values are placeholders** (#3). The page pre-filled fields with examples such as `55 11 3397-XXXX`, which its own validation then refused. They now show as hints, and only real defaults are pre-filled.
-- **Errors show beside the form** (#3). Validation messages appear in a list above the buttons and mark the field, instead of one `alert()` at a time.
-- **Copying uses the Clipboard API** (#3). The signature is copied as rich text and as HTML, with the old `execCommand` copy kept as the fallback.
-- **The name is bold in every email client** (#4). The weight is set inline, because a theme or an email client can reset `<strong>`.
-- **Copying the HTML is the recommended way** (#12, #14). Its button is bold and the form says so under the buttons: pasted HTML keeps the text sharp at any size and the links working, while the image is for email programs that do not accept an HTML signature.
-- **The divider is as tall as the logo** (#13). It was the border of the text's cell, so it ran the whole height of the signature; it is now the border of a cell that holds only the logo, in plain table markup email programs keep.
-- **Copy and download appear once a signature is generated** (#15). They hide again when a field changes, so neither can deliver a signature that no longer matches the form. Copy HTML is the filled button and Download image a grey one.
-- **The regional office is chosen, not typed** (#18). Staff at a regional office type only their department, and staff at a school only the school; both pick the office from a list, and the signature appends its acronym as before ("NTIC / DREMP"). Defaults saved in the old combined fields are split into the two.
-- **A deploy reaches the browser at once** (#21). The plugin's own scripts and stylesheets carry the file's modification time in `?ver=`, beside the version. Hosts cache them for a year, and with the version alone a browser kept the previous script after an update.
-- **The version is declared in the main plugin file** (#22). `EMAIL_SIGNATURE_GENERATOR_VERSION` sits beside the `Version:` header, as Free Form Certificate's `FFC_VERSION` does, so a bump edits the main file and `readme.txt` only.
-- **Phone numbers dial on a tap** (#23). Each number in the signature is a `tel:` link ("55 11 3397-1234" → `tel:+551133971234`), in the same plain style as the email link, so it reads as text and opens the dialler on a phone or Teams.
-- **Email domains, on a switch** (#24). Settings turn the restriction on or off. On, it takes one domain or several, one per line: the form shows the domain beside the field, or a list of them, so a person types only the part before the "@", a pasted address is split, and an "@" in that part is refused. Off, any valid address is accepted except at refused domains, a list that starts with placeholders and throwaway inboxes (`test.com`, `example.com`, `mailinator.com` …) and can be edited. A domain saved before keeps the restriction on. The list also covers `yopmail.fr`, `guerrillamailblock.com`, `trashmail.de` and `maildrop.cc` (#25).
-- **The Layout tab, the shortcode to copy, and a default unit** (#26). The Logo tab is now Layout and also holds the space above the signature, which left General. General opens with the shortcode, a Copy button and how to limit the models. The Units table marks the unit the form starts on; the unit fields take it, so the Fields tab only points there.
-- **The logo has real alternative text, and phone numbers format themselves** (#28). The bundled logo is described as "Prefeitura de São Paulo – Secretaria Municipal de Educação" instead of "Logo"; a chosen image takes its media-library text, and Layout has a field to set it. A phone typed as `(11) 3397-1234` or `11933971234` becomes `55 11 3397-1234` when the field is left; several numbers are joined by " | ".
-- **Capitals are a choice of each field** (#30). The Fields tab has a Capitals switch for every free-text field: the name and the department or role start on, the rest off. It replaces the General switch, whose choice carries into the name fields. The signature used to force capitals on the name and the role with CSS whatever the switch said; the text itself is now converted, so turning it off works.
-- **Every field's label can change** (#32). The Fields tab lists each field by a generic name (Unit, Name) and has a "Label in the form" box: what the form shows, the built-in label when empty. The Units tab's "Name in the form" moved there, and a saved one becomes the unit fields' label.
-- **The Fields tab fits a laptop screen** (#36). Its text boxes kept WordPress's fixed width, so at 1280 px the table ran past its card and hid the Required, Locked and Capitals columns; they now follow their column, and a table that still does not fit scrolls inside the card.
+- **Example values are placeholders, and errors show beside the form** (#3). The page pre-filled examples its own validation refused, and reported errors one `alert()` at a time; now hints are hints, and every error is listed above the buttons and marks its field.
+- **Copy HTML is the recommended way** (#3, #12, #14, #15). It copies rich text and HTML through the Clipboard API, its button is the filled one, and the form says why. Copy and download appear only once a signature is generated, and hide again when a field changes.
+- **A cleaner signature** (#4, #13, #30). The name is bold inline, which every email client keeps; the divider is as tall as the logo; and capitals are written into the text instead of forced by CSS, so turning them off works.
 
 ### Removed
 
-- **`assinatura.html` left the repository** (#3). The release build now produces the standalone file from the plugin's sources.
+- **`assinatura.html` left the repository** (#3). The release build produces the standalone file from the plugin's sources.
 
 ### Security
 
-- **Typed values are escaped in the signature** (#3). The page inserted them into the signature's HTML as they were, so a copied signature could carry markup or script someone typed. A link must also be `http` or `https`.
-- **The logo and html2canvas are bundled** (#3). The logo was hotlinked from a third-party site and html2canvas came from a CDN. Both now ship with the plugin, and html2canvas is byte-identical to its 1.4.1 release.
+- **Typed values are escaped in the signature** (#3). The page inserted them as they were, so a copied signature could carry markup or script someone typed. A link must be `http` or `https`.
+- **The logo and html2canvas are bundled** (#3). The logo was hotlinked from a third-party site and html2canvas came from a CDN; both now ship with the plugin, html2canvas byte-identical to its 1.4.1 release.
 
 ## [0.3.0] (2025-06-24) — `de27b69`
 
