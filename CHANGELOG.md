@@ -33,6 +33,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **The regional office is chosen, not typed** (#18). Staff at a regional office type only their department, and staff at a school only the school; both pick the office from a list, and the signature appends its acronym as before ("NTIC / DREMP"). Defaults saved in the old combined fields are split into the two.
 - **A deploy reaches the browser at once** (#21). The plugin's own scripts and stylesheets carry the file's modification time in `?ver=`, beside the version. Hosts cache them for a year, and with the version alone a browser kept the previous script after an update.
 - **The version is declared in the main plugin file** (#22). `EMAIL_SIGNATURE_GENERATOR_VERSION` sits beside the `Version:` header, as Free Form Certificate's `FFC_VERSION` does, so a bump edits the main file and `readme.txt` only.
+- **Phone numbers dial on a tap** (#23). Each number in the signature is a `tel:` link ("55 11 3397-1234" → `tel:+551133971234`), in the same plain style as the email link, so it reads as text and opens the dialler on a phone or Teams.
 
 ### Removed
 
