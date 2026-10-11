@@ -363,6 +363,8 @@ final class Config {
 				self::REMEMBER_MINUTES
 			),
 			'forget'             => __( 'Forget it', 'email-signature-generator' ),
+			'privacy'            => __( 'The signature is built in your browser: nothing you type is sent to the site.', 'email-signature-generator' ),
+			'fixErrors'          => __( 'Check the marked fields.', 'email-signature-generator' ),
 			'forgotten'          => __( 'This browser no longer keeps what you typed.', 'email-signature-generator' ),
 			'darkPreview'        => __( 'See it in dark mode', 'email-signature-generator' ),
 			'howTo'              => __( 'How to add the signature to your email', 'email-signature-generator' ),

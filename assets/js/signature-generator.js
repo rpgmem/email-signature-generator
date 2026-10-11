@@ -626,11 +626,15 @@
 		] ) );
 
 		var forgetBtn = el( doc, 'button', { type: 'button', class: 'esg-forget', text: strings.forget } );
+		// Where what is typed goes: said always, and by the remember note
+		// when that is on, since it says the same and more.
 		if ( remember ) {
 			form.appendChild( el( doc, 'p', { class: 'esg-remember' }, [
 				el( doc, 'span', { text: strings.remembered + ' ' } ),
 				forgetBtn,
 			] ) );
+		} else if ( strings.privacy ) {
+			form.appendChild( el( doc, 'p', { class: 'esg-privacy', text: strings.privacy } ) );
 		}
 
 		var status = el( doc, 'p', { class: 'esg-status', role: 'status' } );
@@ -747,9 +751,14 @@
 						} );
 					}
 				}
-				fieldsBox.appendChild( el( doc, 'p', { class: 'esg-field' }, [
+				// Each field carries its own error, read with the field.
+				var error = el( doc, 'span', { id: id + '-error', class: 'esg-field-error', hidden: true } );
+				var control = 'SPAN' === input.tagName ? input.querySelector( 'input' ) : input;
+				control.setAttribute( 'aria-describedby', [ control.getAttribute( 'aria-describedby' ), error.id ].filter( Boolean ).join( ' ' ) );
+				fieldsBox.appendChild( el( doc, 'p', { class: 'esg-field', 'data-esg-field': field.key }, [
 					el( doc, 'label', { for: id, text: field.label + ( field.required ? ' *' : '' ) } ),
 					input,
+					error,
 				] ) );
 			} );
 		restoreSaved();
@@ -801,28 +810,59 @@
 			return values;
 		}
 
-		function showErrors( errors ) {
+		/**
+		 * Mark each field in error and print its message under it; the box
+		 * above the buttons only says that something needs fixing, and the
+		 * first field in error takes the focus.
+		 *
+		 * @param {Object[]} errors Errors, each with a field key and a message.
+		 * @param {boolean}  focus  Move the focus to the first field in error.
+		 */
+		function showErrors( errors, focus ) {
 			errorsBox.innerHTML = '';
 			fieldsBox.querySelectorAll( '[aria-invalid]' ).forEach( function ( input ) {
 				input.removeAttribute( 'aria-invalid' );
 			} );
+			fieldsBox.querySelectorAll( '.esg-field-error' ).forEach( function ( span ) {
+				span.textContent = '';
+				span.hidden = true;
+			} );
+			var first = null;
 			errors.forEach( function ( error ) {
-				errorsBox.appendChild( el( doc, 'li', { text: error.message } ) );
 				var input = fieldsBox.querySelector( '[name="' + error.key + '"]' );
+				var span = fieldsBox.querySelector( '[data-esg-field="' + error.key + '"] .esg-field-error' );
 				if ( input ) {
 					input.setAttribute( 'aria-invalid', 'true' );
+					first = first || input;
+				}
+				if ( span ) {
+					// Two errors on one field: both are said.
+					span.textContent = span.textContent ? span.textContent + ' ' + error.message : error.message;
+					span.hidden = false;
+				} else {
+					errorsBox.appendChild( el( doc, 'li', { text: error.message } ) );
 				}
 			} );
+			if ( errors.length ) {
+				errorsBox.insertBefore( el( doc, 'li', { class: 'esg-errors-summary', text: strings.fixErrors } ), errorsBox.firstChild );
+			}
+			if ( focus && first ) {
+				first.focus();
+			}
 		}
 
 		function setStatus( text ) {
 			status.textContent = text || '';
 		}
 
-		function generate() {
+		/**
+		 * @param {boolean} [focus] Move the focus to the first field in error.
+		 * @return {boolean} Whether a signature was generated.
+		 */
+		function generate( focus ) {
 			var values = readValues();
 			var errors = validate( current, values, config );
-			showErrors( errors );
+			showErrors( errors, focus );
 			setStatus( '' );
 			if ( errors.length ) {
 				html = '';
@@ -860,7 +900,7 @@
 
 		form.addEventListener( 'submit', function ( event ) {
 			event.preventDefault();
-			generate();
+			generate( true );
 		} );
 
 		copyBtn.addEventListener( 'click', function () {

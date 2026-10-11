@@ -251,8 +251,13 @@ describe( 'mount', () => {
 
 		expect( document.querySelectorAll( '.esg-model option' ) ).toHaveLength( config.models.length );
 		expect( ui.generate() ).toBe( false );
-		expect( document.querySelectorAll( '.esg-errors li' ).length ).toBeGreaterThan( 0 );
-		expect( document.querySelector( '[name="name"]' ).getAttribute( 'aria-invalid' ) ).toBe( 'true' );
+		expect( document.querySelector( '.esg-errors' ).textContent ).toBe( config.strings.fixErrors );
+		const name = document.querySelector( '[name="name"]' );
+		expect( name.getAttribute( 'aria-invalid' ) ).toBe( 'true' );
+		const nameError = document.querySelector( '[data-esg-field="name"] .esg-field-error' );
+		expect( nameError.hidden ).toBe( false );
+		expect( nameError.textContent ).not.toBe( '' );
+		expect( name.getAttribute( 'aria-describedby' ) ).toBe( nameError.id );
 
 		Object.entries( valid ).forEach( ( [ key, value ] ) => {
 			const input = document.querySelector( `[name="${ key }"]` );
@@ -263,6 +268,26 @@ describe( 'mount', () => {
 		expect( ui.generate() ).toBe( true );
 		expect( ui.html() ).toContain( 'MARIA DA SILVA' );
 		expect( document.querySelectorAll( '.esg-errors li' ) ).toHaveLength( 0 );
+		expect( nameError.hidden ).toBe( true );
+		expect( nameError.textContent ).toBe( '' );
+	} );
+
+	it( 'moves the focus to the first field in error when the form is sent', () => {
+		document.body.innerHTML = '<div id="c"></div>';
+		gen.mount( document.getElementById( 'c' ), config );
+		document.querySelector( '.esg-generate' ).click();
+		expect( document.activeElement.getAttribute( 'aria-invalid' ) ).toBe( 'true' );
+	} );
+
+	it( 'says nothing typed leaves the browser, once', () => {
+		document.body.innerHTML = '<div id="c"></div>';
+		gen.mount( document.getElementById( 'c' ), { ...config, rememberValues: false } );
+		expect( document.querySelector( '.esg-privacy' ).textContent ).toBe( config.strings.privacy );
+
+		document.body.innerHTML = '<div id="c"></div>';
+		gen.mount( document.getElementById( 'c' ), { ...config, rememberValues: true } );
+		expect( document.querySelector( '.esg-privacy' ) ).toBeNull();
+		expect( document.querySelector( '.esg-remember' ) ).not.toBeNull();
 	} );
 
 	it( 'offers the download unless the site turned it off', () => {
@@ -556,7 +581,7 @@ describe( 'settings in the configuration', () => {
 		const domain = document.querySelector( '.esg-email-group .esg-email-domain' );
 		expect( domain.tagName ).toBe( 'SPAN' );
 		expect( domain.textContent ).toBe( '@sme.prefeitura.sp.gov.br' );
-		expect( document.querySelector( '[name="email"]' ).getAttribute( 'aria-describedby' ) ).toBe( domain.id );
+		expect( document.querySelector( '[name="email"]' ).getAttribute( 'aria-describedby' ).split( ' ' )[ 0 ] ).toBe( domain.id );
 
 		fill( { ...valid, email: 'Maria.Silva' } );
 		expect( ui.generate() ).toBe( true );
@@ -592,7 +617,9 @@ describe( 'settings in the configuration', () => {
 		expect( local.value ).toBe( 'maria@gmail.com' );
 		expect( ui.generate() ).toBe( false );
 		expect( local.getAttribute( 'aria-invalid' ) ).toBe( 'true' );
-		expect( document.querySelector( '.esg-errors' ).textContent ).toContain( config.strings.emailLocalOnly );
+		const error = document.querySelector( '[data-esg-field="email"] .esg-field-error' );
+		expect( error.textContent ).toContain( config.strings.emailLocalOnly );
+		expect( local.getAttribute( 'aria-describedby' ).split( ' ' ) ).toEqual( [ local.id + '-domain', error.id ] );
 	} );
 
 	it( 'shows a locked field read-only and always uses its default', () => {

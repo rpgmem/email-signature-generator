@@ -192,6 +192,8 @@ return array (
     'Recommended: copy the HTML and paste it into your email program\'s signature settings. The text stays sharp at any size and the links work. Use the image only where a signature cannot be HTML.' => 'Recomendado: copie o HTML e cole nas configurações de assinatura do seu programa de e-mail. O texto fica nítido em qualquer tamanho e os links funcionam. Use a imagem apenas onde a assinatura não puder ser em HTML.',
     'This browser remembers what you type here for %d minutes after you generate the signature. Nothing is sent to the site.' => 'Este navegador lembra o que você digitar aqui por %d minutos depois de gerar a assinatura. Nada é enviado ao site.',
     'Forget it' => 'Esquecer',
+    'The signature is built in your browser: nothing you type is sent to the site.' => 'A assinatura é gerada no seu navegador: nada do que você digita é enviado ao site.',
+    'Check the marked fields.' => 'Verifique os campos marcados.',
     'This browser no longer keeps what you typed.' => 'Este navegador não guarda mais o que você digitou.',
     'Outlook on the web and the new Outlook for Windows: Settings (gear) → Account → Signatures. Create a signature, paste with Ctrl+V, choose it for new messages and replies, and save.' => 'Outlook na web e novo Outlook para Windows: Configurações (engrenagem) → Conta → Assinaturas. Crie uma assinatura, cole com Ctrl+V, escolha-a para novas mensagens e respostas e salve.',
     'Classic Outlook for Windows: File → Options → Mail → Signatures → New. Paste with Ctrl+V, choose it for new messages and replies, and select OK.' => 'Outlook clássico para Windows: Arquivo → Opções → Email → Assinaturas → Novo. Cole com Ctrl+V, escolha-a para novas mensagens e respostas e clique em OK.',
