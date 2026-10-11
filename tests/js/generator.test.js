@@ -111,6 +111,13 @@ describe( 'render', () => {
 		expect( html ).toContain( 'mailto:maria.silva@sme.prefeitura.sp.gov.br' );
 	} );
 
+	it( 'links every phone number so a tap dials it', () => {
+		const html = gen.render( model( 'staff_regional' ), { ...valid, phone: '55 11 3397-1234 | 55 11 93397-5678' }, config );
+		expect( html ).toContain( '<a href="tel:+551133971234" style="text-decoration: none; color: inherit;">55 11 3397-1234</a>' );
+		expect( html ).toContain( '<a href="tel:+5511933975678" style="text-decoration: none; color: inherit;">55 11 93397-5678</a>' );
+		expect( html ).toContain( '</a> | <a href="tel:+5511933975678"' );
+	} );
+
 	it( 'keeps the name as typed when upper-casing is off', () => {
 		const html = gen.render( model( 'staff_regional' ), valid, { ...config, uppercaseName: false } );
 		expect( html ).toContain( 'Maria da Silva' );

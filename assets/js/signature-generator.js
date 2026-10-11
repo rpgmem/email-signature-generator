@@ -201,7 +201,12 @@
 			lines.push( line( '<a href="mailto:' + escapeHtml( email ) + '" style="text-decoration: none; color: inherit;">' + escapeHtml( email ) + '</a>' ) );
 		}
 		if ( get( 'phone' ) ) {
-			lines.push( line( escapeHtml( config.strings.phonePrefix + ' ' + get( 'phone' ) ) ) );
+			// Each number dials on a tap: "55 11 3397-1234" → tel:+551133971234.
+			var numbers = get( 'phone' ).split( '|' ).map( function ( number ) {
+				number = number.trim();
+				return '<a href="tel:+' + number.replace( /\D/g, '' ) + '" style="text-decoration: none; color: inherit;">' + escapeHtml( number ) + '</a>';
+			} );
+			lines.push( line( escapeHtml( config.strings.phonePrefix ) + ' ' + numbers.join( ' | ' ) ) );
 		}
 		if ( has.school && get( 'school' ) ) {
 			lines.push( line( escapeHtml( withOffice( get( 'school' ) ) ) ) );
