@@ -317,7 +317,15 @@
 }
 
 .esg-settings .esg-regions-acronym {
-	width: 140px;
+	width: 180px;
+}
+
+/* Wide enough for the longest acronym, 12 characters. */
+.esg-settings .esg-regions-table .esg-acronym {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 160px;
+	text-transform: uppercase;
 }
 
 .esg-settings .esg-regions-remove {

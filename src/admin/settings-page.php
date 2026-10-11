@@ -417,7 +417,7 @@ final class SettingsPage {
 	private static function regionRow( string $name, string $index, string $office, string $acronym ): void {
 		$base = $name . '[regions][' . $index . ']';
 		printf(
-			'<tr><td><input type="text" class="large-text" name="%1$s" value="%2$s" aria-label="%3$s" required></td><td class="esg-regions-acronym"><input type="text" class="small-text esg-acronym" name="%4$s" value="%5$s" aria-label="%6$s" pattern="[A-Za-z0-9]{1,12}" maxlength="12" required></td><td class="esg-regions-remove"><button type="button" class="button-link esg-regions-delete" aria-label="%7$s">%8$s</button></td></tr>',
+			'<tr><td><input type="text" class="large-text" name="%1$s" value="%2$s" aria-label="%3$s" required></td><td class="esg-regions-acronym"><input type="text" class="esg-acronym" name="%4$s" value="%5$s" aria-label="%6$s" pattern="[A-Za-z0-9]{1,12}" maxlength="12" required></td><td class="esg-regions-remove"><button type="button" class="button-link esg-regions-delete" aria-label="%7$s">%8$s</button></td></tr>',
 			esc_attr( $base . '[name]' ),
 			esc_attr( $office ),
 			esc_attr__( 'Name', 'email-signature-generator' ),
