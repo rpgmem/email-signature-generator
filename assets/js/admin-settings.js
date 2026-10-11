@@ -140,6 +140,34 @@
 	} );
 	syncShown();
 
+	/**
+	 * Copy buttons: the field named by `data-esg-copy` goes to the
+	 * clipboard, and the button says so for a moment.
+	 */
+	document.querySelectorAll( '[data-esg-copy]' ).forEach( function ( button ) {
+		var label = button.textContent;
+		button.addEventListener( 'click', function () {
+			var field = document.getElementById( button.getAttribute( 'data-esg-copy' ) );
+			if ( ! field ) {
+				return;
+			}
+			function done() {
+				button.textContent = settings.copied || label;
+				window.setTimeout( function () {
+					button.textContent = label;
+				}, LINGER );
+			}
+			field.select();
+			if ( window.navigator.clipboard && window.navigator.clipboard.writeText ) {
+				window.navigator.clipboard.writeText( field.value ).then( done, function () {
+					// The text stays selected for a manual copy.
+				} );
+			} else if ( document.execCommand && document.execCommand( 'copy' ) ) {
+				done();
+			}
+		} );
+	} );
+
 	if ( settings.action && settings.nonce && window.fetch ) {
 		document.querySelectorAll( 'input[data-esg-autosave]' ).forEach( function ( input ) {
 			input.addEventListener( 'change', function () {
@@ -187,6 +215,14 @@
 				event.preventDefault();
 				activate( tab.getAttribute( 'data-esg-tab' ) );
 				tab.focus();
+			} );
+		} );
+
+		// A link inside a panel that points at another tab.
+		tabs.querySelectorAll( '[data-esg-goto]' ).forEach( function ( link ) {
+			link.addEventListener( 'click', function ( event ) {
+				event.preventDefault();
+				activate( link.getAttribute( 'data-esg-goto' ) );
 			} );
 		} );
 

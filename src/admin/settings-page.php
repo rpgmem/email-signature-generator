@@ -13,6 +13,7 @@ use EmailSignatureGenerator\Config;
 use EmailSignatureGenerator\Plugin;
 use EmailSignatureGenerator\Regions;
 use EmailSignatureGenerator\Settings;
+use EmailSignatureGenerator\Shortcode;
 
 /**
  * The settings screen. It saves through the Settings API (options.php), which
@@ -103,6 +104,7 @@ final class SettingsPage {
 				'saving'      => __( 'Saving…', 'email-signature-generator' ),
 				'saved'       => __( 'Saved', 'email-signature-generator' ),
 				'failed'      => __( 'Not saved', 'email-signature-generator' ),
+				'copied'      => __( 'Copied', 'email-signature-generator' ),
 			)
 		);
 	}
@@ -120,17 +122,11 @@ final class SettingsPage {
 		$name     = Settings::OPTION;
 		$logo_url = $settings['logo_id'] > 0 ? (string) wp_get_attachment_image_url( $settings['logo_id'], 'medium' ) : '';
 		$regions  = array() !== $settings['regions'] ? $settings['regions'] : Regions::defaults();
+		$unit     = self::defaultUnit( $config );
 
 		echo '<div class="wrap esg-settings">';
 		echo '<h1>' . esc_html__( 'Email Signature', 'email-signature-generator' ) . '</h1>';
-		echo '<p>' . wp_kses(
-			sprintf(
-				/* translators: %s: the shortcode. */
-				__( 'Place the form on any page with %s. These settings apply to every form on the site.', 'email-signature-generator' ),
-				'<code>[email_signature]</code>'
-			),
-			array( 'code' => array() )
-		) . '</p>';
+		echo '<p>' . esc_html__( 'These settings apply to every form on the site.', 'email-signature-generator' ) . '</p>';
 
 		echo '<form method="post" action="options.php">';
 		settings_fields( self::GROUP );
@@ -144,6 +140,22 @@ final class SettingsPage {
 		self::openPanel( 'general', $active );
 		self::openCard( __( 'Form', 'email-signature-generator' ), 'settings' );
 		echo '<table class="form-table" role="presentation"><tbody>';
+
+		printf(
+			'<tr><th scope="row"><label for="esg-shortcode">%1$s</label></th><td><input type="text" id="esg-shortcode" class="regular-text code" value="%2$s" readonly> <button type="button" class="button esg-copy" data-esg-copy="esg-shortcode">%3$s</button><p class="description">%4$s</p></td></tr>',
+			esc_html__( 'Shortcode', 'email-signature-generator' ),
+			esc_attr( '[' . Shortcode::TAG . ']' ),
+			esc_html__( 'Copy', 'email-signature-generator' ),
+			wp_kses(
+				sprintf(
+					/* translators: 1: an example shortcode, 2: the model ids, separated by commas. */
+					__( 'Paste it into any page or post. To offer only some models, in the order given, list them: %1$s. Model ids: %2$s.', 'email-signature-generator' ),
+					'<code>[' . esc_html( Shortcode::TAG ) . ' models="' . esc_html( implode( ',', array_slice( Settings::modelIds(), 1 ) ) ) . '"]</code>',
+					'<code>' . esc_html( implode( ', ', Settings::modelIds() ) ) . '</code>'
+				),
+				array( 'code' => array() )
+			)
+		);
 
 		echo '<tr><th scope="row">' . esc_html__( 'Models offered', 'email-signature-generator' ) . '</th><td><fieldset>';
 		foreach ( $config['models'] as $model ) {
@@ -227,20 +239,10 @@ final class SettingsPage {
 		);
 		echo '</tbody></table></div>';
 
-		self::openCard( __( 'Layout', 'email-signature-generator' ), 'layout' );
-		echo '<table class="form-table" role="presentation"><tbody>';
-		printf(
-			'<tr><th scope="row"><label for="esg-top-space">%1$s</label></th><td><input type="number" id="esg-top-space" class="small-text" name="%2$s[top_space]" value="%3$d" min="0" max="%4$d" required> px<p class="description">%5$s</p></td></tr>',
-			esc_html__( 'Space above the signature', 'email-signature-generator' ),
-			esc_attr( $name ),
-			(int) $settings['top_space'],
-			(int) Settings::TOP_SPACE_MAX,
-			esc_html__( 'Keeps the signature slightly apart from the text above it, in the copied HTML and in the image. It adds to the height, never to the width.', 'email-signature-generator' )
-		);
-		echo '</tbody></table></div></div>';
+		echo '</div>';
 
-		// Logo.
-		self::openPanel( 'logo', $active );
+		// Layout: the logo and the space around the signature.
+		self::openPanel( 'layout', $active );
 		self::openCard( __( 'Logo', 'email-signature-generator' ), 'image' );
 		echo '<table class="form-table" role="presentation"><tbody>';
 		printf(
@@ -260,6 +262,18 @@ final class SettingsPage {
 			(int) $settings['logo_width'],
 			(int) Settings::LOGO_WIDTH_MIN,
 			(int) Settings::LOGO_WIDTH_MAX
+		);
+		echo '</tbody></table></div>';
+
+		self::openCard( __( 'Spacing', 'email-signature-generator' ), 'layout' );
+		echo '<table class="form-table" role="presentation"><tbody>';
+		printf(
+			'<tr><th scope="row"><label for="esg-top-space">%1$s</label></th><td><input type="number" id="esg-top-space" class="small-text" name="%2$s[top_space]" value="%3$d" min="0" max="%4$d" required> px<p class="description">%5$s</p></td></tr>',
+			esc_html__( 'Space above the signature', 'email-signature-generator' ),
+			esc_attr( $name ),
+			(int) $settings['top_space'],
+			(int) Settings::TOP_SPACE_MAX,
+			esc_html__( 'Keeps the signature slightly apart from the text above it, in the copied HTML and in the image. It adds to the height, never to the width.', 'email-signature-generator' )
 		);
 		echo '</tbody></table></div></div>';
 
@@ -351,18 +365,19 @@ final class SettingsPage {
 		);
 		echo '</tbody></table>';
 		echo '<table class="widefat striped esg-regions-table"><thead><tr>';
+		echo '<th scope="col" class="esg-regions-default">' . esc_html__( 'Default', 'email-signature-generator' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Name', 'email-signature-generator' ) . '</th>';
 		echo '<th scope="col" class="esg-regions-acronym">' . esc_html__( 'Acronym', 'email-signature-generator' ) . '</th>';
 		echo '<td class="esg-regions-remove"></td>';
 		echo '</tr></thead><tbody class="esg-regions-rows">';
 		foreach ( array_values( $regions ) as $i => $region ) {
-			self::regionRow( $name, (string) $i, $region['name'], $region['acronym'] );
+			self::regionRow( $name, (string) $i, $region['name'], $region['acronym'], $unit === $region['acronym'] );
 		}
 		echo '</tbody></table>';
 		// The row the "Add" button copies; a template is inert, so its
 		// required inputs never block the form.
 		echo '<template class="esg-regions-template">';
-		self::regionRow( $name, '__i__', '', '' );
+		self::regionRow( $name, '__i__', '', '', false );
 		echo '</template>';
 		printf( '<p><button type="button" class="button esg-regions-add">%s</button></p>', esc_html__( 'Add a unit', 'email-signature-generator' ) );
 		echo '</div></div>';
@@ -389,11 +404,13 @@ final class SettingsPage {
 					}
 					echo '</select>';
 				} elseif ( 'office' === ( $field['type'] ?? '' ) ) {
-					printf( '<select name="%s">', esc_attr( $base . '[default]' ) );
-					foreach ( $regions as $region ) {
-						printf( '<option value="%1$s"%2$s>%3$s</option>', esc_attr( $region['acronym'] ), selected( $field['default'] ?? '', $region['acronym'], false ), esc_html( Regions::label( $region ) ) );
-					}
-					echo '</select>';
+					// One default for every unit field, chosen on the Units tab.
+					printf(
+						'<span class="description">%1$s <a href="%2$s" data-esg-goto="regions">%3$s</a></span>',
+						esc_html( $unit ),
+						esc_url( add_query_arg( 'tab', 'regions' ) ),
+						esc_html__( 'Set on the Units tab', 'email-signature-generator' )
+					);
 				} else {
 					printf(
 						'<input type="text" class="regular-text" name="%1$s" value="%2$s" placeholder="%3$s">',
@@ -441,17 +458,22 @@ final class SettingsPage {
 	}
 
 	/**
-	 * One row of the offices table.
+	 * One row of the units table.
 	 *
 	 * @param string $name    Option name.
 	 * @param string $index   Row index, or the template's placeholder.
-	 * @param string $office  Office name.
-	 * @param string $acronym Office acronym.
+	 * @param string $office  Unit name.
+	 * @param string $acronym Unit acronym.
+	 * @param bool   $is_default Whether it is the form's default unit.
 	 */
-	private static function regionRow( string $name, string $index, string $office, string $acronym ): void {
+	private static function regionRow( string $name, string $index, string $office, string $acronym, bool $is_default ): void {
 		$base = $name . '[regions][' . $index . ']';
 		printf(
-			'<tr><td><input type="text" class="large-text" name="%1$s" value="%2$s" aria-label="%3$s" required></td><td class="esg-regions-acronym"><input type="text" class="esg-acronym" name="%4$s" value="%5$s" aria-label="%6$s" pattern="[A-Za-z0-9]{1,12}" maxlength="12" required></td><td class="esg-regions-remove"><button type="button" class="button-link esg-regions-delete" aria-label="%7$s">%8$s</button></td></tr>',
+			'<tr><td class="esg-regions-default"><input type="radio" name="%1$s" value="%2$s" aria-label="%3$s"%4$s></td><td><input type="text" class="large-text" name="%5$s" value="%6$s" aria-label="%7$s" required></td><td class="esg-regions-acronym"><input type="text" class="esg-acronym" name="%8$s" value="%9$s" aria-label="%10$s" pattern="[A-Za-z0-9]{1,12}" maxlength="12" required></td><td class="esg-regions-remove"><button type="button" class="button-link esg-regions-delete" aria-label="%11$s">%12$s</button></td></tr>',
+			esc_attr( $name . '[default_unit_row]' ),
+			esc_attr( $index ),
+			esc_attr__( 'Default unit of the form', 'email-signature-generator' ),
+			checked( $is_default, true, false ),
 			esc_attr( $base . '[name]' ),
 			esc_attr( $office ),
 			esc_attr__( 'Name', 'email-signature-generator' ),
@@ -461,6 +483,22 @@ final class SettingsPage {
 			esc_attr__( 'Remove this unit', 'email-signature-generator' ),
 			esc_html__( 'Remove', 'email-signature-generator' )
 		);
+	}
+
+	/**
+	 * The unit the form starts on: the one every unit field defaults to.
+	 *
+	 * @param array<string, mixed> $config The applied configuration.
+	 */
+	private static function defaultUnit( array $config ): string {
+		foreach ( $config['models'] as $model ) {
+			foreach ( $model['fields'] as $field ) {
+				if ( 'office' === ( $field['type'] ?? '' ) ) {
+					return (string) ( $field['default'] ?? '' );
+				}
+			}
+		}
+		return '';
 	}
 
 	/**
@@ -474,9 +512,9 @@ final class SettingsPage {
 				'label' => __( 'General', 'email-signature-generator' ),
 				'icon'  => 'settings',
 			),
-			'logo'     => array(
-				'label' => __( 'Logo', 'email-signature-generator' ),
-				'icon'  => 'image',
+			'layout'   => array(
+				'label' => __( 'Layout', 'email-signature-generator' ),
+				'icon'  => 'layout',
 			),
 			'download' => array(
 				'label' => __( 'Downloaded image', 'email-signature-generator' ),

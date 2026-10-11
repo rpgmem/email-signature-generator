@@ -64,6 +64,19 @@ describe( 'settings toggles', () => {
 		expect( other.hidden ).toBe( false );
 	} );
 
+	it( 'copies the shortcode and says so', async () => {
+		window.esgAdmin.copied = 'Copied';
+		document.body.innerHTML = '<input id="sc" value="[email_signature]" readonly><button type="button" data-esg-copy="sc">Copy</button>';
+		const writeText = vi.fn( () => Promise.resolve() );
+		Object.defineProperty( window.navigator, 'clipboard', { value: { writeText }, configurable: true } );
+		boot( {} );
+		const button = document.querySelector( 'button' );
+		button.click();
+		expect( writeText ).toHaveBeenCalledWith( '[email_signature]' );
+		await flush();
+		expect( button.textContent ).toBe( 'Copied' );
+	} );
+
 	it( 'posts every ticked model and shows the stored list', async () => {
 		document.body.innerHTML = `<p>${ toggle( 'models', 'a' ) }</p><p>${ toggle( 'models', 'b', false ) }</p>`;
 		boot( { success: true, data: { value: [ 'a', 'b' ] } } );
