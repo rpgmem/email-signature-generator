@@ -162,11 +162,6 @@
 	.esg-settings .card {
 		padding: 16px;
 	}
-
-	.esg-settings .esg-fields-table {
-		display: block;
-		overflow-x: auto;
-	}
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -183,13 +178,30 @@
 	background: #ffffff;
 }
 
-.esg-settings .esg-fields-table {
+/* Wherever the columns still do not fit, the table scrolls inside its card. */
+.esg-settings .esg-table-scroll {
 	max-width: 960px;
 	margin-bottom: 16px;
+	overflow-x: auto;
+}
+
+.esg-settings .esg-fields-table {
+	min-width: 640px;
 }
 
 .esg-settings .esg-fields-table td {
 	vertical-align: middle;
+}
+
+/*
+ * The text boxes follow their column instead of WordPress's fixed 25em, so
+ * the switch columns stay inside the card on a laptop screen.
+ */
+.esg-settings .esg-fields-table input[type="text"],
+.esg-settings .esg-fields-table select {
+	width: 100%;
+	min-width: 6em;
+	max-width: 100%;
 }
 
 /* On/off switch: a real checkbox, hidden but focusable, drawn as a track. */
