@@ -744,7 +744,7 @@
 
 		/**
 		 * Put back what this browser kept for the current model; a locked
-		 * field keeps its fixed value.
+		 * field keeps its fixed value, and a field left empty its default.
 		 */
 		function restoreSaved() {
 			var saved = remember ? loadSaved( doc, 'values:' + current.id ) : null;
@@ -753,7 +753,9 @@
 			}
 			current.fields.forEach( function ( field ) {
 				var input = fieldsBox.querySelector( '[name="' + field.key + '"]' );
-				if ( ! input || field.locked || 'string' !== typeof saved[ field.key ] ) {
+				// An empty value is not a choice: the field keeps its default,
+				// so a default the site sets later still shows.
+				if ( ! input || field.locked || 'string' !== typeof saved[ field.key ] || '' === saved[ field.key ].trim() ) {
 					return;
 				}
 				input.value = saved[ field.key ];
