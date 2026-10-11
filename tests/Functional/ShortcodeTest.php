@@ -47,6 +47,19 @@ final class ShortcodeTest extends WP_UnitTestCase {
 		self::assertTrue( wp_style_is( Shortcode::STYLE_HANDLE, 'enqueued' ) );
 	}
 
+	public function test_its_own_assets_are_versioned_by_file_time(): void {
+		do_shortcode( '[email_signature]' );
+
+		$js  = wp_scripts()->registered[ Shortcode::SCRIPT_HANDLE ]->ver;
+		$css = wp_styles()->registered[ Shortcode::STYLE_HANDLE ]->ver;
+		self::assertSame( Plugin::VERSION . '.' . filemtime( Plugin::dir() . 'assets/js/signature-generator.js' ), $js, 'A deploy changes the file time, so a cached script is replaced.' );
+		self::assertSame( Plugin::VERSION . '.' . filemtime( Plugin::dir() . 'assets/css/signature-generator.css' ), $css );
+	}
+
+	public function test_a_missing_asset_falls_back_to_the_version(): void {
+		self::assertSame( Plugin::VERSION, Plugin::assetVersion( 'assets/js/does-not-exist.js' ) );
+	}
+
 	public function test_every_enqueued_file_exists(): void {
 		do_shortcode( '[email_signature]' );
 		$dir = Plugin::dir();

@@ -94,4 +94,20 @@ final class Plugin {
 	public static function url(): string {
 		return plugin_dir_url( self::$file );
 	}
+
+	/**
+	 * The `?ver=` of one of the plugin's own assets: the plugin version plus
+	 * the file's modification time.
+	 *
+	 * The version alone does not change between deploys of the same release,
+	 * and hosts serve these files with a year-long cache, so a browser kept
+	 * the previous script after an update. The file time changes whenever
+	 * the file does.
+	 *
+	 * @param string $relative Path under the plugin directory, e.g. `assets/js/x.js`.
+	 */
+	public static function assetVersion( string $relative ): string {
+		$time = @filemtime( self::dir() . $relative ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- a missing file falls back to the version.
+		return false === $time ? self::VERSION : self::VERSION . '.' . $time;
+	}
 }

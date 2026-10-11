@@ -31,6 +31,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **The divider is as tall as the logo** (#13). It was the border of the text's cell, so it ran the whole height of the signature; it is now the border of a cell that holds only the logo, in plain table markup email programs keep.
 - **Copy and download appear once a signature is generated** (#15). They hide again when a field changes, so neither can deliver a signature that no longer matches the form. Copy HTML is the filled button and Download image a grey one.
 - **The regional office is chosen, not typed** (#18). Staff at a regional office type only their department, and staff at a school only the school; both pick the office from a list, and the signature appends its acronym as before ("NTIC / DREMP"). Defaults saved in the old combined fields are split into the two.
+- **A deploy reaches the browser at once** (#21). The plugin's own scripts and stylesheets carry the file's modification time in `?ver=`, beside the version. Hosts cache them for a year, and with the version alone a browser kept the previous script after an update.
 
 ### Removed
 
