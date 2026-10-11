@@ -33,7 +33,7 @@ return array (
     'Logged-in users only' => 'Somente usuários logados',
     'Name and email' => 'Nome e e-mail',
     'Name in capitals' => 'Nome em maiúsculas',
-    'Print the name in capital letters, whatever was typed' => 'Imprimir o nome em letras maiúsculas, como quer que tenha sido digitado',
+    'The name appears in capital letters, however it was typed' => 'O nome aparece em letras maiúsculas independentemente de como foi digitado',
     'Allowed email domain' => 'Domínio de e-mail permitido',
     'Accept only addresses at the domains below' => 'Aceitar apenas endereços nos domínios abaixo',
     'Off, the form accepts any valid address outside the refused domains.' => 'Desligado, o formulário aceita qualquer endereço válido fora dos domínios recusados.',

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Email Signature Generator 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
-"POT-Creation-Date: 2026-10-11 01:24+0000\n"
+"POT-Creation-Date: 2026-10-11 01:30+0000\n"
 "PO-Revision-Date: 2026-10-10 21:54+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Português do Brasil\n"
@@ -133,8 +133,8 @@ msgid "Name in capitals"
 msgstr "Nome em maiúsculas"
 
 #: src/admin/settings-page.php:204
-msgid "Print the name in capital letters, whatever was typed"
-msgstr "Imprimir o nome em letras maiúsculas, como quer que tenha sido digitado"
+msgid "The name appears in capital letters, however it was typed"
+msgstr "O nome aparece em letras maiúsculas independentemente de como foi digitado"
 
 #: src/admin/settings-page.php:212
 msgid "Allowed email domain"
@@ -164,7 +164,7 @@ msgstr "Domínios recusados"
 msgid "While any address is accepted, addresses at these domains are refused: placeholders and throwaway inboxes people type to get past the field. One per line; a subdomain of one is refused too."
 msgstr "Enquanto qualquer endereço é aceito, endereços nestes domínios são recusados: exemplos e caixas descartáveis que as pessoas digitam para passar pelo campo. Um por linha; um subdomínio deles também é recusado."
 
-#: src/admin/settings-page.php:246 src/config.php:116
+#: src/admin/settings-page.php:246 src/config.php:120
 msgid "Logo"
 msgstr "Logotipo"
 
@@ -362,173 +362,173 @@ msgstr "Geral"
 msgid "Layout"
 msgstr "Layout"
 
-#: src/config.php:102
+#: src/config.php:106
 msgid "Regional office"
 msgstr "Diretoria"
 
-#: src/config.php:159
+#: src/config.php:163
 msgid "Full name"
 msgstr "Nome completo"
 
-#: src/config.php:161
+#: src/config.php:165
 msgid "Type your full name"
 msgstr "Digite seu nome completo"
 
-#: src/config.php:165
+#: src/config.php:169
 msgid "Email"
 msgstr "E-mail"
 
-#: src/config.php:173
+#: src/config.php:177
 msgid "Phone number(s)"
 msgstr "Telefone(s)"
 
-#: src/config.php:179
+#: src/config.php:183
 msgid "Address | Floor | Room"
 msgstr "Endereço | Andar | Sala"
 
-#: src/config.php:184
+#: src/config.php:188
 msgid "Postal code | City | State"
 msgstr "CEP | Cidade | Estado"
 
-#: src/config.php:189
+#: src/config.php:193
 msgid "Link 1"
 msgstr "Link 1"
 
-#: src/config.php:203
+#: src/config.php:207
 msgid "Link 2"
 msgstr "Link 2"
 
-#: src/config.php:206
+#: src/config.php:210
 msgid "Type a second link, if needed"
 msgstr "Digite um segundo link, caso necessário"
 
-#: src/config.php:212
+#: src/config.php:216
 msgid "Staff - Regional office"
 msgstr "Servidores - DRE"
 
-#: src/config.php:217
+#: src/config.php:221
 msgid "Department"
 msgstr "Setor"
 
-#: src/config.php:233
+#: src/config.php:237
 msgid "Staff - School"
 msgstr "Servidores - Escola"
 
-#: src/config.php:238
+#: src/config.php:242
 msgid "Role"
 msgstr "Cargo"
 
-#: src/config.php:247
+#: src/config.php:251
 msgid "School"
 msgstr "Escola"
 
-#: src/config.php:260
+#: src/config.php:264
 msgid "Department or school building"
 msgstr "Setores DRE / Prédio Escola"
 
-#: src/config.php:264
+#: src/config.php:268
 msgid "Department or school"
 msgstr "Setor ou Escola"
 
-#: src/config.php:272
+#: src/config.php:276
 msgid "Regional office or central"
 msgstr "Regional ou Central"
 
-#: src/config.php:303
+#: src/config.php:307
 msgid "Signature model"
 msgstr "Modelo de assinatura"
 
-#: src/config.php:304
+#: src/config.php:308
 msgid "Generate signature"
 msgstr "Gerar assinatura"
 
-#: src/config.php:305
+#: src/config.php:309
 msgid "Copy HTML"
 msgstr "Copiar HTML"
 
-#: src/config.php:306
+#: src/config.php:310
 msgid "Download image"
 msgstr "Baixar imagem"
 
-#: src/config.php:307
+#: src/config.php:311
 msgid "Preview"
 msgstr "Pré-visualização"
 
-#: src/config.php:308
+#: src/config.php:312
 msgid "Tel.:"
 msgstr "Tel.:"
 
-#: src/config.php:309
+#: src/config.php:313
 msgid "Signature copied. Paste it into your email signature settings."
 msgstr "Assinatura copiada. Cole-a nas configurações de assinatura do seu e-mail."
 
-#: src/config.php:310
+#: src/config.php:314
 msgid "The signature could not be copied. Select it in the preview and copy it by hand."
 msgstr "Não foi possível copiar a assinatura. Selecione-a na pré-visualização e copie manualmente."
 
-#: src/config.php:311
+#: src/config.php:315
 msgid "The image could not be created. Try again."
 msgstr "Não foi possível gerar a imagem. Tente novamente."
 
-#: src/config.php:312
+#: src/config.php:316
 msgid "More options"
 msgstr "Mais opções"
 
-#: src/config.php:313
+#: src/config.php:317
 msgid "Image downloaded. Links in an image cannot be clicked and small text loses sharpness: if your email program accepts it, prefer Copy HTML."
 msgstr "Imagem baixada. Na imagem, os links não são clicáveis e o texto pequeno perde nitidez: se o seu programa de e-mail aceitar, prefira Copiar HTML."
 
-#: src/config.php:314
+#: src/config.php:318
 msgid "Recommended: copy the HTML and paste it into your email program's signature settings. The text stays sharp at any size and the links work. Use the image only where a signature cannot be HTML."
 msgstr "Recomendado: copie o HTML e cole nas configurações de assinatura do seu programa de e-mail. O texto fica nítido em qualquer tamanho e os links funcionam. Use a imagem apenas onde a assinatura não puder ser em HTML."
 
 #. translators: %s: a field's label.
-#: src/config.php:316
+#: src/config.php:320
 #, php-format
 msgid "%s is required."
 msgstr "O campo \"%s\" é obrigatório."
 
-#: src/config.php:317
+#: src/config.php:321
 msgid "Enter a valid email address."
 msgstr "Informe um e-mail válido."
 
 #. translators: %s: the allowed email domains, such as example.org, separated by commas.
-#: src/config.php:319
+#: src/config.php:323
 #, php-format
 msgid "Use an address at %s."
 msgstr "Use um endereço do domínio %s."
 
-#: src/config.php:320
+#: src/config.php:324
 msgid "Email domain"
 msgstr "Domínio do e-mail"
 
-#: src/config.php:321
+#: src/config.php:325
 msgid "Type only the part before the \"@\": the domain is already beside the field."
 msgstr "Digite só a parte antes do \"@\": o domínio já está ao lado do campo."
 
 #. translators: %s: an email domain, such as test.com.
-#: src/config.php:323
+#: src/config.php:327
 #, php-format
 msgid "Addresses at %s are not accepted. Use your real email address."
 msgstr "Endereços em %s não são aceitos. Use seu e-mail real."
 
-#: src/config.php:324
+#: src/config.php:328
 msgid "Enter the phone number as 55 XX XXXX-XXXX or 55 XX XXXXX-XXXX. For two numbers, separate them with \" | \"."
 msgstr "Informe o telefone no formato 55 XX XXXX-XXXX ou 55 XX XXXXX-XXXX. Para dois números, separe-os com \" | \"."
 
 #. translators: %s: a field's label.
-#: src/config.php:326
+#: src/config.php:330
 #, php-format
 msgid "%s is not a valid address."
 msgstr "O campo \"%s\" não é um endereço válido."
 
 #. translators: %s: a field's label.
-#: src/config.php:328
+#: src/config.php:332
 #, php-format
 msgid "%s cannot contain a slash: the acronym is added on its own."
 msgstr "O campo %s não pode ter barra: a sigla é acrescentada sozinha."
 
-#: src/config.php:329
+#: src/config.php:333
 msgid "Role takes a single role, without slashes."
 msgstr "O campo \"Cargo\" aceita um único cargo, sem barras."
 
@@ -559,6 +559,9 @@ msgstr "A verificação de integridade (SHA-256) do pacote de atualização falh
 #. Plugin header: Description
 msgid "A form, placed with a shortcode, that builds a consistent HTML email signature for your organisation and copies it to Outlook or downloads it as an image."
 msgstr "Um formulário, inserido por shortcode, que monta uma assinatura de e-mail em HTML padronizada para a sua organização e a copia para o Outlook ou a baixa como imagem."
+
+#~ msgid "Print the name in capital letters, whatever was typed"
+#~ msgstr "Imprimir o nome em letras maiúsculas, como quer que tenha sido digitado"
 
 #, php-format
 #~ msgid "Place the form on any page with %s. These settings apply to every form on the site."

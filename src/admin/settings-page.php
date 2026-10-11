@@ -201,7 +201,7 @@ final class SettingsPage {
 			array(
 				'name'    => $name . '[uppercase_name]',
 				'checked' => $settings['uppercase_name'],
-				'label'   => __( 'Print the name in capital letters, whatever was typed', 'email-signature-generator' ),
+				'label'   => __( 'The name appears in capital letters, however it was typed', 'email-signature-generator' ),
 				'key'     => 'uppercase_name',
 			)
 		);
