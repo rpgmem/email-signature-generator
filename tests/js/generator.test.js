@@ -381,6 +381,21 @@ describe( 'settings in the configuration', () => {
 		expect( gen.validate( model( 'staff_regional' ), { ...valid, email: 'a@example.com' }, config ) ).toHaveLength( 1 );
 	} );
 
+	it( 'explains where to paste the signature, collapsed under the result', () => {
+		document.body.innerHTML = '<div id="c"></div>';
+		gen.mount( document.getElementById( 'c' ), config );
+		const howto = document.querySelector( '.esg-output details.esg-howto' );
+		expect( howto ).not.toBeNull();
+		expect( howto.open ).toBe( false );
+		expect( howto.querySelector( 'summary' ).textContent ).toBe( config.strings.howTo );
+		expect( [ ...howto.querySelectorAll( 'li' ) ].map( ( li ) => li.textContent ) ).toEqual( [
+			config.strings.howToOutlookWeb,
+			config.strings.howToOutlook,
+			config.strings.howToGmail,
+			config.strings.howToPhone,
+		] );
+	} );
+
 	it( 'leaves the email field free when no domain is set', () => {
 		document.body.innerHTML = '<div id="c"></div>';
 		gen.mount( document.getElementById( 'c' ), config );
