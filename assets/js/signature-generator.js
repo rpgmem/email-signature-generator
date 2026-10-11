@@ -537,6 +537,13 @@
 		}
 		form.appendChild( output );
 		output.appendChild( el( doc, 'p', { class: 'esg-hint', text: strings.copyHint } ) );
+		// Where to paste it: the step people most often get stuck on.
+		output.appendChild( el( doc, 'details', { class: 'esg-howto' }, [
+			el( doc, 'summary', { text: strings.howTo } ),
+			el( doc, 'ul', {}, [ strings.howToOutlookWeb, strings.howToOutlook, strings.howToGmail, strings.howToPhone ].filter( Boolean ).map( function ( text ) {
+				return el( doc, 'li', { text: text } );
+			} ) ),
+		] ) );
 
 		var status = el( doc, 'p', { class: 'esg-status', role: 'status' } );
 		var previewHost = el( doc, 'div', { class: 'esg-preview' } );

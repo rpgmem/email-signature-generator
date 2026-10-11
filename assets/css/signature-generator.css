@@ -186,3 +186,22 @@
 		width: 100%;
 	}
 }
+
+/* Where to paste the signature, collapsed until asked for. */
+.esg-generator .esg-howto {
+	margin: 0 0 12px;
+}
+
+.esg-generator .esg-howto summary {
+	cursor: pointer;
+	color: var(--esg-accent);
+}
+
+.esg-generator .esg-howto ul {
+	margin: 8px 0 0;
+	padding-left: 20px;
+}
+
+.esg-generator .esg-howto li {
+	margin-bottom: 6px;
+}

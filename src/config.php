@@ -323,6 +323,11 @@ final class Config {
 			'moreOptions'        => __( 'More options', 'email-signature-generator' ),
 			'downloaded'         => __( 'Image downloaded. Links in an image cannot be clicked and small text loses sharpness: if your email program accepts it, prefer Copy HTML.', 'email-signature-generator' ),
 			'copyHint'           => __( 'Recommended: copy the HTML and paste it into your email program\'s signature settings. The text stays sharp at any size and the links work. Use the image only where a signature cannot be HTML.', 'email-signature-generator' ),
+			'howTo'              => __( 'How to add the signature to your email', 'email-signature-generator' ),
+			'howToOutlookWeb'    => __( 'Outlook on the web and the new Outlook for Windows: Settings (gear) → Account → Signatures. Create a signature, paste with Ctrl+V, choose it for new messages and replies, and save.', 'email-signature-generator' ),
+			'howToOutlook'       => __( 'Classic Outlook for Windows: File → Options → Mail → Signatures → New. Paste with Ctrl+V, choose it for new messages and replies, and select OK.', 'email-signature-generator' ),
+			'howToGmail'         => __( 'Gmail: Settings (gear) → See all settings → General → Signature → Create new. Paste with Ctrl+V, choose it in "Signature defaults", and select "Save changes" at the bottom of the page.', 'email-signature-generator' ),
+			'howToPhone'         => __( 'Phone apps: most accept only plain text. Set the signature on the web or on the computer; messages sent from there carry it.', 'email-signature-generator' ),
 			/* translators: %s: a field's label. */
 			'required'           => __( '%s is required.', 'email-signature-generator' ),
 			'invalidEmail'       => __( 'Enter a valid email address.', 'email-signature-generator' ),
