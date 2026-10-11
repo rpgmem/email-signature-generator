@@ -47,6 +47,11 @@ final class Settings {
 	 */
 	public const DOMAIN_PATTERN = '/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/';
 
+	/**
+	 * A Google Analytics 4 measurement ID, as stored (upper case).
+	 */
+	public const ANALYTICS_ID_PATTERN = '/^G-[A-Z0-9]{4,20}$/';
+
 	public const IMAGE_QUALITY_MIN = 50;
 
 	public const IMAGE_QUALITY_MAX = 100;
@@ -75,7 +80,7 @@ final class Settings {
 	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -107,6 +112,8 @@ final class Settings {
 			'regions'               => array(),
 			'default_unit'          => '',
 			'access'                => self::ACCESS_EVERYONE,
+			'analytics'             => false,
+			'analytics_id'          => '',
 			'fields'                => array(),
 		);
 	}
@@ -117,7 +124,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -183,6 +190,8 @@ final class Settings {
 			'regions'               => $regions,
 			'default_unit'          => $default_unit,
 			'access'                => self::ACCESS_LOGGED_IN === $access ? self::ACCESS_LOGGED_IN : self::ACCESS_EVERYONE,
+			'analytics'             => ! empty( $input['analytics'] ),
+			'analytics_id'          => self::analyticsId( $input['analytics_id'] ?? '' ),
 			'fields'                => self::sanitizeFields( self::legacyUnitLabel( $input, self::legacyCapitals( $input ) ) ),
 		);
 	}
@@ -200,6 +209,7 @@ final class Settings {
 	public static function save( $input ): array {
 		static $reported         = false;
 		static $reported_domains = false;
+		static $reported_id      = false;
 		$input                   = is_array( $input ) ? $input : array();
 		$rejected                = Regions::parse( $input['regions'] ?? array() )['rejected'];
 		if ( ! $reported && array() !== $rejected && function_exists( 'add_settings_error' ) ) {
@@ -230,7 +240,39 @@ final class Settings {
 				)
 			);
 		}
+		$analytics_id = is_scalar( $input['analytics_id'] ?? null ) ? trim( (string) $input['analytics_id'] ) : '';
+		if ( ! $reported_id && '' !== $analytics_id && '' === self::analyticsId( $analytics_id ) && function_exists( 'add_settings_error' ) ) {
+			$reported_id = true;
+			add_settings_error(
+				self::OPTION,
+				'analytics_id_rejected',
+				sprintf(
+					/* translators: %s: the ID typed. */
+					__( 'The Google Analytics ID was not saved, because it is not a measurement ID such as G-XXXXXXXXXX: %s', 'email-signature-generator' ),
+					sanitize_text_field( $analytics_id )
+				)
+			);
+		}
 		return self::sanitize( $input );
+	}
+
+	/**
+	 * Whether the page loads Google Analytics: switched on and given an ID.
+	 *
+	 * @param array<string, mixed> $settings Sanitized settings.
+	 */
+	public static function analyticsOn( array $settings ): bool {
+		return ! empty( $settings['analytics'] ) && '' !== ( $settings['analytics_id'] ?? '' );
+	}
+
+	/**
+	 * A measurement ID as stored: upper case; '' when it is not one.
+	 *
+	 * @param mixed $raw Typed ID.
+	 */
+	public static function analyticsId( $raw ): string {
+		$id = is_scalar( $raw ) ? strtoupper( trim( (string) $raw ) ) : '';
+		return 1 === preg_match( self::ANALYTICS_ID_PATTERN, $id ) ? $id : '';
 	}
 
 	/**
@@ -287,6 +329,7 @@ final class Settings {
 		$config['offerDownload']       = (bool) $settings['offer_download'];
 		$config['downloadStyle']       = (string) $settings['download_style'];
 		$config['rememberValues']      = (bool) $settings['remember_values'];
+		$config['analytics']           = self::analyticsOn( $settings );
 		$config['emailDomains']        = $settings['restrict_email_domain'] ? array_values( $settings['email_domains'] ) : array();
 		$config['blockedEmailDomains'] = array_values( $settings['blocked_email_domains'] );
 		$config['logo']['width']       = (int) $settings['logo_width'];

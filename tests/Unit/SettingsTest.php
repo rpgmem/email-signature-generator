@@ -31,6 +31,20 @@ final class SettingsTest extends TestCase {
 		self::assertSame( Settings::defaults(), Settings::sanitize( array() ) );
 	}
 
+	public function test_analytics_is_off_by_default_and_takes_only_a_measurement_id(): void {
+		self::assertFalse( Settings::defaults()['analytics'] );
+		self::assertSame( '', Settings::defaults()['analytics_id'] );
+		self::assertSame( 'G-ABC1234', Settings::sanitize( array( 'analytics_id' => ' g-abc1234 ' ) )['analytics_id'] );
+		self::assertSame( '', Settings::sanitize( array( 'analytics_id' => '<script>' ) )['analytics_id'] );
+		self::assertSame( '', Settings::sanitize( array( 'analytics_id' => 'UA-12345-1' ) )['analytics_id'], 'Universal Analytics IDs are gone.' );
+	}
+
+	public function test_analytics_is_on_only_with_an_id(): void {
+		self::assertFalse( Settings::analyticsOn( Settings::sanitize( array( 'analytics' => '1' ) ) ) );
+		self::assertFalse( Settings::analyticsOn( Settings::sanitize( array( 'analytics' => '0', 'analytics_id' => 'G-ABC1234' ) ) ) );
+		self::assertTrue( Settings::analyticsOn( Settings::sanitize( array( 'analytics' => '1', 'analytics_id' => 'G-ABC1234' ) ) ) );
+	}
+
 	public function test_garbage_input_gives_the_defaults(): void {
 		self::assertSame( Settings::defaults(), Settings::sanitize( 'not an array' ) );
 	}

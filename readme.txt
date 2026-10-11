@@ -55,6 +55,8 @@ On/off settings are switches that save as soon as they are flipped. Text fields,
 
 Nothing typed in the form is sent to the site, and the plugin stores no personal data. With "Remember what was typed" on, the values stay in the visitor's own browser and are forgotten 60 minutes after the signature was last generated, or at once with the form's "Forget it" link. Leave it off where computers are shared.
 
+By default the form loads nothing from third parties. With Google Analytics switched on (off by default), the pages with the form load Google's tag, which sets Google's cookies, and record when a signature is generated, copied or downloaded, with only the model and the image format.
+
 == Installation ==
 
 1. Download `email-signature-generator-X.Y.Z.zip` from the latest GitHub release.

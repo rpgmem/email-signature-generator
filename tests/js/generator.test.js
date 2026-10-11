@@ -244,6 +244,36 @@ describe( 'fileName', () => {
 	} );
 } );
 
+describe( 'track', () => {
+	it( 'sends an event only when the site switched Analytics on and Google loaded', () => {
+		const gtag = vi.fn();
+		gen.track( { analytics: false }, { gtag }, 'email_signature_generated', { model: 'x' } );
+		gen.track( { analytics: true }, {}, 'email_signature_generated', { model: 'x' } );
+		expect( gtag ).not.toHaveBeenCalled();
+
+		gen.track( { analytics: true }, { gtag }, 'email_signature_generated', { model: 'x' } );
+		expect( gtag ).toHaveBeenCalledWith( 'event', 'email_signature_generated', { model: 'x' } );
+	} );
+
+	it( 'reports a generated signature with only its model', () => {
+		document.body.innerHTML = '<div id="c"></div>';
+		window.gtag = vi.fn();
+		const ui = gen.mount( document.getElementById( 'c' ), { ...config, analytics: true } );
+		Object.entries( valid ).forEach( ( [ key, value ] ) => {
+			const input = document.querySelector( `[name="${ key }"]` );
+			if ( input ) {
+				input.value = value;
+			}
+		} );
+		expect( ui.generate() ).toBe( true );
+		expect( window.gtag ).toHaveBeenCalledTimes( 1 );
+		const [ , event, params ] = window.gtag.mock.calls[ 0 ];
+		expect( event ).toBe( 'email_signature_generated' );
+		expect( Object.keys( params ) ).toEqual( [ 'model' ] );
+		delete window.gtag;
+	} );
+} );
+
 describe( 'mount', () => {
 	it( 'draws the chosen model, shows errors and builds the preview', () => {
 		document.body.innerHTML = '<div id="c"></div>';

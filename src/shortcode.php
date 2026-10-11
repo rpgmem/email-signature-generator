@@ -22,6 +22,11 @@ final class Shortcode {
 
 	public const SCRIPT_HANDLE = 'email-signature-generator';
 
+	/**
+	 * Google's tag, enqueued only when Analytics is on.
+	 */
+	public const GTAG_HANDLE = 'email-signature-generator-gtag';
+
 	public const STYLE_HANDLE = 'email-signature-generator';
 
 	public const HTML2CANVAS_HANDLE = 'email-signature-generator-html2canvas';
@@ -64,7 +69,7 @@ final class Shortcode {
 
 		$config = self::restrictModels( Settings::siteConfig(), (string) $atts['models'] );
 
-		self::enqueue();
+		self::enqueue( Settings::get() );
 
 		// The width is the page's, not the signature's, so it is not in the
 		// configuration. It is inline because a block theme's constrained
@@ -111,9 +116,13 @@ final class Shortcode {
 
 	/**
 	 * Load the script, its image library and the form's stylesheet. Called
-	 * from render(), so they load only on pages that show the generator.
+	 * from render(), so they load only on pages that show the generator;
+	 * Google's tag too when the settings turn Analytics on, and nothing of
+	 * Google's otherwise.
+	 *
+	 * @param array<string, mixed> $settings Sanitized settings.
 	 */
-	private static function enqueue(): void {
+	private static function enqueue( array $settings ): void {
 		wp_enqueue_style( self::STYLE_HANDLE, Plugin::url() . 'assets/css/signature-generator.css', array(), Plugin::assetVersion( 'assets/css/signature-generator.css' ) );
 		wp_enqueue_script(
 			self::HTML2CANVAS_HANDLE,
@@ -128,6 +137,17 @@ final class Shortcode {
 			array( self::HTML2CANVAS_HANDLE ),
 			Plugin::assetVersion( 'assets/js/signature-generator.js' ),
 			array( 'in_footer' => true )
+		);
+
+		if ( ! Settings::analyticsOn( $settings ) ) {
+			return;
+		}
+		$id = (string) $settings['analytics_id'];
+		// Google's own loader, with no version argument: the URL is Google's.
+		wp_enqueue_script( self::GTAG_HANDLE, 'https://www.googletagmanager.com/gtag/js?id=' . rawurlencode( $id ), array(), null, array( 'strategy' => 'async' ) ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- a third-party URL that versions itself.
+		wp_add_inline_script(
+			self::GTAG_HANDLE,
+			'window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config",' . (string) wp_json_encode( $id ) . ');'
 		);
 	}
 }

@@ -553,6 +553,21 @@
 	}
 
 	/**
+	 * Tell Google Analytics what happened, when the site switched it on:
+	 * only the event and the model, never what was typed.
+	 *
+	 * @param {Object} config Configuration (analytics).
+	 * @param {Window} win    Window.
+	 * @param {string} event  Event name.
+	 * @param {Object} params Event parameters.
+	 */
+	function track( config, win, event, params ) {
+		if ( config.analytics && win && 'function' === typeof win.gtag ) {
+			win.gtag( 'event', event, params );
+		}
+	}
+
+	/**
 	 * Draw the form and wire its buttons inside a container.
 	 *
 	 * @param {Element} container The element that holds the generator.
@@ -877,6 +892,7 @@
 				storeSaved( doc, 'model', { id: current.id } );
 				storeSaved( doc, 'values:' + current.id, values );
 			}
+			track( config, doc.defaultView, 'email_signature_generated', { model: current.id } );
 			return true;
 		}
 
@@ -909,6 +925,9 @@
 			}
 			copySignature( html, doc, function ( ok ) {
 				setStatus( ok ? strings.copied : strings.copyFailed );
+				if ( ok ) {
+					track( config, doc.defaultView, 'email_signature_copied', { model: current.id } );
+				}
 			} );
 		} );
 
@@ -955,6 +974,7 @@
 					doc.body.appendChild( link );
 					link.click();
 					doc.body.removeChild( link );
+					track( config, win, 'email_signature_downloaded', { model: current.id, format: image.format } );
 					if ( 'plain' !== downloadStyle ) {
 						setStatus( strings.downloaded );
 					}
@@ -1010,6 +1030,7 @@
 	var api = {
 		escapeHtml: escapeHtml,
 		formatPhone: formatPhone,
+		track: track,
 		normalizeUrl: normalizeUrl,
 		isValidUrl: isValidUrl,
 		validate: validate,
