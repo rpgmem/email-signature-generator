@@ -62,6 +62,13 @@ final class Config {
 	);
 
 	/**
+	 * What the bundled logo shows, read by screen readers and shown when an
+	 * email program blocks images. Data, like the units' names: it describes
+	 * the image, so it is not translated.
+	 */
+	public const LOGO_ALT = 'Prefeitura de São Paulo – Secretaria Municipal de Educação';
+
+	/**
 	 * Width, in pixels, at which the logo is drawn in the signature.
 	 */
 	public const LOGO_WIDTH = 120;
@@ -117,7 +124,7 @@ final class Config {
 			'logo'                => array(
 				'url'   => $logo_url,
 				'width' => self::LOGO_WIDTH,
-				'alt'   => __( 'Logo', 'email-signature-generator' ),
+				'alt'   => self::LOGO_ALT,
 			),
 			'image'               => array(
 				'format'  => self::IMAGE_FORMAT,

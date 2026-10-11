@@ -179,6 +179,15 @@ final class SettingsTest extends TestCase {
 		self::assertSame( 'DREBT', $this->field( $config, 'staff_school', 'office' )['default'] );
 	}
 
+	public function test_the_logo_text_describes_the_image(): void {
+		self::assertSame( Config::LOGO_ALT, Settings::apply( Config::defaults( '' ), Settings::defaults() )['logo']['alt'] );
+
+		$settings = Settings::sanitize( array( 'logo_alt' => ' <b>Escola X</b> ' ) );
+		self::assertSame( 'Escola X', $settings['logo_alt'] );
+		self::assertSame( 'Escola X', Settings::apply( Config::defaults( '' ), $settings, 'https://example.org/x.png' )['logo']['alt'] );
+		self::assertSame( Settings::LOGO_ALT_MAX, mb_strlen( Settings::sanitize( array( 'logo_alt' => str_repeat( 'á', 200 ) ) )['logo_alt'] ) );
+	}
+
 	public function test_the_default_unit_is_every_unit_fields_default(): void {
 		self::assertSame( '', Settings::sanitize( array() )['default_unit'] );
 
@@ -350,7 +359,7 @@ final class SettingsTest extends TestCase {
 		self::assertFalse( $config['uppercaseName'] );
 		self::assertSame( array( 'format' => 'jpg', 'quality' => 80, 'scale' => 3 ), $config['image'] );
 		self::assertSame( array( 'example.org' ), $config['emailDomains'] );
-		self::assertSame( array( 'url' => 'https://example.org/chosen.png', 'width' => 90, 'alt' => 'Logo' ), $config['logo'] );
+		self::assertSame( array( 'url' => 'https://example.org/chosen.png', 'width' => 90, 'alt' => '' ), $config['logo'], 'Another image does not carry the bundled logo\'s text.' );
 		self::assertSame( array( 'North / N', 'South / S' ), $config['regions'] );
 
 		$address = $this->field( $config, 'staff_school', 'address' );
