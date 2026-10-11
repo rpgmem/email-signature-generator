@@ -23,7 +23,7 @@ The default layout and logo are those of the São Paulo Municipal Department of 
 
 In **Settings → Email Signature** an administrator sets, for every form on the site:
 
-- **General:** the models offered, who may use the form, whether each browser may remember what was typed, and the email domains (only some allowed, shown beside the field so people type only the part before the "@", or any address except placeholder domains such as `test.com`).
+- **General:** the models offered, who may use the form, whether each browser may remember what was typed, optional Google Analytics (off by default; only a GA4 measurement ID, never a pasted snippet), and the email domains (only some allowed, shown beside the field so people type only the part before the "@", or any address except placeholder domains such as `test.com`).
 - **Layout:** how wide the form gets on the page, the logo (from the media library), its width and its alternative text, and the space above the signature.
 - **Downloaded image:** whether and how the download is offered, and the image's format (PNG or JPG) and resolution.
 - **Units:** the units people choose from (name and acronym), and which one the form starts on.
@@ -44,6 +44,8 @@ Then:
 ## Privacy
 
 The signature is built in the visitor's browser: nothing typed is sent to the site, and the plugin stores no personal data. When the administrator turns on **Remember what was typed** (off by default), the values stay in that browser's local storage so the form fills itself the next time, and they are forgotten 60 minutes after the signature was last generated; the form also has a **Forget it** link that clears them at once. Leave it off where computers are shared.
+
+By default the form sets no cookie and loads no third-party file. If the administrator switches on **Google Analytics** (off by default), the pages with the form load Google's tag, which sets Google's cookies, and record when a signature is generated, copied or downloaded, with only the model and the image format.
 
 ## Screenshots
 

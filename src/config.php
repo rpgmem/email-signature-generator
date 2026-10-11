@@ -147,6 +147,7 @@ final class Config {
 			'topSpace'            => self::TOP_SPACE,
 			'offerDownload'       => true,
 			'rememberValues'      => false,
+			'analytics'           => false,
 			'rememberMinutes'     => self::REMEMBER_MINUTES,
 			'downloadStyle'       => 'notice',
 			'emailDomains'        => array(),

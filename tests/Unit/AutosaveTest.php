@@ -50,6 +50,14 @@ final class AutosaveTest extends TestCase {
 		self::assertFalse( Autosave::apply( $on, 'remember_values', '0' )['remember_values'] );
 	}
 
+	public function test_the_analytics_switch_saves_on_its_own_and_keeps_the_id(): void {
+		$on = Autosave::apply( Settings::sanitize( array( 'analytics_id' => 'G-ABC1234' ) ), 'analytics', '1' );
+		self::assertIsArray( $on );
+		self::assertTrue( Autosave::read( $on, 'analytics' ) );
+		self::assertSame( 'G-ABC1234', $on['analytics_id'] );
+		self::assertFalse( Autosave::apply( $on, 'analytics', '0' )['analytics'] );
+	}
+
 	public function test_the_domain_restriction_turns_on_and_off_and_keeps_the_list(): void {
 		$on = Autosave::apply( Settings::sanitize( array( 'email_domains' => 'a.org' ) ), 'restrict_email_domain', '1' );
 		self::assertIsArray( $on );
