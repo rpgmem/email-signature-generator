@@ -68,6 +68,13 @@ final class Config {
 	public const IMAGE_SCALE = 1;
 
 	/**
+	 * What the form calls a unit when the site sets no name of its own.
+	 */
+	public static function unitLabel(): string {
+		return __( 'Regional office', 'email-signature-generator' );
+	}
+
+	/**
 	 * The default configuration.
 	 *
 	 * @param string $logo_url Absolute URL of the logo the signature links to.
@@ -157,7 +164,7 @@ final class Config {
 		);
 		$office  = array(
 			'key'      => 'office',
-			'label'    => __( 'Regional office', 'email-signature-generator' ),
+			'label'    => self::unitLabel(),
 			'type'     => 'office',
 			'required' => true,
 			'default'  => 'DREMP',
@@ -285,7 +292,7 @@ final class Config {
 			/* translators: %s: a field's label. */
 			'invalidUrl'         => __( '%s is not a valid address.', 'email-signature-generator' ),
 			/* translators: %s: a field's label. */
-			'invalidNoSlash'     => __( '%s cannot contain a slash: the regional office\'s acronym is added on its own.', 'email-signature-generator' ),
+			'invalidNoSlash'     => __( '%s cannot contain a slash: the acronym is added on its own.', 'email-signature-generator' ),
 			'invalidSingleRole'  => __( 'Role takes a single role, without slashes.', 'email-signature-generator' ),
 		);
 	}

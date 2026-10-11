@@ -314,8 +314,19 @@ final class SettingsPage {
 
 		// Regions.
 		self::openPanel( 'regions', $active );
-		self::openCard( __( 'Regional offices', 'email-signature-generator' ), 'building' );
-		echo '<p class="description">' . esc_html__( 'The choices of the "Regional office or central" field. The signature prints each as "Name / ACRONYM". The acronym identifies the office: capitals and digits, up to 12, each used once.', 'email-signature-generator' ) . '</p>';
+		self::openCard( __( 'Units', 'email-signature-generator' ), 'building' );
+		echo '<p class="description">' . esc_html__( 'The units people choose from in the signature form. The signature prints a unit as "Name / ACRONYM", or adds its acronym to the department or the school. The acronym identifies the unit: capitals and digits, up to 12, each used once.', 'email-signature-generator' ) . '</p>';
+		echo '<table class="form-table" role="presentation"><tbody>';
+		printf(
+			'<tr><th scope="row"><label for="esg-unit-label">%1$s</label></th><td><input type="text" id="esg-unit-label" class="regular-text" name="%2$s[unit_label]" value="%3$s" placeholder="%4$s" maxlength="%5$d"><p class="description">%6$s</p></td></tr>',
+			esc_html__( 'Name in the form', 'email-signature-generator' ),
+			esc_attr( $name ),
+			esc_attr( $settings['unit_label'] ),
+			esc_attr( Config::unitLabel() ),
+			(int) Settings::UNIT_LABEL_MAX,
+			esc_html__( 'What the signature form calls the unit it asks for. Leave it empty to use the default shown.', 'email-signature-generator' )
+		);
+		echo '</tbody></table>';
 		echo '<table class="widefat striped esg-regions-table"><thead><tr>';
 		echo '<th scope="col">' . esc_html__( 'Name', 'email-signature-generator' ) . '</th>';
 		echo '<th scope="col" class="esg-regions-acronym">' . esc_html__( 'Acronym', 'email-signature-generator' ) . '</th>';
@@ -330,7 +341,7 @@ final class SettingsPage {
 		echo '<template class="esg-regions-template">';
 		self::regionRow( $name, '__i__', '', '' );
 		echo '</template>';
-		printf( '<p><button type="button" class="button esg-regions-add">%s</button></p>', esc_html__( 'Add an office', 'email-signature-generator' ) );
+		printf( '<p><button type="button" class="button esg-regions-add">%s</button></p>', esc_html__( 'Add a unit', 'email-signature-generator' ) );
 		echo '</div></div>';
 
 		// Fields.
@@ -424,7 +435,7 @@ final class SettingsPage {
 			esc_attr( $base . '[acronym]' ),
 			esc_attr( $acronym ),
 			esc_attr__( 'Acronym', 'email-signature-generator' ),
-			esc_attr__( 'Remove this office', 'email-signature-generator' ),
+			esc_attr__( 'Remove this unit', 'email-signature-generator' ),
 			esc_html__( 'Remove', 'email-signature-generator' )
 		);
 	}
@@ -449,7 +460,7 @@ final class SettingsPage {
 				'icon'  => 'download',
 			),
 			'regions'  => array(
-				'label' => __( 'Regional offices', 'email-signature-generator' ),
+				'label' => __( 'Units', 'email-signature-generator' ),
 				'icon'  => 'building',
 			),
 			'fields'   => array(

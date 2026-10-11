@@ -221,5 +221,6 @@ final class SettingsTest extends WP_UnitTestCase {
 		self::assertSame( 14, substr_count( $html, '[regions][' ) / 2 - 1, 'Fourteen rows plus the template, two inputs each.' );
 		self::assertStringContainsString( 'name="' . Settings::OPTION . '[regions][12][acronym]" value="DREMP"', $html );
 		self::assertStringContainsString( '<template class="esg-regions-template">', $html );
+		self::assertStringContainsString( 'name="' . Settings::OPTION . '[unit_label]" value=""', $html );
 	}
 }
