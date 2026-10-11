@@ -5,7 +5,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-## [1.0.0] (2026-10-11)
+## [1.0.0] (2026-10-11) — `4797e9c`
 
 The signature page becomes a WordPress plugin: a form placed with a shortcode, set up from the admin, and a standalone HTML file published beside it on every release.
 
