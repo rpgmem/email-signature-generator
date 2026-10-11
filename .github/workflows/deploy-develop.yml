@@ -119,9 +119,9 @@ jobs:
           SSH_CMD="ssh -i ~/.ssh/deploy_key -p $PORT -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=30"
 
           # The version this commit declares, read from the commit, not the host.
-          VERSION=$(grep -oE "const VERSION = '[^']+'" src/plugin.php | grep -oE "'[^']+'" | tr -d "'")
+          VERSION=$(grep -oE "define\( 'EMAIL_SIGNATURE_GENERATOR_VERSION', '[^']+'" email-signature-generator.php | grep -oE "'[^']+'$" | tr -d "'")
           if [ -z "$VERSION" ]; then
-            echo "::error::could not read Plugin::VERSION from src/plugin.php"
+            echo "::error::could not read EMAIL_SIGNATURE_GENERATOR_VERSION from email-signature-generator.php"
             exit 1
           fi
 

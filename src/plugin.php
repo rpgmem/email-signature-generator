@@ -15,10 +15,10 @@ namespace EmailSignatureGenerator;
 final class Plugin {
 
 	/**
-	 * Plugin version. Kept in step with the `Version:` header and the
-	 * `Stable tag` in readme.txt.
+	 * Plugin version, defined in the main plugin file beside the `Version:`
+	 * header.
 	 */
-	public const VERSION = '1.0.0';
+	public const VERSION = \EMAIL_SIGNATURE_GENERATOR_VERSION;
 
 	/**
 	 * Minimum PHP version, as declared by the `Requires PHP:` header.
