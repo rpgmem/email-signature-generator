@@ -188,11 +188,15 @@ final class Documentation {
 		// On a wide screen the contents is a sticky column beside the topics;
 		// on a narrow one it stays above them (assets/css/admin-settings.css).
 		echo '<div class="esg-doc-layout">';
-		printf( '<nav class="card esg-doc-contents" aria-label="%3$s"><h2>%1$s<span>%2$s</span></h2><ul>', Icons::svg( 'book' ), esc_html__( 'Contents', 'email-signature-generator' ), esc_attr__( 'Contents', 'email-signature-generator' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed markup from the icon registry.
+		// Quick navigation, as in Free Form Certificate's documentation: one
+		// row per topic with its icon, and a search box that filters both the
+		// rows and the cards (assets/js/admin-settings.js).
+		printf( '<nav class="card esg-doc-contents" aria-label="%1$s"><h2>%2$s<span>%1$s</span></h2>', esc_attr__( 'Quick Navigation', 'email-signature-generator' ), Icons::svg( 'search' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed markup from the icon registry.
+		printf( '<p class="esg-doc-search"><input type="search" id="esg-doc-search" placeholder="%1$s" aria-label="%2$s" /></p><ul>', esc_attr__( 'Search documentation…', 'email-signature-generator' ), esc_attr__( 'Search documentation', 'email-signature-generator' ) );
 		foreach ( $topics as $id => $topic ) {
-			printf( '<li><a href="#esg-doc-%1$s">%2$s</a></li>', esc_attr( $id ), esc_html( $topic['title'] ) );
+			printf( '<li><a href="#esg-doc-%1$s">%2$s%3$s</a></li>', esc_attr( $id ), Icons::svg( $topic['icon'], 16 ), esc_html( $topic['title'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed markup from the icon registry.
 		}
-		echo '</ul></nav>';
+		printf( '</ul><p class="esg-doc-search-empty" hidden>%s</p></nav>', esc_html__( 'No topic matches this search.', 'email-signature-generator' ) );
 
 		echo '<div class="esg-doc-topics">';
 		foreach ( $topics as $id => $topic ) {
