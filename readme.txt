@@ -48,10 +48,11 @@ Settings → Email Signature sets, for every form on the site:
 * per field: the label the form shows, a default value, whether it is required, whether it is locked to that default, and whether it is printed in capitals.
 * optional Google Analytics, with a GA4 measurement ID (off by default);
 * the form's colours, rounded corners and font, to match the site (off by default; the signature keeps its own look).
+* this settings screen's Dark Mode: off, on, or following the operating system (off by default).
 
 A Documentation tab on the same screen explains every setting, how the form behaves, privacy and updates.
 
-On/off settings are switches that save as soon as they are flipped. Text fields, the logo and the lists save with "Save Changes".
+On/off settings are switches that save as soon as they are flipped, and Dark Mode saves as soon as it changes. Text fields, the logo and the lists save with "Save Changes".
 
 == Privacy ==
 
