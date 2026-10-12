@@ -5,16 +5,20 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.3.0] (2026-10-12)
+
+The licence moves to AGPLv3 or later. The rest is the release process catching up with Free Form Certificate: CI tests the declared WordPress floor, both coverage floors rise to 90%, Dependabot's minor updates merge on their own, and every workflow runs with a read-only token. Nothing changes in what the plugin does.
+
 ### Changed
 
-- **The generator's copy and download paths are tested** (#66). New tests cover Copy HTML through the Clipboard API and its selection fallback, a refused or failed copy, the image download when the library is missing, when drawing fails and when the drawing is reduced to a JPG, a remembered office no longer offered, and loading in a browser. JS line coverage rises from 86.3% to 94.1%.
-- **CI tests the declared WordPress floor, and both coverage floors rise to 90%** (#67). The functional suite also runs on WordPress 6.8, the floor the readme promises, with the test library of the same branch. `composer.json` pins the PHP platform to 8.3. The PHP floor moves from 88% to 90% and the JS floor from 81% to 90%; `CLAUDE.md` records the rule shared by the four plugins.
-- **Dependabot's patch and minor updates merge on their own** (#70). A workflow arms squash auto-merge on them once Dependabot opens the PR, the same as Free Form Certificate; required checks still gate the merge, and majors stay manual.
-- ⚠ **The licence is now AGPLv3 or later** (#73). Reuse and forks stay free, and a modified copy offered as a network service must now publish its source too. A test holds `LICENSE`, the plugin header, `readme.txt`, both manifests and `README.md` together. Releases already published stay GPLv3.
+- ⚠ **The licence is now AGPLv3 or later** (#73). Reuse and forks stay free; a modified copy offered as a network service must now publish its source too. Releases already published stay GPLv3, and a test holds every declaration of the licence together.
+- **CI tests the declared WordPress floor, and both coverage floors rise to 90%** (#67). The functional suite also runs on WordPress 6.8, and `composer.json` pins the PHP platform to 8.3.
+- **The generator's copy and download paths are tested** (#66): the Clipboard API and its fallback, a refused copy, and the image download when drawing fails. JS line coverage rose from 86.3% to 94.1%.
+- **Dependabot's patch and minor updates merge on their own** (#70). Required checks still gate the merge; majors stay manual.
 
 ### Security
 
-- **CI jobs run with a read-only token, and the generator no longer uses `Math.random()`** (#75). `lint.yml` and `tests.yml` now declare `contents: read`; the generator numbers its form ids with a counter. Both close CodeQL alerts.
+- **CI jobs run with a read-only token, and form ids no longer use `Math.random()`** (#75). Both close CodeQL alerts.
 
 ## [1.2.0] (2026-10-12) — `d888d8f`
 
