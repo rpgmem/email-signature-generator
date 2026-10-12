@@ -532,7 +532,7 @@ final class SettingsPage {
 
 		// Design: the form's colours, corners and font.
 		self::openPanel( 'design', $active );
-		self::openCard( __( 'Design', 'email-signature-generator' ), 'brush' );
+		self::openCard( __( 'Design', 'email-signature-generator' ), 'palette' );
 		echo '<table class="form-table" role="presentation"><tbody>';
 		printf(
 			'<tr><th scope="row">%1$s</th><td><input type="hidden" name="%2$s[custom_style]" value="0">',
@@ -693,7 +693,7 @@ final class SettingsPage {
 			),
 			'design'        => array(
 				'label' => __( 'Design', 'email-signature-generator' ),
-				'icon'  => 'brush',
+				'icon'  => 'palette',
 			),
 			'documentation' => array(
 				'label' => __( 'Documentation', 'email-signature-generator' ),
