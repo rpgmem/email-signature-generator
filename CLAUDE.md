@@ -35,7 +35,7 @@ Domain values stay in Portuguese where they are data, not code: the names of the
   - When its scope emerged mid-session, confirm with the maintainer first.
 - When `develop` moves under a PR, the PR is `behind`. Update the branch; don't wait it out.
 - **Closing issues:** `Closes #NNN` does not auto-close an issue when the PR merges into `develop`, because the default branch is `main`. Close the issue by hand when the work lands, and tick its checkboxes or map each one to the PR that shipped it.
-- **Refs:** an agent's credential can create and update refs but **cannot delete a ref** (HTTP 403). Deleting merged branches is the maintainer's job.
+- **Refs:** an agent's credential can create and update refs but **cannot delete a ref** (HTTP 403). Deleting a branch that survives the merge is the maintainer's job (see "Issues, pull requests and the merge queue").
 - Dependabot targets `develop`. A security update opens against `main`: retarget it to `develop`.
 
 ### Rulesets (set by the maintainer in Settings → Rules → Rulesets)
@@ -54,6 +54,17 @@ An agent cannot read or change these; the table is the intended configuration, s
 A required check must run on every PR to that branch: no `paths:` filter, and no job-level `if:` that can skip it. Otherwise every PR waits forever on a check that never reports.
 
 Force push stays allowed on `develop`, because the post-release sync is a reset.
+
+## Issues, pull requests and the merge queue
+
+The same standard as Free Form Certificate (its `CLAUDE.md` → "Issues, pull requests and the merge queue"). The layout lives in the templates — `.github/ISSUE_TEMPLATE/` (bug, feature, task) and `.github/PULL_REQUEST_TEMPLATE.md` (plus `PULL_REQUEST_TEMPLATE/release.md`, reached with `?template=release.md`); the rules around them are here.
+
+- **An issue before the PR.** Every PR names the issue it closes. Exempt, and only these: a trivial docs or chore change, a Dependabot PR, the `release: X.Y.Z` bump and the CHANGELOG SHA backfill. An agent opens the issue itself, in English, from the task template.
+- **Titles.** Issue: `Area: the problem in one sentence`. PR: `type(scope): summary`, `type` one of `feat`, `fix`, `docs`, `test`, `refactor`, `chore` — it becomes the squash subject on `develop`. Release titles keep their own shape.
+- **Labels: one type.** Type is `bug`, `enhancement`, `task`, `documentation` or `security`; this plugin is small enough that it carries no area labels. `duplicate`, `invalid` and `wontfix` say why something closed unmerged, and `dependencies` and the ecosystem labels belong to Dependabot, whose config applies them. An agent cannot create a label, only apply one that exists.
+- **One merge at a time.** Only one PR is ready with auto-merge armed; the others wait as drafts. After a merge the next PR takes `develop` by a merge, never a rebase; `CHANGELOG.md` conflicts keep both bullets, translation catalogues are recompiled rather than hand-edited, the touched tests run again, and only then is it flipped to ready and armed.
+- **After each merge** the agent closes the issue by hand, ticking or naming each acceptance criterion.
+- **Branches.** Settings → General → "Automatically delete head branches" is on, so GitHub deletes a merged PR's branch. Whatever survives, the agent lists at the end of the batch for the maintainer to delete; local worktrees the agent removes itself.
 
 ## Versioning and CHANGELOG
 
