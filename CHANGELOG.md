@@ -5,6 +5,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.2.0] (2026-10-12)
+
+The settings screen takes Free Form Certificate's look: its colours, icons and documentation navigation, and a dark mode; a cleared number now keeps its default.
+
 ### Added
 
 - **Dark mode for the settings screen** (#59). A Dark Mode setting on the General tab (Off, On, or Auto to follow the operating system) turns this screen dark with Free Form Certificate's dark palette, saves as soon as it changes and repaints at once. The form on the site keeps its own look.

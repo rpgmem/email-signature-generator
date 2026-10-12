@@ -3,7 +3,7 @@ Contributors: rpgmem
 Tags: email signature, signature generator, outlook, shortcode
 Requires at least: 6.8
 Tested up to: 7.1.3
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 Requires PHP: 8.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -81,6 +81,11 @@ Updates then arrive through the normal WordPress update screen, straight from th
 
 The full history of every release is in [CHANGELOG.md](https://github.com/rpgmem/email-signature-generator/blob/main/CHANGELOG.md).
 
+= 1.2.0 =
+* New: an optional dark mode for the settings screen (Off, On, or Auto to follow the operating system), saved and applied at once.
+* Changed: the settings screen takes Free Form Certificate's colours and icons, and the documentation gets its Quick Navigation, with search, in a column that stays in view.
+* Fixed: a cleared number field keeps its default.
+
 = 1.1.0 =
 * New: the latest standalone generator on GitHub Pages at a stable address.
 * New: optional Google Analytics (GA4), recording only when a signature is generated, copied or downloaded; nothing typed is sent.
@@ -98,5 +103,5 @@ The full history of every release is in [CHANGELOG.md](https://github.com/rpgmem
 
 == Upgrade Notice ==
 
-= 1.1.0 =
-Optional Google Analytics and a Design tab for the form's colours, corners and font, both off by default; errors under each field; a fixed email field; the standalone HTML on GitHub Pages. Details in CHANGELOG.md.
+= 1.2.0 =
+The settings screen takes Free Form Certificate's colours, icons and documentation navigation, with an optional dark mode (General tab, off by default). A cleared number field keeps its default. Details in CHANGELOG.md.
