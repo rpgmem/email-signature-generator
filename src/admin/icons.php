@@ -10,9 +10,9 @@ declare(strict_types=1);
 namespace EmailSignatureGenerator\Admin;
 
 /**
- * Line icons drawn in the text colour, so they follow the admin colour
- * scheme. The drawings are Free Form Certificate's, so the two plugins look
- * alike: 24×24, a stroke in `currentColor`, and only geometry, never a
+ * Line icons drawn in the text colour, so they follow the screen's palette,
+ * light or dark. The drawings are Free Form Certificate's, so the two plugins
+ * look alike: 24×24, a stroke in `currentColor`, and only geometry, never a
  * colour, a style or a script of their own.
  */
 final class Icons {
