@@ -21,7 +21,160 @@
 	--esg-danger-text: #8a2424;
 	--esg-danger-light: #fcf0f1;
 	--esg-shadow-sm: 0 1px 3px rgb(0 0 0 / 10%);
+	--esg-primary-hover: #135e96;
+	--esg-bg: #f0f0f1;
+	--esg-bg-input: #ffffff;
+	--esg-select-arrow: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E");
+	--esg-toggle-knob: #ffffff;
 }
+/* Dark mode: Free Form Certificate's dark values for the same tokens. The
+   block redefines colour tokens only; the class is put on <html> by the
+   inline script the settings page prints in the head. */
+:root.esg-dark-mode {
+	--esg-primary: #5dabde;
+	--esg-primary-hover: #7cbde8;
+	--esg-primary-light: #1a2f42;
+	--esg-text-on-primary: #213c4e;
+	--esg-bg: #1d2327;
+	--esg-bg-card: #2c3338;
+	--esg-bg-alt: #23282d;
+	--esg-bg-input: #23282d;
+	--esg-text: #e7e8ea;
+	--esg-text-secondary: #c3c4c7;
+	--esg-text-muted: #a7aaad;
+	--esg-border: #6f7c89;
+	--esg-border-light: #2c3338;
+	--esg-success: #4caf50;
+	--esg-success-light: #1a2e1a;
+	--esg-danger-text: #ef9a9a;
+	--esg-danger-light: #2e1515;
+	--esg-shadow-sm: 0 1px 3px rgb(0 0 0 / 30%);
+	--esg-select-arrow: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23c3c4c7%22%2F%3E%3C%2Fsvg%3E");
+}
+
+/* The WordPress chrome inside this screen. Core paints these light whatever
+   the plugin does, so in dark mode each one is repainted from the tokens;
+   light mode needs none of this. */
+:root.esg-dark-mode body.wp-admin {
+	color: var(--esg-text);
+	background-color: var(--esg-bg);
+}
+
+:root.esg-dark-mode .esg-settings h1,
+:root.esg-dark-mode .esg-settings h2,
+:root.esg-dark-mode .esg-settings h3,
+:root.esg-dark-mode .esg-settings .form-table th,
+:root.esg-dark-mode .esg-settings .form-table td,
+:root.esg-dark-mode .esg-settings label,
+:root.esg-dark-mode .esg-settings legend,
+:root.esg-dark-mode .esg-settings > p {
+	color: var(--esg-text);
+}
+
+:root.esg-dark-mode .esg-settings .description {
+	color: var(--esg-text-muted);
+}
+
+/* Links in the panels only, and at the lowest weight: the tab menu and the
+   documentation's navigation tiles paint their own. */
+:where(:root.esg-dark-mode) .esg-tabs__panel a:not(.button) {
+	color: var(--esg-primary);
+}
+
+:where(:root.esg-dark-mode) .esg-tabs__panel a:not(.button):hover {
+	color: var(--esg-primary-hover);
+}
+
+:root.esg-dark-mode .esg-settings .widefat {
+	color: var(--esg-text);
+	background: var(--esg-bg-card);
+	border-color: var(--esg-border-light);
+}
+
+:root.esg-dark-mode .esg-settings .widefat thead th,
+:root.esg-dark-mode .esg-settings .widefat thead td {
+	color: var(--esg-text);
+	background: var(--esg-bg-alt);
+	border-color: var(--esg-border-light);
+}
+
+:root.esg-dark-mode .esg-settings .widefat td,
+:root.esg-dark-mode .esg-settings .widefat tbody th {
+	color: var(--esg-text);
+	border-color: var(--esg-border-light);
+}
+
+:root.esg-dark-mode .esg-settings .striped > tbody > :nth-child(odd) {
+	background-color: var(--esg-bg-alt);
+}
+
+:root.esg-dark-mode .esg-settings input[type="text"],
+:root.esg-dark-mode .esg-settings input[type="number"],
+:root.esg-dark-mode .esg-settings input[type="email"],
+:root.esg-dark-mode .esg-settings input[type="url"],
+:root.esg-dark-mode .esg-settings input[type="search"],
+:root.esg-dark-mode .esg-settings select,
+:root.esg-dark-mode .esg-settings textarea {
+	color: var(--esg-text);
+	background-color: var(--esg-bg-input);
+	border-color: var(--esg-border);
+}
+
+:root.esg-dark-mode .esg-settings select {
+	background-image: var(--esg-select-arrow);
+}
+
+:root.esg-dark-mode .esg-settings input:focus,
+:root.esg-dark-mode .esg-settings select:focus,
+:root.esg-dark-mode .esg-settings textarea:focus {
+	border-color: var(--esg-primary);
+	box-shadow: 0 0 0 1px var(--esg-primary);
+}
+
+:root.esg-dark-mode .esg-settings input[type="checkbox"],
+:root.esg-dark-mode .esg-settings input[type="radio"] {
+	background-color: var(--esg-bg-input);
+	border-color: var(--esg-border);
+}
+
+:root.esg-dark-mode .esg-settings .button,
+:root.esg-dark-mode .esg-settings .button-secondary {
+	color: var(--esg-text);
+	background: var(--esg-bg-alt);
+	border-color: var(--esg-border);
+}
+
+:root.esg-dark-mode .esg-settings .button:hover,
+:root.esg-dark-mode .esg-settings .button-secondary:hover {
+	color: var(--esg-text);
+	background: var(--esg-bg-card);
+	border-color: var(--esg-primary);
+}
+
+:root.esg-dark-mode .esg-settings .button-primary {
+	color: var(--esg-text-on-primary);
+	background: var(--esg-primary);
+	border-color: var(--esg-primary);
+}
+
+:root.esg-dark-mode .esg-settings .button-primary:hover {
+	color: var(--esg-text-on-primary);
+	background: var(--esg-primary-hover);
+	border-color: var(--esg-primary-hover);
+}
+
+:root.esg-dark-mode .esg-settings .notice,
+:root.esg-dark-mode .esg-settings div.updated,
+:root.esg-dark-mode .esg-settings div.error {
+	color: var(--esg-text);
+	background: var(--esg-bg-card);
+}
+
+:root.esg-dark-mode .esg-settings code {
+	color: var(--esg-text);
+	background: var(--esg-bg-alt);
+}
+
 
 .esg-settings {
 	max-width: 1500px;
@@ -379,7 +532,7 @@
 	width: 18px;
 	height: 18px;
 	border-radius: 50%;
-	background: var(--esg-bg-card);
+	background: var(--esg-toggle-knob);
 	box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
 	content: "";
 	transition: transform 0.15s ease;

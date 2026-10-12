@@ -88,9 +88,15 @@ final class Settings {
 	private const UNLOCKABLE = array( 'name', 'email' );
 
 	/**
+	 * Values `dark_mode` accepts: never, always, or what the operating
+	 * system prefers. It colours this plugin's settings screen only.
+	 */
+	public const DARK_MODES = array( 'off', 'on', 'auto' );
+
+	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, custom_style: bool, colors: array<string, string>, radius: int, font: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, custom_style: bool, colors: array<string, string>, radius: int, font: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>, dark_mode: string}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -129,6 +135,7 @@ final class Settings {
 			'radius'                => Config::RADIUS,
 			'font'                  => Config::FONTS[0],
 			'fields'                => array(),
+			'dark_mode'             => 'off',
 		);
 	}
 
@@ -138,7 +145,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, custom_style: bool, colors: array<string, string>, radius: int, font: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, custom_style: bool, colors: array<string, string>, radius: int, font: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>, dark_mode: string}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -214,6 +221,7 @@ final class Settings {
 			'radius'                => $custom ? min( self::RADIUS_MAX, max( 0, self::number( $input['radius'] ?? null, Config::RADIUS ) ) ) : Config::RADIUS,
 			'font'                  => $custom && in_array( $input['font'] ?? '', Config::FONTS, true ) ? (string) $input['font'] : Config::FONTS[0],
 			'fields'                => self::sanitizeFields( self::legacyUnitLabel( $input, self::legacyCapitals( $input ) ) ),
+			'dark_mode'             => in_array( $input['dark_mode'] ?? '', self::DARK_MODES, true ) ? (string) $input['dark_mode'] : 'off',
 		);
 	}
 
