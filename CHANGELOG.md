@@ -10,6 +10,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **CI holds coverage floors and two new guards** (#55). PHP line coverage (unit and functional suites merged) and JS line coverage now have floors. Tests check the Upgrade Notice against the Stable tag, and require every PHPCS or PHPStan suppression to name its rule and give a reason. The admin script's tests now count toward coverage.
 - **The documentation's contents stays in view on a wide screen** (#56). From 1100px wide, the Contents box is a column beside the topics that stays put while they scroll; narrower, it stays above them. The credits line moves below the topics, and a topic opened from the contents lands just below the admin bar.
 - **The documentation's navigation matches Free Form Certificate's** (#57). The Contents box is now Quick Navigation: a search box that filters the topics and their cards, and one bordered row per topic with its icon, filled with the admin colour on hover.
+- **The settings screen takes Free Form Certificate's colours and icons** (#58). Its colours come from one palette with Free Form Certificate's light values: the accent is its blue rather than the admin colour scheme's, and borders are darker (3:1 against white). The Design tab and its topic use its palette icon, and the chart icon is its drawing.
 
 ### Fixed
 

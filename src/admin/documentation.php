@@ -138,7 +138,7 @@ final class Documentation {
 			),
 			'design'   => array(
 				'title' => __( 'Design', 'email-signature-generator' ),
-				'icon'  => 'brush',
+				'icon'  => 'palette',
 				'tab'   => 'design',
 				'intro' => __( 'The form\'s colours, corners and font, to match the site. The signature keeps its own look, since that is what email programs receive.', 'email-signature-generator' ),
 				'items' => array(
