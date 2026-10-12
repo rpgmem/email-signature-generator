@@ -150,13 +150,13 @@ final class Settings {
 			$models = $ids;
 		}
 
-		$width   = (int) ( $input['logo_width'] ?? Config::LOGO_WIDTH );
-		$quality = (int) ( $input['image_quality'] ?? Config::IMAGE_QUALITY );
-		$space   = (int) ( $input['top_space'] ?? Config::TOP_SPACE );
-		$form    = (int) ( $input['form_width'] ?? Config::FORM_WIDTH );
+		$width   = self::number( $input['logo_width'] ?? null, Config::LOGO_WIDTH );
+		$quality = self::number( $input['image_quality'] ?? null, Config::IMAGE_QUALITY );
+		$space   = self::number( $input['top_space'] ?? null, Config::TOP_SPACE );
+		$form    = self::number( $input['form_width'] ?? null, Config::FORM_WIDTH );
 		$style   = is_string( $input['download_style'] ?? null ) ? $input['download_style'] : 'notice';
 		$format  = is_string( $input['image_format'] ?? null ) ? $input['image_format'] : Config::IMAGE_FORMAT;
-		$scale   = (int) ( $input['image_scale'] ?? Config::IMAGE_SCALE );
+		$scale   = self::number( $input['image_scale'] ?? null, Config::IMAGE_SCALE );
 
 		// Before the list, one domain was stored as `email_domain`, and a
 		// non-empty one meant the restriction was on.
@@ -211,7 +211,7 @@ final class Settings {
 			'analytics_id'          => self::analyticsId( $input['analytics_id'] ?? '' ),
 			'custom_style'          => $custom,
 			'colors'                => $custom ? self::colors( $input['colors'] ?? array() ) : Config::COLORS,
-			'radius'                => $custom ? min( self::RADIUS_MAX, max( 0, (int) ( $input['radius'] ?? Config::RADIUS ) ) ) : Config::RADIUS,
+			'radius'                => $custom ? min( self::RADIUS_MAX, max( 0, self::number( $input['radius'] ?? null, Config::RADIUS ) ) ) : Config::RADIUS,
 			'font'                  => $custom && in_array( $input['font'] ?? '', Config::FONTS, true ) ? (string) $input['font'] : Config::FONTS[0],
 			'fields'                => self::sanitizeFields( self::legacyUnitLabel( $input, self::legacyCapitals( $input ) ) ),
 		);
@@ -329,6 +329,18 @@ final class Settings {
 		$la = self::luminance( $a );
 		$lb = self::luminance( $b );
 		return ( max( $la, $lb ) + 0.05 ) / ( min( $la, $lb ) + 0.05 );
+	}
+
+	/**
+	 * A number field as posted. A cleared field posts '', which means "not
+	 * set", not zero: it, and anything that is not a number, gives the
+	 * default, so emptying a field never stores its lower bound.
+	 *
+	 * @param mixed $raw      Posted value.
+	 * @param int   $fallback The default.
+	 */
+	private static function number( $raw, int $fallback ): int {
+		return is_numeric( $raw ) ? (int) $raw : $fallback;
 	}
 
 	/**

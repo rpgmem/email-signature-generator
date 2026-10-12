@@ -1,9 +1,5 @@
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { root } from './helpers.js';
-
-const script = readFileSync( path.join( root, 'assets/js/admin-settings.js' ), 'utf8' );
+import { runScript } from './helpers.js';
 
 function row( i, name, acronym ) {
 	return `<tr><td><input name="o[regions][${ i }][name]" value="${ name }" required></td>`
@@ -16,7 +12,7 @@ beforeEach( () => {
 	document.body.innerHTML = `<table><tbody class="esg-regions-rows">${ row( 0, 'Norte', 'DREN' ) }${ row( 1, 'Sul', 'DRES' ) }</tbody></table>`
 		+ `<template class="esg-regions-template">${ row( '__i__', '', '' ) }</template>`
 		+ '<button type="button" class="esg-regions-add">add</button>';
-	new Function( script )();
+	runScript( 'assets/js/admin-settings.js' );
 } );
 
 describe( 'regional offices table', () => {

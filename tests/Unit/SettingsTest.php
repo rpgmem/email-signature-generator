@@ -402,9 +402,30 @@ final class SettingsTest extends TestCase {
 		self::assertSame( 640, Settings::sanitize( array() )['form_width'] );
 		self::assertSame( Settings::FORM_WIDTH_MIN, Settings::sanitize( array( 'form_width' => '100' ) )['form_width'] );
 		self::assertSame( Settings::FORM_WIDTH_MAX, Settings::sanitize( array( 'form_width' => '5000' ) )['form_width'] );
-		self::assertSame( Settings::FORM_WIDTH_MIN, Settings::sanitize( array( 'form_width' => 'wide' ) )['form_width'], 'Garbage floors instead of failing.' );
+		self::assertSame( 640, Settings::sanitize( array( 'form_width' => 'wide' ) )['form_width'], 'Garbage gives the default instead of failing.' );
 		self::assertSame( 800, Settings::sanitize( array( 'form_width' => '800' ) )['form_width'] );
 		self::assertSame( Config::SIGNATURE_WIDTH, Settings::FORM_WIDTH_MIN, 'The form never gets narrower than the signature.' );
+	}
+
+	public function test_a_cleared_number_keeps_its_default(): void {
+		$saved = Settings::sanitize(
+			array(
+				'custom_style'  => '1',
+				'logo_width'    => '',
+				'top_space'     => '',
+				'form_width'    => '',
+				'image_quality' => '',
+				'image_scale'   => '',
+				'radius'        => '',
+			)
+		);
+		self::assertSame( Config::LOGO_WIDTH, $saved['logo_width'], 'A cleared field is not its lower bound.' );
+		self::assertSame( Config::TOP_SPACE, $saved['top_space'] );
+		self::assertSame( Config::FORM_WIDTH, $saved['form_width'] );
+		self::assertSame( Config::IMAGE_QUALITY, $saved['image_quality'] );
+		self::assertSame( Config::IMAGE_SCALE, $saved['image_scale'] );
+		self::assertSame( Config::RADIUS, $saved['radius'], 'A cleared field is not square corners.' );
+		self::assertSame( 0, Settings::sanitize( array( 'top_space' => '0' ) )['top_space'], 'A typed 0 is a choice.' );
 	}
 
 	public function test_the_standalone_width_matches_the_default_form_width(): void {
