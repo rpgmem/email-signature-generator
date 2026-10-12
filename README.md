@@ -9,7 +9,7 @@ It comes in two forms, both published on every [release](https://github.com/rpgm
 
 The default layout and logo are those of the São Paulo Municipal Department of Education (SME-SP), and both can be adapted to another organisation.
 
-**Requires** WordPress 6.8 or later and PHP 8.3 or later (plugin only) · **License** GPLv3 or later
+**Requires** WordPress 6.8 or later and PHP 8.3 or later (plugin only) · **License** AGPLv3 or later
 
 ## Models
 

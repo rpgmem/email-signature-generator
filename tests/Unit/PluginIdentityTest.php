@@ -44,6 +44,33 @@ final class PluginIdentityTest extends TestCase {
 		self::assertStringContainsString( '<config name="minimum_wp_version" value="' . Plugin::REQUIRES_WP . '"/>', $phpcs, 'WPCS minimum_wp_version.' );
 	}
 
+	/**
+	 * GitHub reads LICENSE, WordPress the header and readme.txt, Composer and
+	 * npm their manifests: in Institutional Email, LICENSE once carried GPLv2
+	 * while all the rest said GPLv3, and nothing disagreed out loud.
+	 */
+	public function test_the_licence_agrees_everywhere(): void {
+		$name = 'AGPLv3 or later';
+		$uri  = 'https://www.gnu.org/licenses/agpl-3.0.html';
+		$spdx = 'AGPL-3.0-or-later';
+
+		self::assertSame( $name, $this->header( 'License' ), 'Plugin header License.' );
+		self::assertSame( $uri, $this->header( 'License URI' ), 'Plugin header License URI.' );
+		self::assertSame( $name, $this->readme( 'License' ), 'readme.txt License.' );
+		self::assertSame( $uri, $this->readme( 'License URI' ), 'readme.txt License URI.' );
+
+		foreach ( array( 'composer.json', 'package.json' ) as $manifest ) {
+			$json = json_decode( (string) file_get_contents( self::ROOT . '/' . $manifest ), true );
+			self::assertSame( $spdx, $json['license'] ?? null, "{$manifest} license." );
+		}
+
+		self::assertStringContainsString( '**License** ' . $name, (string) file_get_contents( self::ROOT . '/README.md' ), 'README.md.' );
+
+		$licence = (string) file_get_contents( self::ROOT . '/LICENSE' );
+		self::assertStringStartsWith( 'GNU AFFERO GENERAL PUBLIC LICENSE', ltrim( $licence ), 'LICENSE is the AGPL text.' );
+		self::assertStringContainsString( 'Version 3, 19 November 2007', $licence, 'LICENSE is version 3.' );
+	}
+
 	public function test_the_slug_names_the_main_file_and_the_text_domain(): void {
 		self::assertFileExists( self::ROOT . '/' . Plugin::SLUG . '.php' );
 		self::assertSame( Plugin::SLUG, $this->header( 'Text Domain' ) );
