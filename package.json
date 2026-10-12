@@ -2,7 +2,7 @@
   "name": "email-signature-generator",
   "private": true,
   "description": "Dev tooling for Email Signature Generator (linting, tests and builds; nothing here ships in the plugin).",
-  "license": "GPL-3.0-or-later",
+  "license": "AGPL-3.0-or-later",
   "scripts": {
     "lint:js": "eslint --no-error-on-unmatched-pattern \"assets/js/**/*.js\"",
     "lint:js:fix": "eslint --no-error-on-unmatched-pattern \"assets/js/**/*.js\" --fix",

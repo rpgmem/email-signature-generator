@@ -2,7 +2,7 @@
     "name": "rpgmem/email-signature-generator",
     "description": "A shortcode form that builds a consistent HTML email signature and copies it to Outlook or downloads it as an image.",
     "type": "wordpress-plugin",
-    "license": "GPL-3.0-or-later",
+    "license": "AGPL-3.0-or-later",
     "require": {
         "php": ">=8.3"
     },
@@ -37,6 +37,9 @@
         "phpcbf": "phpcbf"
     },
     "config": {
+        "platform": {
+            "php": "8.3"
+        },
         "sort-packages": true,
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true

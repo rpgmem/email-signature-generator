@@ -3,13 +3,13 @@
  * Plugin Name:       Email Signature Generator
  * Plugin URI:        https://github.com/rpgmem/email-signature-generator
  * Description:       A form, placed with a shortcode, that builds a consistent HTML email signature for your organisation and copies it to Outlook or downloads it as an image.
- * Version:           1.2.0
+ * Version:           1.3.0
  * Requires at least: 6.8
  * Requires PHP:      8.3
  * Author:            Alex Meusburger
  * Author URI:        https://github.com/rpgmem
- * License:           GPLv3 or later
- * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
+ * License:           AGPLv3 or later
+ * License URI:       https://www.gnu.org/licenses/agpl-3.0.html
  * Text Domain:       email-signature-generator
  * Domain Path:       /languages
  *
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * The plugin version, beside the header WordPress reads as text. The two are
  * bumped together; readme.txt's Stable tag is the third site.
  */
-define( 'EMAIL_SIGNATURE_GENERATOR_VERSION', '1.2.0' );
+define( 'EMAIL_SIGNATURE_GENERATOR_VERSION', '1.3.0' );
 
 /*
  * Inline autoloader for the EmailSignatureGenerator\ namespace, so the plugin
