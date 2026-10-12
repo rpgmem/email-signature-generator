@@ -3,7 +3,7 @@ Contributors: rpgmem
 Tags: email signature, signature generator, outlook, shortcode
 Requires at least: 6.8
 Tested up to: 7.1.3
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 Requires PHP: 8.3
 License: AGPLv3 or later
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
@@ -104,5 +104,5 @@ The full history of every release is in [CHANGELOG.md](https://github.com/rpgmem
 
 == Upgrade Notice ==
 
-= 1.2.0 =
-The settings screen takes Free Form Certificate's colours, icons and documentation navigation, with an optional dark mode (General tab, off by default). A cleared number field keeps its default. Details in CHANGELOG.md.
+= 1.3.0 =
+⚠ The licence is now AGPLv3 or later: reuse and forks stay free, and a modified copy offered as a service must publish its source. CI also tests the WordPress floor and runs with a read-only token. Details in CHANGELOG.md.
