@@ -72,7 +72,7 @@ The same standard as Free Form Certificate (its `CLAUDE.md` → "Issues, pull re
   - the `Version:` header in `email-signature-generator.php`;
   - `EMAIL_SIGNATURE_GENERATOR_VERSION`, defined just below it in the same file (as Free Form Certificate does with `FFC_VERSION`). `Plugin::VERSION` reads it, and the unit bootstrap reads it from the file's text;
   - `Stable tag` in `readme.txt`.
-- **The floors** (PHP 8.3, WordPress 6.8, the same as Free Form Certificate's) live in the plugin header, `readme.txt`, `Plugin::REQUIRES_PHP` / `REQUIRES_WP` and `phpcs.xml.dist`. `composer.json` also declares the PHP floor.
+- **The floors** (PHP 8.3, WordPress 6.8, the same as Free Form Certificate's) live in the plugin header, `readme.txt`, `Plugin::REQUIRES_PHP` / `REQUIRES_WP` and `phpcs.xml.dist`. `composer.json` declares the PHP floor twice: in `require.php`, and in `config.platform.php`, which makes Composer resolve dev dependencies as if it ran on the floor, so none can quietly require a newer PHP.
 - **`PluginIdentityTest`** fails when any of those disagree.
 - **Feature PRs never bump the version.**
   - Their CHANGELOG entry goes under `## [Unreleased]`.
@@ -125,13 +125,13 @@ The zip ships no Composer or npm dependency. The autoloader is inline in the mai
 ## Quality gates
 
 These run in CI on every PR and on pushes to `main` and `develop`:
-- PHPUnit `unit` suite on PHP 8.3 and 8.4, and the functional suite against a real WordPress and MySQL (`phpunit.functional.xml.dist`).
+- PHPUnit `unit` suite on PHP 8.3 and 8.4, and the functional suite against a real WordPress and MySQL (`phpunit.functional.xml.dist`). The functional suite runs on the latest WordPress and on **the declared floor**: the `floor` leg reads `Requires at least` from the plugin header, resolves it to that branch's newest patch release and swaps the WordPress test library to the same branch, so moving the floor moves the test. A floor nothing runs is a claim, not a requirement.
 - PHPStan level 8, and PHPCS with WPCS and PHPCompatibilityWP.
 - ESLint over `assets/js` and Stylelint over `assets/css`.
 - `composer validate --strict` and `composer audit --locked`.
 - The release build against the newest tag.
 - Vitest over the generator (`tests/js`), against the real configuration that `bin/build-standalone.php - ` prints.
-- Coverage floors. The PHP floor is `COVERAGE_FLOOR_LINES` in `tests.yml`, checked against the merged line coverage of the unit and functional suites (`bin/coverage-merge.php`). The JS floor is `thresholds.lines` in `vitest.config.mjs`, which counts every file in `assets/js`. Both move up in the PR that delivers a gain, never down, and sit at most 5 points below the measured figure.
+- Coverage floors. The PHP floor is `COVERAGE_FLOOR_LINES` in `tests.yml`, checked against the merged line coverage of the unit and functional suites (`bin/coverage-merge.php`). The JS floor is `thresholds.lines` in `vitest.config.mjs`, which counts every file in `assets/js`. The rule is the same in the four plugins (Free Form Certificate, Total Mail Queue, Email Signature Generator, Institutional Email): **a floor is the highest of 90%, the measured figure minus 5 points, and its current value.** So it is never below 90%, never more than 5 points behind what is measured, and never lowered — the one exception is an honest re-measure after deleting covered product code, recorded beside the floor. Raise it in the PR that delivers the gain, and only once the measured figure is above it.
 
 Two guards read the code rather than test it:
 - `ReadmeUpgradeNoticeTest`: the Upgrade Notice holds one entry, for the Stable tag, at most 300 characters, pointing at `CHANGELOG.md`, and the updater's own parser returns it.
