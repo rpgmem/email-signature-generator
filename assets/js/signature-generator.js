@@ -17,6 +17,11 @@
 	var SIGNATURE_WIDTH = 450;
 	var BODY_LINE = 'margin: 0; padding: 0; font-size: 8px; line-height: 1.2;';
 
+	// Each mounted generator takes the next number, so two on one page never
+	// share an element id. A counter, not a random value: the id only ties a
+	// label to its field, and a counter cannot collide.
+	var mounted = 0;
+
 	/**
 	 * Escape a value for an HTML text node or a double-quoted attribute.
 	 *
@@ -577,7 +582,8 @@
 	function mount( container, config ) {
 		var doc = container.ownerDocument;
 		var strings = config.strings;
-		var uid = 'esg-' + Math.random().toString( 36 ).slice( 2, 8 );
+		mounted += 1;
+		var uid = 'esg-' + mounted;
 		var current = config.models[ 0 ];
 		var html = '';
 

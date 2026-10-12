@@ -12,6 +12,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Dependabot's patch and minor updates merge on their own** (#70). A workflow arms squash auto-merge on them once Dependabot opens the PR, the same as Free Form Certificate; required checks still gate the merge, and majors stay manual.
 - ⚠ **The licence is now AGPLv3 or later** (#73). Reuse and forks stay free, and a modified copy offered as a network service must now publish its source too. A test holds `LICENSE`, the plugin header, `readme.txt`, both manifests and `README.md` together. Releases already published stay GPLv3.
 
+### Security
+
+- **CI jobs run with a read-only token, and the generator no longer uses `Math.random()`** (#75). `lint.yml` and `tests.yml` now declare `contents: read`; the generator numbers its form ids with a counter. Both close CodeQL alerts.
+
 ## [1.2.0] (2026-10-12) — `d888d8f`
 
 The settings screen takes Free Form Certificate's look: its colours, icons and documentation navigation, and a dark mode; a cleared number now keeps its default.
