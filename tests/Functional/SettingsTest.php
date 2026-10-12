@@ -159,7 +159,8 @@ final class SettingsTest extends WP_UnitTestCase {
 		foreach ( $headings[1] as $heading ) {
 			self::assertStringStartsWith( '<svg class="esg-icon"', $heading );
 		}
-		self::assertSame( count( $headings[1] ), preg_match_all( '/<div class="card[^"]*"><h2[ >]/', $html ) );
+		// The documentation's contents box is a <nav>, labelled by its heading's text.
+		self::assertSame( count( $headings[1] ), preg_match_all( '/<(?:div|nav) class="card[^"]*"[^>]*><h2[ >]/', $html ) );
 
 		// Every tab carries an icon.
 		self::assertSame( count( SettingsPage::tabs() ), preg_match_all( '/data-esg-tab="[a-z]+"><svg class="esg-icon"/', $html ) );

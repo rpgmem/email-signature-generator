@@ -13,7 +13,9 @@
 	display: flex;
 	align-items: stretch;
 	margin-top: 16px;
-	overflow: hidden;
+	/* clip, not hidden: hidden makes a scroll container, which would hold
+	   the documentation's sticky contents in place. */
+	overflow: clip;
 	border: 1px solid #c3c4c7;
 	border-radius: 4px;
 	background: #ffffff;
@@ -182,6 +184,32 @@
 .esg-settings .esg-doc-contents ul {
 	margin: 0;
 	columns: 2 16em;
+}
+
+/* A topic reached from the contents lands just below the admin bar: core
+   already pads the scroll by the bar's 32px, and this adds a little air. */
+.esg-settings .esg-doc h2[id] {
+	scroll-margin-top: 16px;
+}
+
+/* Wide screens: the contents is a column beside the topics and stays in
+   view while they scroll (46px clears the admin bar); a list taller than
+   the window scrolls on its own. Narrower, it stays above them. */
+@media screen and (min-width: 1100px) {
+	.esg-settings .esg-doc-layout {
+		display: grid;
+		grid-template-columns: 260px minmax(0, 1fr);
+		gap: 16px;
+		align-items: start;
+	}
+
+	.esg-settings .esg-doc-contents {
+		position: sticky;
+		top: 46px;
+		max-height: calc(100vh - 62px);
+		margin-bottom: 0;
+		overflow-y: auto;
+	}
 }
 
 .esg-settings .esg-doc-credits {

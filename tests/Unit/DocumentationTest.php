@@ -111,6 +111,20 @@ final class DocumentationTest extends TestCase {
 	}
 
 	/**
+	 * The contents and the topics sit in one layout element, the two columns
+	 * on a wide screen; the credits follow it, outside the sticky column.
+	 */
+	public function test_the_contents_and_the_topics_share_one_layout(): void {
+		ob_start();
+		Documentation::render();
+		$html = (string) ob_get_clean();
+
+		self::assertStringStartsWith( '<div class="esg-doc-layout"><nav class="card esg-doc-contents" aria-label="Contents">', $html );
+		self::assertMatchesRegularExpression( '#</ul></nav><div class="esg-doc-topics"><div class="card esg-doc">#', $html );
+		self::assertMatchesRegularExpression( '#</div></div></div><p class="esg-doc-credits">.*</p>$#s', $html );
+	}
+
+	/**
 	 * The author and the repository come from the plugin header, so they
 	 * say what the Plugins screen says.
 	 */
