@@ -11,9 +11,10 @@ export default defineConfig( {
 			// assets/vendor, outside this pattern.
 			include: [ 'assets/js/**/*.js' ],
 			reporter: [ 'text-summary' ],
-			// Ratcheted up in the PR that delivers a gain, never lowered; at
-			// most 5 points below the measured figure (85.73% when set).
-			thresholds: { lines: 81 },
+			// The highest of 90%, the measured figure minus 5 points, and the
+			// current value; never lowered (CLAUDE.md). Raised 81 -> 90 in #67,
+			// measured 94.1% when set.
+			thresholds: { lines: 90 },
 		},
 	},
 } );
