@@ -5,6 +5,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- **The generator's copy and download paths are tested** (#66). New tests cover Copy HTML through the Clipboard API and its selection fallback, a refused or failed copy, the image download when the library is missing, when drawing fails and when the drawing is reduced to a JPG, a remembered office no longer offered, and loading in a browser. JS line coverage rises from 86.3% to 94.1%.
+
 ## [1.2.0] (2026-10-12) — `d888d8f`
 
 The settings screen takes Free Form Certificate's look: its colours, icons and documentation navigation, and a dark mode; a cleared number now keeps its default.
