@@ -5,7 +5,26 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-## [1.1.0] (2026-10-11)
+## [1.2.0] (2026-10-12)
+
+The settings screen takes Free Form Certificate's look: its colours, icons and documentation navigation, and a dark mode; a cleared number now keeps its default.
+
+### Added
+
+- **Dark mode for the settings screen** (#59). A Dark Mode setting on the General tab (Off, On, or Auto to follow the operating system) turns this screen dark with Free Form Certificate's dark palette, saves as soon as it changes and repaints at once. The form on the site keeps its own look.
+
+### Changed
+
+- **CI holds coverage floors and two new guards** (#55). PHP line coverage (unit and functional suites merged) and JS line coverage now have floors. Tests check the Upgrade Notice against the Stable tag, and require every PHPCS or PHPStan suppression to name its rule and give a reason. The admin script's tests now count toward coverage.
+- **The documentation's contents stays in view on a wide screen** (#56). From 1100px wide, the Contents box is a column beside the topics that stays put while they scroll; narrower, it stays above them. The credits line moves below the topics, and a topic opened from the contents lands just below the admin bar.
+- **The documentation's navigation matches Free Form Certificate's** (#57). The Contents box is now Quick Navigation: a search box that filters the topics and their cards, and one bordered row per topic with its icon, filled with the admin colour on hover.
+- **The settings screen takes Free Form Certificate's colours and icons** (#58). Its colours come from one palette with Free Form Certificate's light values: the accent is its blue rather than the admin colour scheme's, and borders are darker (3:1 against white). The Design tab and its topic use its palette icon, and the chart icon is its drawing.
+
+### Fixed
+
+- **A cleared number field keeps its default** (#55). Emptying the form width, logo width, space above, image quality or rounded corners stored the lowest value; it now means "not set".
+
+## [1.1.0] (2026-10-11) — `e540c1c`
 
 The form gets clearer errors and a sturdier email field, and the plugin gains optional analytics and a design of its own; the standalone page gets a stable address.
 

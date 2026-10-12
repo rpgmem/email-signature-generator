@@ -70,8 +70,9 @@ final class Documentation {
 					array( __( 'Who can use the form', 'email-signature-generator' ), __( 'Everyone who can see the page, or logged-in users only; the others see a link to log in.', 'email-signature-generator' ) ),
 					array( __( 'Google Analytics', 'email-signature-generator' ), __( 'Off by default, and then nothing of Google\'s is loaded. Switched on with a measurement ID (G-XXXXXXXXXX), the pages that show the form load Google\'s tag and record when a signature is generated, copied or downloaded, with only the model and the image format.', 'email-signature-generator' ) ),
 					array( __( 'Allowed email domain', 'email-signature-generator' ), __( 'On: the person types only the part before the "@" and the domain is shown beside the field, as a list when there is more than one. Off: any valid address is accepted, except the refused domains, a list of placeholder and disposable domains such as test.com that you can edit.', 'email-signature-generator' ) ),
+					array( __( 'Dark Mode', 'email-signature-generator' ), __( 'Off by default. On, or Auto when the operating system is set to dark, this settings screen turns dark at once. It is this screen only: the form on the site keeps its own look.', 'email-signature-generator' ) ),
 				),
-				'note'  => __( 'The on/off switches save as soon as they are flipped. Everything else saves with "Save Changes".', 'email-signature-generator' ),
+				'note'  => __( 'The on/off switches and Dark Mode save as soon as they change. Everything else saves with "Save Changes".', 'email-signature-generator' ),
 			),
 			'layout'   => array(
 				'title' => __( 'Layout', 'email-signature-generator' ),
@@ -138,7 +139,7 @@ final class Documentation {
 			),
 			'design'   => array(
 				'title' => __( 'Design', 'email-signature-generator' ),
-				'icon'  => 'brush',
+				'icon'  => 'palette',
 				'tab'   => 'design',
 				'intro' => __( 'The form\'s colours, corners and font, to match the site. The signature keeps its own look, since that is what email programs receive.', 'email-signature-generator' ),
 				'items' => array(
@@ -185,14 +186,20 @@ final class Documentation {
 	public static function render(): void {
 		$topics = self::topics();
 
-		printf( '<div class="card esg-doc-contents"><h2>%1$s<span>%2$s</span></h2><ul>', Icons::svg( 'book' ), esc_html__( 'Contents', 'email-signature-generator' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed markup from the icon registry.
+		// On a wide screen the contents is a sticky column beside the topics;
+		// on a narrow one it stays above them (assets/css/admin-settings.css).
+		echo '<div class="esg-doc-layout">';
+		// Quick navigation, as in Free Form Certificate's documentation: one
+		// row per topic with its icon, and a search box that filters both the
+		// rows and the cards (assets/js/admin-settings.js).
+		printf( '<nav class="card esg-doc-contents" aria-label="%1$s"><h2>%2$s<span>%1$s</span></h2>', esc_attr__( 'Quick Navigation', 'email-signature-generator' ), Icons::svg( 'search' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed markup from the icon registry.
+		printf( '<p class="esg-doc-search"><input type="search" id="esg-doc-search" placeholder="%1$s" aria-label="%2$s" /></p><ul>', esc_attr__( 'Search documentation…', 'email-signature-generator' ), esc_attr__( 'Search documentation', 'email-signature-generator' ) );
 		foreach ( $topics as $id => $topic ) {
-			printf( '<li><a href="#esg-doc-%1$s">%2$s</a></li>', esc_attr( $id ), esc_html( $topic['title'] ) );
+			printf( '<li><a href="#esg-doc-%1$s">%2$s%3$s</a></li>', esc_attr( $id ), Icons::svg( $topic['icon'], 16 ), esc_html( $topic['title'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed markup from the icon registry.
 		}
-		echo '</ul>';
-		self::credits();
-		echo '</div>';
+		printf( '</ul><p class="esg-doc-search-empty" hidden>%s</p></nav>', esc_html__( 'No topic matches this search.', 'email-signature-generator' ) );
 
+		echo '<div class="esg-doc-topics">';
 		foreach ( $topics as $id => $topic ) {
 			printf(
 				'<div class="card esg-doc"><h2 id="esg-doc-%1$s">%2$s<span>%3$s</span></h2><p>%4$s</p>',
@@ -220,6 +227,9 @@ final class Documentation {
 			}
 			echo '</div>';
 		}
+		echo '</div></div>';
+
+		self::credits();
 	}
 
 	/**

@@ -123,6 +123,58 @@ jobs:
       - name: Run functional tests
         run: vendor/bin/phpunit -c phpunit.functional.xml.dist --testdox --verbose
 
+  coverage:
+    name: Coverage (PHP 8.3)
+    runs-on: ubuntu-latest
+    env:
+      # Merged line coverage of the unit and functional suites. Ratcheted up in
+      # the PR that delivers a gain, never lowered, and at most 5 points below
+      # the measured figure (92.66% when set).
+      COVERAGE_FLOOR_LINES: '88'
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wp_esg_tests
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: pcov
+          extensions: mysqli, openssl, mbstring, xml, dom, simplexml
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Bootstrap WP test environment
+        run: |
+          for i in $(seq 1 30); do
+            mysqladmin ping -h127.0.0.1 -P3306 -uroot -proot --silent 2>/dev/null && break
+            sleep 2
+          done
+          bash bin/install-wp-tests.sh wp_esg_tests root root 127.0.0.1:3306 true latest
+
+      - name: Measure the unit and functional suites
+        run: |
+          mkdir -p build/coverage
+          vendor/bin/phpunit --testsuite=unit --coverage-php build/coverage/unit.cov
+          vendor/bin/phpunit -c phpunit.functional.xml.dist --coverage-php build/coverage/functional.cov
+
+      - name: Check the floor
+        run: php bin/coverage-merge.php "$COVERAGE_FLOOR_LINES" build/coverage/unit.cov build/coverage/functional.cov
+
   phpcs:
     name: Coding standards (PHPCS)
     runs-on: ubuntu-latest

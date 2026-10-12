@@ -88,9 +88,15 @@ final class Settings {
 	private const UNLOCKABLE = array( 'name', 'email' );
 
 	/**
+	 * Values `dark_mode` accepts: never, always, or what the operating
+	 * system prefers. It colours this plugin's settings screen only.
+	 */
+	public const DARK_MODES = array( 'off', 'on', 'auto' );
+
+	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, custom_style: bool, colors: array<string, string>, radius: int, font: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, custom_style: bool, colors: array<string, string>, radius: int, font: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>, dark_mode: string}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -129,6 +135,7 @@ final class Settings {
 			'radius'                => Config::RADIUS,
 			'font'                  => Config::FONTS[0],
 			'fields'                => array(),
+			'dark_mode'             => 'off',
 		);
 	}
 
@@ -138,7 +145,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, custom_style: bool, colors: array<string, string>, radius: int, font: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, custom_style: bool, colors: array<string, string>, radius: int, font: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>, dark_mode: string}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -150,13 +157,13 @@ final class Settings {
 			$models = $ids;
 		}
 
-		$width   = (int) ( $input['logo_width'] ?? Config::LOGO_WIDTH );
-		$quality = (int) ( $input['image_quality'] ?? Config::IMAGE_QUALITY );
-		$space   = (int) ( $input['top_space'] ?? Config::TOP_SPACE );
-		$form    = (int) ( $input['form_width'] ?? Config::FORM_WIDTH );
+		$width   = self::number( $input['logo_width'] ?? null, Config::LOGO_WIDTH );
+		$quality = self::number( $input['image_quality'] ?? null, Config::IMAGE_QUALITY );
+		$space   = self::number( $input['top_space'] ?? null, Config::TOP_SPACE );
+		$form    = self::number( $input['form_width'] ?? null, Config::FORM_WIDTH );
 		$style   = is_string( $input['download_style'] ?? null ) ? $input['download_style'] : 'notice';
 		$format  = is_string( $input['image_format'] ?? null ) ? $input['image_format'] : Config::IMAGE_FORMAT;
-		$scale   = (int) ( $input['image_scale'] ?? Config::IMAGE_SCALE );
+		$scale   = self::number( $input['image_scale'] ?? null, Config::IMAGE_SCALE );
 
 		// Before the list, one domain was stored as `email_domain`, and a
 		// non-empty one meant the restriction was on.
@@ -211,9 +218,10 @@ final class Settings {
 			'analytics_id'          => self::analyticsId( $input['analytics_id'] ?? '' ),
 			'custom_style'          => $custom,
 			'colors'                => $custom ? self::colors( $input['colors'] ?? array() ) : Config::COLORS,
-			'radius'                => $custom ? min( self::RADIUS_MAX, max( 0, (int) ( $input['radius'] ?? Config::RADIUS ) ) ) : Config::RADIUS,
+			'radius'                => $custom ? min( self::RADIUS_MAX, max( 0, self::number( $input['radius'] ?? null, Config::RADIUS ) ) ) : Config::RADIUS,
 			'font'                  => $custom && in_array( $input['font'] ?? '', Config::FONTS, true ) ? (string) $input['font'] : Config::FONTS[0],
 			'fields'                => self::sanitizeFields( self::legacyUnitLabel( $input, self::legacyCapitals( $input ) ) ),
+			'dark_mode'             => in_array( $input['dark_mode'] ?? '', self::DARK_MODES, true ) ? (string) $input['dark_mode'] : 'off',
 		);
 	}
 
@@ -329,6 +337,18 @@ final class Settings {
 		$la = self::luminance( $a );
 		$lb = self::luminance( $b );
 		return ( max( $la, $lb ) + 0.05 ) / ( min( $la, $lb ) + 0.05 );
+	}
+
+	/**
+	 * A number field as posted. A cleared field posts '', which means "not
+	 * set", not zero: it, and anything that is not a number, gives the
+	 * default, so emptying a field never stores its lower bound.
+	 *
+	 * @param mixed $raw      Posted value.
+	 * @param int   $fallback The default.
+	 */
+	private static function number( $raw, int $fallback ): int {
+		return is_numeric( $raw ) ? (int) $raw : $fallback;
 	}
 
 	/**

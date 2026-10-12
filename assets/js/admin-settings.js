@@ -21,6 +21,9 @@
 	 * @return {string|string[]} Value to post.
 	 */
 	function valueOf( input ) {
+		if ( 'SELECT' === input.tagName ) {
+			return input.value;
+		}
 		if ( 'models' !== input.getAttribute( 'data-esg-autosave' ) ) {
 			return input.checked ? '1' : '0';
 		}
@@ -36,9 +39,14 @@
 	 * Show the stored value again: one box, or the whole models group.
 	 *
 	 * @param {HTMLInputElement} input The flipped toggle.
-	 * @param {boolean|string[]} value Stored value.
+	 * @param {boolean|string|string[]} value Stored value.
 	 */
 	function show( input, value ) {
+		if ( 'SELECT' === input.tagName ) {
+			input.value = String( value );
+			input.esgSaved = input.value;
+			return;
+		}
 		if ( Array.isArray( value ) ) {
 			document.querySelectorAll( 'input[data-esg-autosave="models"]' ).forEach( function ( box ) {
 				box.checked = -1 !== value.indexOf( box.value );
@@ -79,7 +87,7 @@
 	 */
 	function save( input ) {
 		var key = input.getAttribute( 'data-esg-autosave' );
-		var before = ! input.checked;
+		var before = 'SELECT' === input.tagName ? input.esgSaved : ! input.checked;
 		var value = valueOf( input );
 		var badge = badgeFor( input );
 		var body = new window.FormData();
@@ -107,13 +115,20 @@
 					throw new Error( json && json.data && json.data.message ? json.data.message : settings.failed );
 				}
 				show( input, json.data.value );
+				// Interested scripts (the dark mode one) act on the saved value;
+				// this widget does not need to know which keys repaint.
+				document.dispatchEvent( new window.CustomEvent( 'esg:setting-saved', { detail: { key: key, value: json.data.value } } ) );
 				setBadge( badge, 'saved', settings.saved );
 				badge.esgTimer = window.setTimeout( function () {
 					badge.hidden = true;
 				}, LINGER );
 			} )
 			.catch( function ( error ) {
-				input.checked = before;
+				if ( 'SELECT' === input.tagName ) {
+					input.value = before;
+				} else {
+					input.checked = before;
+				}
 				syncShown();
 				setBadge( badge, 'error', error && error.message ? error.message : settings.failed );
 			} );
@@ -188,7 +203,10 @@
 	} );
 
 	if ( settings.action && settings.nonce && window.fetch ) {
-		document.querySelectorAll( 'input[data-esg-autosave]' ).forEach( function ( input ) {
+		document.querySelectorAll( 'select[data-esg-autosave]' ).forEach( function ( select ) {
+			select.esgSaved = select.value;
+		} );
+		document.querySelectorAll( '[data-esg-autosave]' ).forEach( function ( input ) {
 			input.addEventListener( 'change', function () {
 				save( input );
 			} );
@@ -260,6 +278,39 @@
 		}, true );
 
 		tabs.classList.add( 'is-ready' );
+	}
+
+	/**
+	 * Documentation search: hides the topics, in the quick navigation and
+	 * as cards, whose text does not contain what was typed. Empty shows all.
+	 */
+	var docSearch = document.getElementById( 'esg-doc-search' );
+	if ( docSearch ) {
+		var docRows = document.querySelectorAll( '.esg-doc-contents li' );
+		var docCards = document.querySelectorAll( '.esg-doc-topics .esg-doc' );
+		var docEmpty = document.querySelector( '.esg-doc-search-empty' );
+		docSearch.addEventListener( 'input', function () {
+			var query = docSearch.value.trim().toLowerCase();
+			var shown = 0;
+			function match( element ) {
+				var hit = '' === query || -1 !== element.textContent.toLowerCase().indexOf( query );
+				element.hidden = ! hit;
+				return hit;
+			}
+			docCards.forEach( match );
+			// A row follows its card, whose text includes the title.
+			docRows.forEach( function ( row ) {
+				var link = row.querySelector( 'a' );
+				var heading = link && document.getElementById( link.getAttribute( 'href' ).slice( 1 ) );
+				var card = heading && heading.closest( '.esg-doc' );
+				var hit = card ? ! card.hidden : match( row );
+				row.hidden = ! hit;
+				shown += hit ? 1 : 0;
+			} );
+			if ( docEmpty ) {
+				docEmpty.hidden = 0 !== shown;
+			}
+		} );
 	}
 
 	/**

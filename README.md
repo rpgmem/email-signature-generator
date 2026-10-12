@@ -23,7 +23,7 @@ The default layout and logo are those of the São Paulo Municipal Department of 
 
 In **Settings → Email Signature** an administrator sets, for every form on the site:
 
-- **General:** the models offered, who may use the form, whether each browser may remember what was typed, optional Google Analytics (off by default; only a GA4 measurement ID, never a pasted snippet), and the email domains (only some allowed, shown beside the field so people type only the part before the "@", or any address except placeholder domains such as `test.com`).
+- **General:** the models offered, who may use the form, whether each browser may remember what was typed, optional Google Analytics (off by default; only a GA4 measurement ID, never a pasted snippet), and the email domains (only some allowed, shown beside the field so people type only the part before the "@", or any address except placeholder domains such as `test.com`), and this screen's Dark Mode (off, on, or following the operating system).
 - **Layout:** how wide the form gets on the page, the logo (from the media library), its width and its alternative text, and the space above the signature.
 - **Downloaded image:** whether and how the download is offered, and the image's format (PNG or JPG) and resolution.
 - **Units:** the units people choose from (name and acronym), and which one the form starts on.
@@ -31,7 +31,7 @@ In **Settings → Email Signature** an administrator sets, for every form on the
 - **Design:** off by default; switched on, the form's colours (accent, text on it, borders, notes, errors), rounded corners and font (its own or the theme's). Colour pairs below WCAG's 4.5:1 are saved with a warning. The signature itself keeps its look.
 - **Documentation:** what every setting does, how the form behaves, privacy and updates, inside WordPress.
 
-The on/off settings save the moment they are flipped; the rest saves with **Save Changes**.
+The on/off settings and Dark Mode save the moment they change; the rest saves with **Save Changes**.
 
 **Standalone**, open the `.html` file in a browser, publish it on any web page, or embed the latest one:
 
