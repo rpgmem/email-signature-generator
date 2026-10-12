@@ -152,6 +152,7 @@ final class GithubUpdater {
 		$info->requires_php  = $compat['requires_php'];
 		$info->last_updated  = $release['published_at'];
 		$info->download_link = $release['package'];
+		$info->icons         = self::icons();
 		$info->sections      = array(
 			'changelog' => wpautop( esc_html( $release['changelog'] ) ),
 		);
@@ -244,7 +245,29 @@ final class GithubUpdater {
 		$obj->tested         = $compat['tested'];
 		$obj->requires_php   = $compat['requires_php'];
 		$obj->upgrade_notice = $release['upgrade_notice'];
+		$obj->icons          = self::icons();
 		return $obj;
+	}
+
+	/**
+	 * The plugin icon WordPress draws on Dashboard → Updates, in the plugin
+	 * list and in the "View details" modal; without it, core shows its grey
+	 * plug placeholder.
+	 *
+	 * The URLs point at the INSTALLED copy rather than at GitHub, so the
+	 * admin's browser fetches nothing from outside the site. That is safe
+	 * because the code building this object is itself the installed copy: an
+	 * install old enough to lack the files also lacks this method.
+	 *
+	 * @return array{'1x': string, '2x': string, svg: string}
+	 */
+	private static function icons(): array {
+		$base = plugin_dir_url( self::mainFile() ) . 'assets/img/brand/';
+		return array(
+			'1x'  => $base . 'icon-128.png',
+			'2x'  => $base . 'icon-256.png',
+			'svg' => $base . 'icon.svg',
+		);
 	}
 
 	/**

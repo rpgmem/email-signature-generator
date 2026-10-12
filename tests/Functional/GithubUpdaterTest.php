@@ -122,6 +122,21 @@ final class GithubUpdaterTest extends WP_UnitTestCase {
 		self::assertObjectNotHasProperty( "response", $result, "Nothing was offered while GitHub was down." );
 	}
 
+	public function test_the_update_and_the_details_modal_carry_the_installed_icon(): void {
+		$base     = plugin_dir_url( Plugin::file() ) . 'assets/img/brand/';
+		$expected = array(
+			'1x'  => $base . 'icon-128.png',
+			'2x'  => $base . 'icon-256.png',
+			'svg' => $base . 'icon.svg',
+		);
+
+		$info = GithubUpdater::pluginInfo( false, 'plugin_information', (object) array( 'slug' => GithubUpdater::SLUG ) );
+		self::assertSame( $expected, $info->icons );
+
+		$older = GithubUpdater::checkForUpdate( $this->transient( '0.0.1' ) );
+		self::assertSame( $expected, current( $older->response )->icons );
+	}
+
 	public function test_the_details_modal(): void {
 		$info = GithubUpdater::pluginInfo( false, 'plugin_information', (object) array( 'slug' => GithubUpdater::SLUG ) );
 		self::assertSame( 'Email Signature Generator', $info->name );
