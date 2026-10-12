@@ -70,6 +70,14 @@ final class Autosave {
 			return Settings::sanitize( $settings );
 		}
 
+		if ( 'dark_mode' === $key ) {
+			if ( ! in_array( $value, Settings::DARK_MODES, true ) ) {
+				return new WP_Error( 'unknown_value', __( 'This value is not one of the options.', 'email-signature-generator' ) );
+			}
+			$settings['dark_mode'] = $value;
+			return Settings::sanitize( $settings );
+		}
+
 		if ( 'models' === $key ) {
 			$settings['models'] = array_map( 'strval', is_array( $value ) ? $value : array() );
 			return Settings::sanitize( $settings );
@@ -112,14 +120,14 @@ final class Autosave {
 	}
 
 	/**
-	 * The stored value of a toggle, as the screen should show it.
+	 * The stored value of a toggle or select, as the screen should show it.
 	 *
 	 * @param array<string, mixed> $settings Sanitized settings.
-	 * @param string               $key      Toggle key.
-	 * @return bool|list<string>
+	 * @param string               $key      Setting key.
+	 * @return bool|string|list<string>
 	 */
 	public static function read( array $settings, string $key ) {
-		if ( in_array( $key, array( 'offer_download', 'restrict_email_domain', 'remember_values', 'analytics', 'custom_style', 'models' ), true ) ) {
+		if ( in_array( $key, array( 'offer_download', 'restrict_email_domain', 'remember_values', 'analytics', 'custom_style', 'models', 'dark_mode' ), true ) ) {
 			return $settings[ $key ];
 		}
 		$parts = explode( '.', $key );

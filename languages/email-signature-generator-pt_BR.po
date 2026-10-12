@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Email Signature Generator 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
-"POT-Creation-Date: 2026-10-12 02:28+0000\n"
+"POT-Creation-Date: 2026-10-12 02:50+0000\n"
 "PO-Revision-Date: 2026-10-10 21:54+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Português do Brasil\n"
@@ -33,23 +33,27 @@ msgstr "A página expirou. Recarregue e tente de novo."
 msgid "You are not allowed to change these settings."
 msgstr "Você não tem permissão para alterar estas configurações."
 
-#: src/admin/autosave.php:81
+#: src/admin/autosave.php:75
+msgid "This value is not one of the options."
+msgstr "Este valor não é uma das opções."
+
+#: src/admin/autosave.php:89
 msgid "This setting cannot be saved on its own. Use \"Save Changes\"."
 msgstr "Esta configuração não é salva sozinha. Use \"Salvar alterações\"."
 
-#: src/admin/autosave.php:86
+#: src/admin/autosave.php:94
 msgid "This field is always required."
 msgstr "Este campo é sempre obrigatório."
 
-#: src/admin/autosave.php:89
+#: src/admin/autosave.php:97
 msgid "This field is not free text, so it has no capitals setting."
 msgstr "Este campo não é texto livre, por isso não tem a opção de maiúsculas."
 
-#: src/admin/autosave.php:92
+#: src/admin/autosave.php:100
 msgid "The name and the email cannot be locked."
 msgstr "O nome e o e-mail não podem ser travados."
 
-#: src/admin/autosave.php:106
+#: src/admin/autosave.php:114
 msgid "Type a default and save the page before locking this field."
 msgstr "Digite um valor padrão e salve a página antes de travar este campo."
 
@@ -73,7 +77,7 @@ msgstr "Oferece só os modelos listados, nessa ordem: staff_regional, staff_scho
 msgid "Every release also publishes a single HTML file with the same form, for use without WordPress. It uses the built-in defaults, not these settings."
 msgstr "Cada versão publica também um único arquivo HTML com o mesmo formulário, para usar sem WordPress. Ele usa os padrões de fábrica, não estas configurações."
 
-#: src/admin/documentation.php:39 src/admin/documentation.php:157
+#: src/admin/documentation.php:39 src/admin/documentation.php:158
 msgid "Standalone HTML"
 msgstr "HTML avulso"
 
@@ -133,7 +137,7 @@ msgstr "Uma seção recolhida com o passo a passo para o Outlook na web, o Outlo
 msgid "How to add the signature to your email"
 msgstr "Como adicionar a assinatura ao seu e-mail"
 
-#: src/admin/documentation.php:56 src/admin/settings-page.php:675
+#: src/admin/documentation.php:56 src/admin/settings-page.php:723
 msgid "General"
 msgstr "Geral"
 
@@ -141,7 +145,7 @@ msgstr "Geral"
 msgid "Who sees the form, what it offers, and which addresses it accepts."
 msgstr "Quem vê o formulário, o que ele oferece e quais endereços aceita."
 
-#: src/admin/documentation.php:61 src/admin/settings-page.php:160
+#: src/admin/documentation.php:61 src/admin/settings-page.php:166
 msgid "Models offered"
 msgstr "Modelos oferecidos"
 
@@ -149,7 +153,7 @@ msgstr "Modelos oferecidos"
 msgid "The models every form on the site may offer. A shortcode's models=\"…\" can narrow this list, never widen it."
 msgstr "Os modelos que todo formulário do site pode oferecer. O models=\"…\" de um shortcode pode reduzir essa lista, nunca ampliá-la."
 
-#: src/admin/documentation.php:63 src/admin/settings-page.php:179
+#: src/admin/documentation.php:63 src/admin/settings-page.php:185
 msgid "Remember what was typed"
 msgstr "Lembrar o que foi digitado"
 
@@ -163,11 +167,11 @@ msgstr "Desligado por padrão. Ligado, cada navegador guarda o que seu usuário 
 msgid "Everyone who can see the page, or logged-in users only; the others see a link to log in."
 msgstr "Todos que podem ver a página, ou só usuários logados; os demais veem um link para entrar."
 
-#: src/admin/documentation.php:70 src/admin/settings-page.php:198
+#: src/admin/documentation.php:70 src/admin/settings-page.php:204
 msgid "Who can use the form"
 msgstr "Quem pode usar o formulário"
 
-#: src/admin/documentation.php:71 src/admin/settings-page.php:249
+#: src/admin/documentation.php:71 src/admin/settings-page.php:255
 msgid "Google Analytics"
 msgstr "Google Analytics"
 
@@ -175,7 +179,7 @@ msgstr "Google Analytics"
 msgid "Off by default, and then nothing of Google's is loaded. Switched on with a measurement ID (G-XXXXXXXXXX), the pages that show the form load Google's tag and record when a signature is generated, copied or downloaded, with only the model and the image format."
 msgstr "Desligado por padrão, e então nada do Google é carregado. Ligado com um ID de medição (G-XXXXXXXXXX), as páginas que mostram o formulário carregam a tag do Google e registram quando uma assinatura é gerada, copiada ou baixada, só com o modelo e o formato da imagem."
 
-#: src/admin/documentation.php:72 src/admin/settings-page.php:219
+#: src/admin/documentation.php:72 src/admin/settings-page.php:225
 msgid "Allowed email domain"
 msgstr "Domínio de e-mail permitido"
 
@@ -183,305 +187,314 @@ msgstr "Domínio de e-mail permitido"
 msgid "On: the person types only the part before the \"@\" and the domain is shown beside the field, as a list when there is more than one. Off: any valid address is accepted, except the refused domains, a list of placeholder and disposable domains such as test.com that you can edit."
 msgstr "Ligado: a pessoa digita só a parte antes do \"@\" e o domínio aparece ao lado do campo, como lista quando há mais de um. Desligado: qualquer endereço válido é aceito, exceto os domínios recusados, uma lista editável de domínios de teste e descartáveis como test.com."
 
-#: src/admin/documentation.php:74
-msgid "The on/off switches save as soon as they are flipped. Everything else saves with \"Save Changes\"."
-msgstr "As chaves liga/desliga salvam assim que são acionadas. O restante salva com \"Salvar alterações\"."
+#: src/admin/documentation.php:73 src/admin/settings-page.php:280
+#: src/admin/settings-page.php:284
+msgid "Dark Mode"
+msgstr "Modo Escuro"
 
-#: src/admin/documentation.php:77 src/admin/settings-page.php:679
+#: src/admin/documentation.php:73
+msgid "Off by default. On, or Auto when the operating system is set to dark, this settings screen turns dark at once. It is this screen only: the form on the site keeps its own look."
+msgstr "Desligado por padrão. Ligado, ou Auto quando o sistema operacional está no tema escuro, esta tela de configurações fica escura na hora. Vale só para esta tela: o formulário no site mantém o próprio visual."
+
+#: src/admin/documentation.php:75
+msgid "The on/off switches and Dark Mode save as soon as they change. Everything else saves with \"Save Changes\"."
+msgstr "As chaves liga/desliga e o Modo Escuro salvam assim que mudam. O restante salva com \"Salvar alterações\"."
+
+#: src/admin/documentation.php:78 src/admin/settings-page.php:727
 msgid "Layout"
 msgstr "Layout"
 
-#: src/admin/documentation.php:80
+#: src/admin/documentation.php:81
 msgid "How the form sits on the page, and how the signature looks."
 msgstr "Como o formulário fica na página e como a assinatura aparece."
 
-#: src/admin/documentation.php:83 src/admin/settings-page.php:282
+#: src/admin/documentation.php:84 src/admin/settings-page.php:306
 msgid "Form width"
 msgstr "Largura do formulário"
 
 #. translators: 1: minimum, 2: maximum, 3: default, all in pixels.
-#: src/admin/documentation.php:86
+#: src/admin/documentation.php:87
 #, php-format
 msgid "The widest the form gets, from %1$d to %2$d px (%3$d px by default). On a narrower screen it shrinks to fit."
 msgstr "A largura máxima do formulário, de %1$d a %2$d px (%3$d px por padrão). Em telas mais estreitas ele se ajusta."
 
-#: src/admin/documentation.php:92
+#: src/admin/documentation.php:93
 msgid "Chosen from the media library; \"Use the bundled logo\" goes back to the default. The signature links to the image, so it must stay in the library. A square image works best."
 msgstr "Escolhido na biblioteca de mídia; \"Usar o logotipo padrão\" volta ao original. A assinatura aponta para a imagem, por isso ela precisa continuar na biblioteca. Uma imagem quadrada funciona melhor."
 
-#: src/admin/documentation.php:92 src/admin/settings-page.php:292
+#: src/admin/documentation.php:93 src/admin/settings-page.php:316
 msgid "Logo"
 msgstr "Logotipo"
 
-#: src/admin/documentation.php:93 src/admin/settings-page.php:306
+#: src/admin/documentation.php:94 src/admin/settings-page.php:330
 msgid "Alternative text"
 msgstr "Texto alternativo"
 
-#: src/admin/documentation.php:93
+#: src/admin/documentation.php:94
 msgid "What the logo shows, in words, for screen readers and for email programs that block images. Empty uses the bundled logo's text, or the chosen image's own alternative text."
 msgstr "O que o logotipo mostra, em palavras, para leitores de tela e programas de e-mail que bloqueiam imagens. Vazio usa o texto do logotipo padrão, ou o texto alternativo da própria imagem escolhida."
 
-#: src/admin/documentation.php:94
+#: src/admin/documentation.php:95
 msgid "Keeps the signature slightly apart from the text above it. It adds to the height, never to the width."
 msgstr "Afasta levemente a assinatura do texto acima dela. Soma à altura, nunca à largura."
 
-#: src/admin/documentation.php:94 src/admin/settings-page.php:327
+#: src/admin/documentation.php:95 src/admin/settings-page.php:351
 msgid "Space above the signature"
 msgstr "Espaço acima da assinatura"
 
-#: src/admin/documentation.php:98 src/admin/settings-page.php:337
-#: src/admin/settings-page.php:683
+#: src/admin/documentation.php:99 src/admin/settings-page.php:361
+#: src/admin/settings-page.php:731
 msgid "Downloaded image"
 msgstr "Imagem baixada"
 
-#: src/admin/documentation.php:101
+#: src/admin/documentation.php:102
 msgid "The image is the fallback for email programs that do not accept an HTML signature."
 msgstr "A imagem é a alternativa para programas de e-mail que não aceitam assinatura em HTML."
 
-#: src/admin/documentation.php:103
+#: src/admin/documentation.php:104
 msgid "Off leaves only Copy HTML."
 msgstr "Desligado, fica só o Copiar HTML."
 
-#: src/admin/documentation.php:103 src/admin/settings-page.php:342
+#: src/admin/documentation.php:104 src/admin/settings-page.php:366
 msgid "Offer the download"
 msgstr "Oferecer o download"
 
-#: src/admin/documentation.php:104
+#: src/admin/documentation.php:105
 msgid "A button with a note recommending Copy HTML after each download, the same inside a collapsed \"More options\", or a plain button."
 msgstr "Um botão com um aviso recomendando o Copiar HTML depois de cada download, o mesmo dentro de um \"Mais opções\" recolhido, ou um botão simples."
 
-#: src/admin/documentation.php:104 src/admin/settings-page.php:354
+#: src/admin/documentation.php:105 src/admin/settings-page.php:378
 msgid "How to offer it"
 msgstr "Como oferecer"
 
-#: src/admin/documentation.php:105
+#: src/admin/documentation.php:106
 msgid "Format and quality"
 msgstr "Formato e qualidade"
 
-#: src/admin/documentation.php:105
+#: src/admin/documentation.php:106
 msgid "PNG keeps small letters clean. JPG makes a smaller file, at a quality you choose, but leaves compression noise around the text."
 msgstr "PNG mantém letras pequenas limpas. JPG gera um arquivo menor, na qualidade escolhida, mas deixa ruído de compressão em volta do texto."
 
-#: src/admin/documentation.php:106
+#: src/admin/documentation.php:107
 msgid "1× is the signature's size in an email. 2× and 3× are sharper, but an email program may show them larger unless the image is resized."
 msgstr "1× é o tamanho da assinatura num e-mail. 2× e 3× são mais nítidas, mas um programa de e-mail pode exibi-las maiores se a imagem não for redimensionada."
 
-#: src/admin/documentation.php:106 src/admin/settings-page.php:387
+#: src/admin/documentation.php:107 src/admin/settings-page.php:411
 msgid "Resolution"
 msgstr "Resolução"
 
-#: src/admin/documentation.php:110 src/admin/settings-page.php:409
-#: src/admin/settings-page.php:687
+#: src/admin/documentation.php:111 src/admin/settings-page.php:433
+#: src/admin/settings-page.php:735
 msgid "Units"
 msgstr "Unidades"
 
-#: src/admin/documentation.php:113
+#: src/admin/documentation.php:114
 msgid "The units people choose from in the form, such as the regional education offices."
 msgstr "As unidades que as pessoas escolhem no formulário, como as diretorias regionais de educação."
 
-#: src/admin/documentation.php:115
+#: src/admin/documentation.php:116
 msgid "Name and acronym"
 msgstr "Nome e sigla"
 
-#: src/admin/documentation.php:115
+#: src/admin/documentation.php:116
 msgid "The signature prints a unit as \"Name / ACRONYM\", or adds its acronym to the department or the school. An acronym is capitals and digits, up to 12, and each is used once."
 msgstr "A assinatura imprime a unidade como \"Nome / SIGLA\", ou acrescenta a sigla ao setor ou à escola. A sigla tem letras maiúsculas e dígitos, até 12, e cada uma é usada uma só vez."
 
-#: src/admin/documentation.php:116 src/admin/documentation.php:133
-#: src/admin/settings-page.php:412 src/admin/settings-page.php:445
+#: src/admin/documentation.php:117 src/admin/documentation.php:134
+#: src/admin/settings-page.php:436 src/admin/settings-page.php:469
 msgid "Default"
 msgstr "Padrão"
 
-#: src/admin/documentation.php:116
+#: src/admin/documentation.php:117
 msgid "The unit the form starts on, in every model."
 msgstr "A unidade com que o formulário começa, em todos os modelos."
 
-#: src/admin/documentation.php:120 src/admin/settings-page.php:431
-#: src/admin/settings-page.php:691
+#: src/admin/documentation.php:121 src/admin/settings-page.php:455
+#: src/admin/settings-page.php:739
 msgid "Fields"
 msgstr "Campos"
 
-#: src/admin/documentation.php:123
+#: src/admin/documentation.php:124
 msgid "Per model and per field, what the form asks and how."
 msgstr "Por modelo e por campo, o que o formulário pergunta e como."
 
-#: src/admin/documentation.php:126 src/admin/settings-page.php:444
+#: src/admin/documentation.php:127 src/admin/settings-page.php:468
 msgid "Label in the form"
 msgstr "Rótulo no formulário"
 
 #. translators: %d: maximum number of characters.
-#: src/admin/documentation.php:129
+#: src/admin/documentation.php:130
 #, php-format
 msgid "What the form calls the field, up to %d characters. Empty shows the built-in label."
 msgstr "Como o formulário chama o campo, até %d caracteres. Vazio mostra o rótulo de fábrica."
 
-#: src/admin/documentation.php:133
+#: src/admin/documentation.php:134
 msgid "Pre-fills the field. The unit fields take their default from the Units tab."
 msgstr "Preenche o campo de antemão. Os campos de unidade tomam o padrão da aba Unidades."
 
-#: src/admin/documentation.php:134 src/admin/settings-page.php:446
+#: src/admin/documentation.php:135 src/admin/settings-page.php:470
 msgid "Required"
 msgstr "Obrigatório"
 
-#: src/admin/documentation.php:134
+#: src/admin/documentation.php:135
 msgid "The form will not generate a signature without it. The name and the unit are always required."
 msgstr "O formulário não gera a assinatura sem ele. O nome e a unidade são sempre obrigatórios."
 
-#: src/admin/documentation.php:135 src/admin/settings-page.php:447
+#: src/admin/documentation.php:136 src/admin/settings-page.php:471
 msgid "Locked"
 msgstr "Travado"
 
-#: src/admin/documentation.php:135
+#: src/admin/documentation.php:136
 msgid "Shows the default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked."
 msgstr "Mostra o padrão e não pode ser alterado, para um valor que toda assinatura deve compartilhar, como o endereço do prédio. O nome e o e-mail não podem ser travados."
 
-#: src/admin/documentation.php:136 src/admin/settings-page.php:448
+#: src/admin/documentation.php:137 src/admin/settings-page.php:472
 msgid "Capitals"
 msgstr "Maiúsculas"
 
-#: src/admin/documentation.php:136
+#: src/admin/documentation.php:137
 msgid "Prints the field in capital letters, however it was typed. The email is always printed in lower case."
 msgstr "Imprime o campo em letras maiúsculas, não importa como foi digitado. O e-mail sai sempre em minúsculas."
 
-#: src/admin/documentation.php:140 src/admin/settings-page.php:535
-#: src/admin/settings-page.php:695
+#: src/admin/documentation.php:141 src/admin/settings-page.php:559
+#: src/admin/settings-page.php:743
 msgid "Design"
 msgstr "Design"
 
-#: src/admin/documentation.php:143
+#: src/admin/documentation.php:144
 msgid "The form's colours, corners and font, to match the site. The signature keeps its own look, since that is what email programs receive."
 msgstr "As cores, os cantos e a fonte do formulário, para combinar com o site. A assinatura mantém o próprio visual, pois é ela que os programas de e-mail recebem."
 
-#: src/admin/documentation.php:145 src/admin/settings-page.php:539
+#: src/admin/documentation.php:146 src/admin/settings-page.php:563
 msgid "Customise"
 msgstr "Personalizar"
 
-#: src/admin/documentation.php:145
+#: src/admin/documentation.php:146
 msgid "Off by default, and the form keeps its own look. Switching it off again puts every value back to its default."
 msgstr "Desligado por padrão, e o formulário mantém o próprio visual. Desligar de novo volta todos os valores ao padrão."
 
-#: src/admin/documentation.php:146
+#: src/admin/documentation.php:147
 msgid "Colours"
 msgstr "Cores"
 
-#: src/admin/documentation.php:146
+#: src/admin/documentation.php:147
 msgid "The accent of the buttons and links, the text on it, the field borders, the notes and the errors. A pair hard to read (below 4.5:1, as WCAG asks) is saved with a warning naming it."
 msgstr "O destaque dos botões e links, o texto sobre ele, as bordas dos campos, as notas e os erros. Um par difícil de ler (abaixo de 4,5:1, como pede a WCAG) é salvo com um aviso que o nomeia."
 
-#: src/admin/documentation.php:148 src/admin/settings-page.php:566
+#: src/admin/documentation.php:149 src/admin/settings-page.php:590
 msgid "Rounded corners"
 msgstr "Cantos arredondados"
 
 #. translators: 1: default, 2: maximum, in pixels.
-#: src/admin/documentation.php:151
+#: src/admin/documentation.php:152
 #, php-format
 msgid "Of the fields, the buttons and the lists, from 0 (square) to %2$d px; %1$d px by default."
 msgstr "Dos campos, dos botões e das listas, de 0 (quadrados) a %2$d px; %1$d px por padrão."
 
-#: src/admin/documentation.php:156 src/admin/settings-page.php:578
+#: src/admin/documentation.php:157 src/admin/settings-page.php:602
 msgid "Font"
 msgstr "Fonte"
 
-#: src/admin/documentation.php:156
+#: src/admin/documentation.php:157
 msgid "The form's own (Arial) or the site theme's."
 msgstr "A do formulário (Arial) ou a do tema do site."
 
-#: src/admin/documentation.php:157
+#: src/admin/documentation.php:158
 msgid "Always keeps the form's own look: it never reads these settings."
 msgstr "Sempre mantém o visual próprio do formulário: nunca lê estas configurações."
 
-#: src/admin/documentation.php:161
+#: src/admin/documentation.php:162
 msgid "Privacy"
 msgstr "Privacidade"
 
-#: src/admin/documentation.php:163
+#: src/admin/documentation.php:164
 msgid "Nothing typed in the form is sent to the site, and the plugin stores no personal data."
 msgstr "Nada do que é digitado no formulário é enviado ao site, e o plugin não guarda dados pessoais."
 
-#: src/admin/documentation.php:165
+#: src/admin/documentation.php:166
 msgid "In the browser"
 msgstr "No navegador"
 
-#: src/admin/documentation.php:165
+#: src/admin/documentation.php:166
 msgid "With \"Remember what was typed\" on, the values stay in the visitor's own browser until they expire or the visitor forgets them. Leave it off where computers are shared."
 msgstr "Com \"Lembrar o que foi digitado\" ligado, os valores ficam no próprio navegador de quem visita até expirarem ou serem esquecidos. Deixe desligado onde os computadores são compartilhados."
 
-#: src/admin/documentation.php:166
+#: src/admin/documentation.php:167
 msgid "On the site"
 msgstr "No site"
 
-#: src/admin/documentation.php:166
+#: src/admin/documentation.php:167
 msgid "Only these settings are stored, in one option that is deleted when the plugin is."
 msgstr "Só estas configurações são guardadas, numa única opção que é apagada junto com o plugin."
 
-#: src/admin/documentation.php:167
+#: src/admin/documentation.php:168
 msgid "If an administrator switches it on, Google receives each visit to a page with the form, as on any site that uses it, and an event when a signature is generated, copied or downloaded. What was typed and the signature are never sent."
 msgstr "Se um administrador o ligar, o Google recebe cada visita a uma página com o formulário, como em qualquer site que o usa, e um evento quando uma assinatura é gerada, copiada ou baixada. O que foi digitado e a assinatura nunca são enviados."
 
-#: src/admin/documentation.php:167
+#: src/admin/documentation.php:168
 msgid "With Google Analytics"
 msgstr "Com o Google Analytics"
 
-#: src/admin/documentation.php:171
+#: src/admin/documentation.php:172
 msgid "Updates"
 msgstr "Atualizações"
 
-#: src/admin/documentation.php:173
+#: src/admin/documentation.php:174
 msgid "New versions arrive through the normal WordPress update screen, from the plugin's GitHub releases."
 msgstr "Novas versões chegam pela tela normal de atualizações do WordPress, a partir das releases do plugin no GitHub."
 
-#: src/admin/documentation.php:175
+#: src/admin/documentation.php:176
 msgid "Checked package"
 msgstr "Pacote verificado"
 
-#: src/admin/documentation.php:175
+#: src/admin/documentation.php:176
 msgid "Each package is checked against its published SHA-256 before it is installed."
 msgstr "Cada pacote é conferido com o SHA-256 publicado antes de ser instalado."
 
-#: src/admin/documentation.php:176
+#: src/admin/documentation.php:177
 msgid "Automatic updates"
 msgstr "Atualizações automáticas"
 
-#: src/admin/documentation.php:176
+#: src/admin/documentation.php:177
 msgid "Turned on or off with WordPress's own link on the Plugins screen."
 msgstr "Ligadas ou desligadas pelo próprio link do WordPress na tela de Plugins."
 
-#: src/admin/documentation.php:194
+#: src/admin/documentation.php:195
 msgid "Quick Navigation"
 msgstr "Navegação Rápida"
 
-#: src/admin/documentation.php:195
+#: src/admin/documentation.php:196
 msgid "Search documentation"
 msgstr "Pesquisar na documentação"
 
-#: src/admin/documentation.php:195
+#: src/admin/documentation.php:196
 msgid "Search documentation…"
 msgstr "Pesquisar na documentação…"
 
-#: src/admin/documentation.php:199
+#: src/admin/documentation.php:200
 msgid "No topic matches this search."
 msgstr "Nenhum tópico corresponde a esta pesquisa."
 
 #. translators: %s: settings tab name.
-#: src/admin/documentation.php:221
+#: src/admin/documentation.php:222
 #, php-format
 msgid "Open the %s tab"
 msgstr "Abrir a aba %s"
 
 #. translators: %s: plugin author's name, linked to the author's page.
-#: src/admin/documentation.php:250
+#: src/admin/documentation.php:251
 #, php-format
 msgid "Developed by %s."
 msgstr "Desenvolvido por %s."
 
 #. translators: %s: link to the plugin's source repository.
-#: src/admin/documentation.php:256
+#: src/admin/documentation.php:257
 #, php-format
 msgid "Source code and issue tracker: %s"
 msgstr "Código-fonte e registro de problemas: %s"
 
 #: src/admin/settings-page.php:60 src/admin/settings-page.php:61
-#: src/admin/settings-page.php:128
+#: src/admin/settings-page.php:134
 msgid "Email Signature"
 msgstr "Assinatura de E-mail"
 
@@ -489,340 +502,356 @@ msgstr "Assinatura de E-mail"
 msgid "Settings"
 msgstr "Configurações"
 
-#: src/admin/settings-page.php:99
+#: src/admin/settings-page.php:105
 msgid "Choose the logo"
 msgstr "Escolher o logotipo"
 
-#: src/admin/settings-page.php:100
+#: src/admin/settings-page.php:106
 msgid "Use this image"
 msgstr "Usar esta imagem"
 
-#: src/admin/settings-page.php:104
+#: src/admin/settings-page.php:110
 msgid "Saving…"
 msgstr "Salvando…"
 
-#: src/admin/settings-page.php:105
+#: src/admin/settings-page.php:111
 msgid "Saved"
 msgstr "Salvo"
 
-#: src/admin/settings-page.php:106
+#: src/admin/settings-page.php:112
 msgid "Not saved"
 msgstr "Não salvo"
 
-#: src/admin/settings-page.php:107
+#: src/admin/settings-page.php:113
 msgid "Copied"
 msgstr "Copiado"
 
-#: src/admin/settings-page.php:129
+#: src/admin/settings-page.php:135
 msgid "These settings apply to every form on the site."
 msgstr "Estas configurações valem para todos os formulários do site."
 
-#: src/admin/settings-page.php:141
+#: src/admin/settings-page.php:147
 msgid "Form"
 msgstr "Formulário"
 
-#: src/admin/settings-page.php:146
+#: src/admin/settings-page.php:152
 msgid "Shortcode"
 msgstr "Shortcode"
 
-#: src/admin/settings-page.php:148
+#: src/admin/settings-page.php:154
 msgid "Copy"
 msgstr "Copiar"
 
 #. translators: 1: an example shortcode, 2: the model ids, separated by commas.
-#: src/admin/settings-page.php:152
+#: src/admin/settings-page.php:158
 #, php-format
 msgid "Paste it into any page or post. To offer only some models, in the order given, list them: %1$s. Model ids: %2$s."
 msgstr "Cole em qualquer página ou post. Para oferecer só alguns modelos, na ordem indicada, liste-os: %1$s. Ids dos modelos: %2$s."
 
-#: src/admin/settings-page.php:174
+#: src/admin/settings-page.php:180
 msgid "With one model, the form does not ask which. With none ticked, every model is offered."
 msgstr "Com um único modelo, o formulário não pergunta qual. Sem nenhum marcado, todos os modelos são oferecidos."
 
-#: src/admin/settings-page.php:186
+#: src/admin/settings-page.php:192
 msgid "Each browser keeps what its user typed, to fill the form the next time"
 msgstr "Cada navegador guarda o que a pessoa digitou, para preencher o formulário na próxima vez"
 
 #. translators: %d: minutes.
-#: src/admin/settings-page.php:193
+#: src/admin/settings-page.php:199
 #, php-format
 msgid "Kept only in that browser, never sent to the site, and forgotten %d minutes after the signature was last generated; the form also offers a link to forget it at once."
 msgstr "Fica só naquele navegador, nunca é enviado ao site e é esquecido %d minutos depois da última vez que a assinatura foi gerada; o formulário também oferece um link para esquecer na hora."
 
-#: src/admin/settings-page.php:200
+#: src/admin/settings-page.php:206
 msgid "Everyone who can see the page"
 msgstr "Todos que podem ver a página"
 
-#: src/admin/settings-page.php:201
+#: src/admin/settings-page.php:207
 msgid "Logged-in users only"
 msgstr "Somente usuários logados"
 
-#: src/admin/settings-page.php:214 src/config.php:228
+#: src/admin/settings-page.php:220 src/config.php:228
 msgid "Email"
 msgstr "E-mail"
 
-#: src/admin/settings-page.php:226
+#: src/admin/settings-page.php:232
 msgid "Accept only addresses at the domains below"
 msgstr "Aceitar apenas endereços nos domínios abaixo"
 
-#: src/admin/settings-page.php:230
+#: src/admin/settings-page.php:236
 msgid "Off, the form accepts any valid address outside the refused domains."
 msgstr "Desligado, o formulário aceita qualquer endereço válido fora dos domínios recusados."
 
-#: src/admin/settings-page.php:234
+#: src/admin/settings-page.php:240
 msgid "Domains"
 msgstr "Domínios"
 
-#: src/admin/settings-page.php:237
+#: src/admin/settings-page.php:243
 msgid "One per line. The form shows the domain beside the field, so a person types only the part before the \"@\"; with more than one, they pick it from a list, and the first is preselected. With none, any address is accepted."
 msgstr "Um por linha. O formulário mostra o domínio ao lado do campo, e a pessoa digita só a parte antes do \"@\"; com mais de um, ela escolhe numa lista, com o primeiro já selecionado. Sem nenhum, qualquer endereço é aceito."
 
-#: src/admin/settings-page.php:242
+#: src/admin/settings-page.php:248
 msgid "Refused domains"
 msgstr "Domínios recusados"
 
-#: src/admin/settings-page.php:245
+#: src/admin/settings-page.php:251
 msgid "While any address is accepted, addresses at these domains are refused: placeholders and throwaway inboxes people type to get past the field. One per line; a subdomain of one is refused too."
 msgstr "Enquanto qualquer endereço é aceito, endereços nestes domínios são recusados: exemplos e caixas descartáveis que as pessoas digitam para passar pelo campo. Um por linha; um subdomínio deles também é recusado."
 
-#: src/admin/settings-page.php:253
+#: src/admin/settings-page.php:259
 msgid "Tracking"
 msgstr "Rastreamento"
 
-#: src/admin/settings-page.php:260
+#: src/admin/settings-page.php:266
 msgid "Load Google Analytics on the pages that show the form"
 msgstr "Carregar o Google Analytics nas páginas que mostram o formulário"
 
-#: src/admin/settings-page.php:264
+#: src/admin/settings-page.php:270
 msgid "Off, nothing of Google's reaches the page. On, the page loads Google's tag with the ID below and records when a signature is generated, copied or downloaded, with only the model (and the image format): never a name, an address or anything typed. Google then receives each visit, so say so in the site's privacy policy. Leave it off if the site already loads Google Analytics on every page."
 msgstr "Desligado, nada do Google chega à página. Ligado, a página carrega a tag do Google com o ID abaixo e registra quando uma assinatura é gerada, copiada ou baixada, só com o modelo (e o formato da imagem): nunca um nome, um endereço ou algo digitado. O Google passa a receber cada visita, então informe isso na política de privacidade do site. Deixe desligado se o site já carrega o Google Analytics em todas as páginas."
 
-#: src/admin/settings-page.php:267
+#: src/admin/settings-page.php:273
 msgid "Measurement ID"
 msgstr "ID de medição"
 
-#: src/admin/settings-page.php:270
+#: src/admin/settings-page.php:276
 msgid "From Google Analytics: Admin, Data streams, the site's stream. Only the ID, not the code snippet. Without an ID nothing is loaded, even switched on."
 msgstr "No Google Analytics: Administrador, Fluxos de dados, o fluxo do site. Só o ID, não o trecho de código. Sem um ID nada é carregado, mesmo ligado."
 
-#: src/admin/settings-page.php:278
+#: src/admin/settings-page.php:288
+msgid "Off"
+msgstr "Desligado"
+
+#: src/admin/settings-page.php:289
+msgid "On (always dark)"
+msgstr "Ligado (sempre escuro)"
+
+#: src/admin/settings-page.php:290
+msgid "Auto (follow OS)"
+msgstr "Auto (seguir SO)"
+
+#: src/admin/settings-page.php:295
+msgid "Applies to this settings screen only; the form on the site keeps its own look. \"Auto\" follows your operating system preference."
+msgstr "Vale só para esta tela de configurações; o formulário no site mantém o próprio visual. \"Auto\" segue a preferência do sistema operacional."
+
+#: src/admin/settings-page.php:302
 msgid "Form on the page"
 msgstr "Formulário na página"
 
 #. translators: %d: default width, in pixels.
-#: src/admin/settings-page.php:288
+#: src/admin/settings-page.php:312
 #, php-format
 msgid "The widest the form gets on the page; on a narrower screen it shrinks to fit. Default: %d px."
 msgstr "A largura máxima do formulário na página; em telas mais estreitas ele se ajusta. Padrão: %d px."
 
-#: src/admin/settings-page.php:296
+#: src/admin/settings-page.php:320
 msgid "Image"
 msgstr "Imagem"
 
-#: src/admin/settings-page.php:300
+#: src/admin/settings-page.php:324
 msgid "Choose from the media library"
 msgstr "Escolher na biblioteca de mídia"
 
-#: src/admin/settings-page.php:301
+#: src/admin/settings-page.php:325
 msgid "Use the bundled logo"
 msgstr "Usar o logotipo padrão"
 
-#: src/admin/settings-page.php:302
+#: src/admin/settings-page.php:326
 msgid "The signature links to this image, so it must stay in the media library. A square image works best."
 msgstr "A assinatura aponta para esta imagem, por isso ela precisa continuar na biblioteca de mídia. Uma imagem quadrada funciona melhor."
 
-#: src/admin/settings-page.php:311
+#: src/admin/settings-page.php:335
 msgid "What the logo shows, in words: screen readers read it, and email programs that block images show it instead. Leave it empty to use the bundled logo's text, or the alternative text the chosen image has in the media library."
 msgstr "O que o logotipo mostra, em palavras: leitores de tela leem esse texto, e programas de e-mail que bloqueiam imagens o exibem no lugar. Deixe vazio para usar o texto do logotipo padrão, ou o texto alternativo que a imagem escolhida tem na biblioteca de mídia."
 
-#: src/admin/settings-page.php:315
+#: src/admin/settings-page.php:339
 msgid "Width"
 msgstr "Largura"
 
-#: src/admin/settings-page.php:323
+#: src/admin/settings-page.php:347
 msgid "Spacing"
 msgstr "Espaçamento"
 
-#: src/admin/settings-page.php:331
+#: src/admin/settings-page.php:355
 msgid "Keeps the signature slightly apart from the text above it, in the copied HTML and in the image. It adds to the height, never to the width."
 msgstr "Afasta levemente a assinatura do texto acima dela, no HTML copiado e na imagem. Soma à altura, nunca à largura."
 
-#: src/admin/settings-page.php:338
+#: src/admin/settings-page.php:362
 msgid "Copying the HTML is the recommended way to use a signature: the text stays sharp at any size. The image is for email programs that do not accept an HTML signature."
 msgstr "Copiar o HTML é a forma recomendada de usar a assinatura: o texto fica nítido em qualquer tamanho. A imagem é para programas de e-mail que não aceitam assinatura em HTML."
 
-#: src/admin/settings-page.php:349
+#: src/admin/settings-page.php:373
 msgid "Show the \"Download image\" button on the form"
 msgstr "Mostrar o botão \"Baixar imagem\" no formulário"
 
-#: src/admin/settings-page.php:353
+#: src/admin/settings-page.php:377
 msgid "Turn it off to offer only Copy HTML. The options below apply while it is on."
 msgstr "Desligue para oferecer só o Copiar HTML. As opções abaixo valem enquanto estiver ligado."
 
-#: src/admin/settings-page.php:356
+#: src/admin/settings-page.php:380
 msgid "A button, and a note recommending Copy HTML after each download (recommended)"
 msgstr "Um botão, e um aviso recomendando Copiar HTML depois de cada download (recomendado)"
 
-#: src/admin/settings-page.php:357
+#: src/admin/settings-page.php:381
 msgid "Inside a collapsed \"More options\", with the same note"
 msgstr "Dentro de \"Mais opções\" recolhido, com o mesmo aviso"
 
-#: src/admin/settings-page.php:358
+#: src/admin/settings-page.php:382
 msgid "A button, with no note"
 msgstr "Um botão, sem aviso"
 
-#: src/admin/settings-page.php:369
+#: src/admin/settings-page.php:393
 msgid "Format"
 msgstr "Formato"
 
-#: src/admin/settings-page.php:372
+#: src/admin/settings-page.php:396
 msgid "PNG (recommended)"
 msgstr "PNG (recomendado)"
 
-#: src/admin/settings-page.php:373
+#: src/admin/settings-page.php:397
 msgid "JPG"
 msgstr "JPG"
 
-#: src/admin/settings-page.php:377
+#: src/admin/settings-page.php:401
 msgid "PNG keeps small letters clean. JPG makes a smaller file but leaves compression noise around the text."
 msgstr "O PNG mantém as letras pequenas limpas. O JPG gera um arquivo menor, mas deixa ruído de compressão em volta do texto."
 
-#: src/admin/settings-page.php:380
+#: src/admin/settings-page.php:404
 msgid "JPG quality"
 msgstr "Qualidade do JPG"
 
-#: src/admin/settings-page.php:385
+#: src/admin/settings-page.php:409
 msgid "Only for JPG. Higher keeps the text sharper and makes the file larger."
 msgstr "Só para JPG. Quanto maior, mais nítido o texto e maior o arquivo."
 
 #. translators: 1: pixel density, such as 2; 2: image width in pixels.
-#: src/admin/settings-page.php:397
+#: src/admin/settings-page.php:421
 #, php-format
 msgid "%1$d× (%2$d px wide)"
 msgstr "%1$d× (%2$d px de largura)"
 
-#: src/admin/settings-page.php:404
+#: src/admin/settings-page.php:428
 msgid "1× is the size of the signature in an email. 2× and 3× are sharper, but an email client may show them larger unless the image is resized."
 msgstr "1× é o tamanho da assinatura no e-mail. 2× e 3× são mais nítidos, mas o cliente de e-mail pode exibi-los maiores se a imagem não for redimensionada."
 
-#: src/admin/settings-page.php:410
+#: src/admin/settings-page.php:434
 msgid "The units people choose from in the signature form. The signature prints a unit as \"Name / ACRONYM\", or adds its acronym to the department or the school. The acronym identifies the unit: capitals and digits, up to 12, each used once."
 msgstr "As unidades que as pessoas escolhem no formulário. A assinatura imprime a unidade como \"Nome / SIGLA\", ou acrescenta a sigla ao setor ou à escola. A sigla identifica a unidade: letras maiúsculas e números, até 12, sem repetir."
 
-#: src/admin/settings-page.php:413 src/admin/settings-page.php:627
+#: src/admin/settings-page.php:437 src/admin/settings-page.php:651
 #: src/config.php:330
 msgid "Name"
 msgstr "Nome"
 
-#: src/admin/settings-page.php:414 src/admin/settings-page.php:630
+#: src/admin/settings-page.php:438 src/admin/settings-page.php:654
 msgid "Acronym"
 msgstr "Sigla"
 
-#: src/admin/settings-page.php:426
+#: src/admin/settings-page.php:450
 msgid "Add a unit"
 msgstr "Adicionar unidade"
 
-#: src/admin/settings-page.php:432
+#: src/admin/settings-page.php:456
 msgid "A default pre-fills the field. A locked field shows its default and cannot be changed, for a value every signature must share, such as the address of the building. The name and the email cannot be locked. Capitals prints the field in capital letters, however it was typed. The label is what the form calls the field; leave it empty for the one shown."
 msgstr "Um padrão preenche o campo de antemão. Um campo travado mostra o padrão e não pode ser alterado, para um valor que toda assinatura deve compartilhar, como o endereço do prédio. O nome e o e-mail não podem ser travados. Maiúsculas imprime o campo em letras maiúsculas, independentemente de como foi digitado. O rótulo é como o formulário chama o campo; deixe vazio para usar o mostrado."
 
-#: src/admin/settings-page.php:443
+#: src/admin/settings-page.php:467
 msgid "Field"
 msgstr "Campo"
 
 #. translators: %s: a field's generic name.
-#: src/admin/settings-page.php:462
+#: src/admin/settings-page.php:486
 #, php-format
 msgid "Label of %s in the form"
 msgstr "Rótulo de %s no formulário"
 
-#: src/admin/settings-page.php:476
+#: src/admin/settings-page.php:500
 msgid "Set on the Units tab"
 msgstr "Defina na aba Unidades"
 
 #. translators: %s: field label.
-#: src/admin/settings-page.php:493
+#: src/admin/settings-page.php:517
 #, php-format
 msgid "%s is required"
 msgstr "%s é obrigatório"
 
 #. translators: %s: field label.
-#: src/admin/settings-page.php:508
+#: src/admin/settings-page.php:532
 #, php-format
 msgid "%s is locked"
 msgstr "%s está travado"
 
 #. translators: %s: field label.
-#: src/admin/settings-page.php:522
+#: src/admin/settings-page.php:546
 #, php-format
 msgid "%s in capital letters"
 msgstr "%s em letras maiúsculas"
 
-#: src/admin/settings-page.php:546
+#: src/admin/settings-page.php:570
 msgid "Use the colours, corners and font below"
 msgstr "Usar as cores, os cantos e a fonte abaixo"
 
-#: src/admin/settings-page.php:550
+#: src/admin/settings-page.php:574
 msgid "Off, the form keeps its own look, and the values below go back to their defaults: switching it off clears the customisation. Only the form changes: the signature keeps its own look, since that is what email programs receive. The standalone HTML always keeps the form's own look."
 msgstr "Desligado, o formulário mantém o próprio visual, e os valores abaixo voltam ao padrão: desligar apaga a personalização. Só o formulário muda: a assinatura mantém o próprio visual, pois é ela que os programas de e-mail recebem. O HTML avulso sempre mantém o visual próprio do formulário."
 
 #. translators: %s: the default colour, #rrggbb.
-#: src/admin/settings-page.php:559
+#: src/admin/settings-page.php:583
 #, php-format
 msgid "Default: %s"
 msgstr "Padrão: %s"
 
 #. translators: %d: the default radius, in pixels.
-#: src/admin/settings-page.php:571
+#: src/admin/settings-page.php:595
 #, php-format
 msgid "Of the fields, the buttons and the lists; 0 makes them square. Default: %d px."
 msgstr "Dos campos, dos botões e das listas; 0 os deixa quadrados. Padrão: %d px."
 
-#: src/admin/settings-page.php:581
+#: src/admin/settings-page.php:605
 msgid "The form's own (Arial)"
 msgstr "A do formulário (Arial)"
 
-#: src/admin/settings-page.php:582
+#: src/admin/settings-page.php:606
 msgid "The site theme's"
 msgstr "A do tema do site"
 
-#: src/admin/settings-page.php:593
+#: src/admin/settings-page.php:617
 msgid "Colours whose text would be hard to read are saved anyway, with a warning naming them."
 msgstr "Cores cujo texto ficaria difícil de ler são salvas mesmo assim, com um aviso que as nomeia."
 
-#: src/admin/settings-page.php:623
+#: src/admin/settings-page.php:647
 msgid "Default unit of the form"
 msgstr "Unidade padrão do formulário"
 
-#: src/admin/settings-page.php:631
+#: src/admin/settings-page.php:655
 msgid "Remove this unit"
 msgstr "Remover esta unidade"
 
-#: src/admin/settings-page.php:632
+#: src/admin/settings-page.php:656
 msgid "Remove"
 msgstr "Remover"
 
-#: src/admin/settings-page.php:659
+#: src/admin/settings-page.php:683
 msgid "Accent (buttons and links)"
 msgstr "Destaque (botões e links)"
 
-#: src/admin/settings-page.php:660
+#: src/admin/settings-page.php:684
 msgid "Text on the accent"
 msgstr "Texto sobre o destaque"
 
-#: src/admin/settings-page.php:661
+#: src/admin/settings-page.php:685
 msgid "Field borders"
 msgstr "Bordas dos campos"
 
-#: src/admin/settings-page.php:662
+#: src/admin/settings-page.php:686
 msgid "Notes and hints"
 msgstr "Notas e dicas"
 
-#: src/admin/settings-page.php:663
+#: src/admin/settings-page.php:687
 msgid "Errors"
 msgstr "Erros"
 
-#: src/admin/settings-page.php:699
+#: src/admin/settings-page.php:747
 msgid "Documentation"
 msgstr "Documentação"
 
@@ -1027,42 +1056,42 @@ msgid "Role takes a single role, without slashes."
 msgstr "O campo \"Cargo\" aceita um único cargo, sem barras."
 
 #. translators: %s: the offices left out, separated by commas.
-#: src/settings.php:244
+#: src/settings.php:252
 #, php-format
 msgid "These units were not saved, because each needs a name and a unique acronym of capitals and digits: %s"
 msgstr "Estas unidades não foram salvas, porque cada uma precisa de nome e de uma sigla única, com letras maiúsculas e números: %s"
 
 #. translators: %s: the domains left out, separated by commas.
-#: src/settings.php:260
+#: src/settings.php:268
 #, php-format
 msgid "These email domains were not saved, because they are not domain names: %s"
 msgstr "Estes domínios de e-mail não foram salvos, porque não são nomes de domínio: %s"
 
 #. translators: %s: the ID typed.
-#: src/settings.php:273
+#: src/settings.php:281
 #, php-format
 msgid "The Google Analytics ID was not saved, because it is not a measurement ID such as G-XXXXXXXXXX: %s"
 msgstr "O ID do Google Analytics não foi salvo, porque não é um ID de medição como G-XXXXXXXXXX: %s"
 
 #. translators: %s: the colour pairs, separated by semicolons.
-#: src/settings.php:287
+#: src/settings.php:295
 #, php-format
 msgid "The colours were saved, but some pairs are hard to read (WCAG asks for at least 4.5:1): %s"
 msgstr "As cores foram salvas, mas alguns pares são difíceis de ler (a WCAG pede pelo menos 4,5:1): %s"
 
-#: src/settings.php:305
+#: src/settings.php:313
 msgid "button text on the accent"
 msgstr "texto do botão sobre o destaque"
 
-#: src/settings.php:306
+#: src/settings.php:314
 msgid "accent on white"
 msgstr "destaque sobre o branco"
 
-#: src/settings.php:307
+#: src/settings.php:315
 msgid "notes on white"
 msgstr "notas sobre o branco"
 
-#: src/settings.php:308
+#: src/settings.php:316
 msgid "errors on white"
 msgstr "erros sobre o branco"
 
@@ -1081,6 +1110,9 @@ msgstr "A verificação de integridade (SHA-256) do pacote de atualização falh
 #. Plugin header: Description
 msgid "A form, placed with a shortcode, that builds a consistent HTML email signature for your organisation and copies it to Outlook or downloads it as an image."
 msgstr "Um formulário, inserido por shortcode, que monta uma assinatura de e-mail em HTML padronizada para a sua organização e a copia para o Outlook ou a baixa como imagem."
+
+#~ msgid "The on/off switches save as soon as they are flipped. Everything else saves with \"Save Changes\"."
+#~ msgstr "As chaves liga/desliga salvam assim que são acionadas. O restante salva com \"Salvar alterações\"."
 
 #~ msgid "Contents"
 #~ msgstr "Sumário"
