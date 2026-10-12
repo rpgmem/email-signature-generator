@@ -1,9 +1,5 @@
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { root } from './helpers.js';
-
-const script = readFileSync( path.join( root, 'assets/js/admin-settings.js' ), 'utf8' );
+import { runScript } from './helpers.js';
 
 function toggle( key, value = '1', checked = true ) {
 	return `<label class="esg-toggle"><input type="checkbox" value="${ value }"${ checked ? ' checked' : '' } data-esg-autosave="${ key }"><span class="esg-toggle-track"></span></label>`;
@@ -11,7 +7,7 @@ function toggle( key, value = '1', checked = true ) {
 
 function boot( answer ) {
 	window.fetch = vi.fn( () => Promise.resolve( { json: () => Promise.resolve( answer ) } ) );
-	new Function( script )();
+	runScript( 'assets/js/admin-settings.js' );
 }
 
 function flush() {
@@ -108,7 +104,7 @@ describe( 'settings toggles', () => {
 	it( 'falls back to a generic message when the answer is not JSON', async () => {
 		document.body.innerHTML = `<p>${ toggle( 'offer_download' ) }</p>`;
 		window.fetch = vi.fn( () => Promise.resolve( { json: () => Promise.reject( new Error( 'html' ) ) } ) );
-		new Function( script )();
+		runScript( 'assets/js/admin-settings.js' );
 		const box = document.querySelector( 'input' );
 		box.checked = false;
 		box.dispatchEvent( new Event( 'change' ) );

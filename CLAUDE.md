@@ -119,8 +119,14 @@ These run in CI on every PR and on pushes to `main` and `develop`:
 - ESLint over `assets/js` and Stylelint over `assets/css`.
 - `composer validate --strict` and `composer audit --locked`.
 - The release build against the newest tag.
-
 - Vitest over the generator (`tests/js`), against the real configuration that `bin/build-standalone.php - ` prints.
+- Coverage floors. The PHP floor is `COVERAGE_FLOOR_LINES` in `tests.yml`, checked against the merged line coverage of the unit and functional suites (`bin/coverage-merge.php`). The JS floor is `thresholds.lines` in `vitest.config.mjs`, which counts every file in `assets/js`. Both move up in the PR that delivers a gain, never down, and sit at most 5 points below the measured figure.
+
+Two guards read the code rather than test it:
+- `ReadmeUpgradeNoticeTest`: the Upgrade Notice holds one entry, for the Stable tag, at most 300 characters, pointing at `CHANGELOG.md`, and the updater's own parser returns it.
+- `SuppressionTest`: every `phpcs:ignore` or `phpcs:disable` names a sniff and gives a reason after `--`; a `@phpstan-ignore` names an identifier with a reason, and the `-line` forms are refused.
+
+A browser script under test runs through `runScript()` in `tests/js/helpers.js`, never `new Function()`, which V8 cannot attribute coverage to.
 
 Locally:
 
@@ -130,7 +136,7 @@ vendor/bin/phpunit --testsuite unit
 vendor/bin/phpstan analyse --no-progress
 vendor/bin/phpcs
 npm run lint
-npm test
+npm run test:coverage
 ```
 
 ## Translations

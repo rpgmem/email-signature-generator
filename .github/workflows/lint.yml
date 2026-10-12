@@ -37,7 +37,7 @@ jobs:
           php-version: '8.3'
           coverage: none
       - run: npm ci
-      - run: npm test
+      - run: npm run test:coverage
 
   css:
     name: Stylelint (assets/css)

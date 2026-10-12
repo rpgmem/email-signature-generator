@@ -5,6 +5,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- **CI holds coverage floors and two new guards** (#PR). PHP line coverage (unit and functional suites merged) and JS line coverage now have floors. Tests check the Upgrade Notice against the Stable tag, and require every PHPCS or PHPStan suppression to name its rule and give a reason. The admin script's tests now count toward coverage.
+
+### Fixed
+
+- **A cleared number field keeps its default** (#PR). Emptying the form width, logo width, space above, image quality or rounded corners stored the lowest value; it now means "not set".
+
 ## [1.1.0] (2026-10-11) — `e540c1c`
 
 The form gets clearer errors and a sturdier email field, and the plugin gains optional analytics and a design of its own; the standalone page gets a stable address.

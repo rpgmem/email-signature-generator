@@ -1,9 +1,5 @@
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { root } from './helpers.js';
-
-const script = readFileSync( path.join( root, 'assets/js/admin-settings.js' ), 'utf8' );
+import { runScript } from './helpers.js';
 
 function tab( id, active ) {
 	return `<li><a class="esg-tabs__tab${ active ? ' is-active' : '' }" href="?page=x&tab=${ id }" data-esg-tab="${ id }" aria-selected="${ active }">${ id }</a></li>`;
@@ -21,7 +17,7 @@ beforeEach( () => {
 		<div class="esg-tabs"><ul>${ tab( 'general', true ) }${ tab( 'logo', false ) }</ul>
 		<div>${ panel( 'general', true ) }${ panel( 'logo', false, '<input id="w" type="number" required>' ) }</div></div>
 	</form>`;
-	new Function( script )();
+	runScript( 'assets/js/admin-settings.js' );
 } );
 
 describe( 'settings tabs', () => {
