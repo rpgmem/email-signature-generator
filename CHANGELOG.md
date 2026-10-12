@@ -8,6 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - **CI holds coverage floors and two new guards** (#55). PHP line coverage (unit and functional suites merged) and JS line coverage now have floors. Tests check the Upgrade Notice against the Stable tag, and require every PHPCS or PHPStan suppression to name its rule and give a reason. The admin script's tests now count toward coverage.
+- **The documentation's contents stays in view on a wide screen** (#56). From 1100px wide, the Contents box is a column beside the topics that stays put while they scroll; narrower, it stays above them. The credits line moves below the topics, and a topic opened from the contents lands just below the admin bar.
 
 ### Fixed
 
