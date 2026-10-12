@@ -9,6 +9,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - **The generator's copy and download paths are tested** (#66). New tests cover Copy HTML through the Clipboard API and its selection fallback, a refused or failed copy, the image download when the library is missing, when drawing fails and when the drawing is reduced to a JPG, a remembered office no longer offered, and loading in a browser. JS line coverage rises from 86.3% to 94.1%.
 - **CI tests the declared WordPress floor, and both coverage floors rise to 90%** (#67). The functional suite also runs on WordPress 6.8, the floor the readme promises, with the test library of the same branch. `composer.json` pins the PHP platform to 8.3. The PHP floor moves from 88% to 90% and the JS floor from 81% to 90%; `CLAUDE.md` records the rule shared by the four plugins.
+- **Dependabot's patch and minor updates merge on their own** (#70). A workflow arms squash auto-merge on them once Dependabot opens the PR, the same as Free Form Certificate; required checks still gate the merge, and majors stay manual.
 
 ## [1.2.0] (2026-10-12) — `d888d8f`
 
