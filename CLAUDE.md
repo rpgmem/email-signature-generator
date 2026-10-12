@@ -37,6 +37,7 @@ Domain values stay in Portuguese where they are data, not code: the names of the
 - **Closing issues:** `Closes #NNN` does not auto-close an issue when the PR merges into `develop`, because the default branch is `main`. Close the issue by hand when the work lands, and tick its checkboxes or map each one to the PR that shipped it.
 - **Refs:** an agent's credential can create and update refs but **cannot delete a ref** (HTTP 403). Deleting a branch that survives the merge is the maintainer's job (see "Issues, pull requests and the merge queue").
 - Dependabot targets `develop`. A security update opens against `main`: retarget it to `develop`.
+- `dependabot-automerge.yml` arms squash auto-merge on Dependabot's patch and minor updates, the same as Free Form Certificate; the required checks still gate the merge. Majors stay manual, because a major can change behaviour the checks do not see. A merge made with the workflow's token does not trigger other workflows, so `deploy-develop.yml` skips it, which only matters for testes and only until the next merge.
 
 ### Rulesets (set by the maintainer in Settings → Rules → Rulesets)
 
