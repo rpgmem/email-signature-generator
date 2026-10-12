@@ -34,6 +34,7 @@ final class Icons {
 		'brush'    => '<path d="M14 4l6 6-8 8-6-6z"/><path d="M6 12l-3 7 7-3"/>',
 		'chart'    => '<path d="M3 20h18M6 20v-6M11 20V8M16 20v-9M21 20V4"/>',
 		'sync'     => '<path d="M20 11a8 8 0 0 0-14.3-4.9L4 8M4 4v4h4M4 13a8 8 0 0 0 14.3 4.9L20 16M20 20v-4h-4"/>',
+		'search'   => '<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.4-4.4"/>',
 	);
 
 	/**

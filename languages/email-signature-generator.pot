@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signature Generator 1.0.0\n"
+"Project-Id-Version: Email Signature Generator 1.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/rpgmem/email-signature-generator/issues\n"
-"POT-Creation-Date: 2026-10-11 23:11+0000\n"
+"POT-Creation-Date: 2026-10-12 02:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -446,24 +446,36 @@ msgstr ""
 msgid "Turned on or off with WordPress's own link on the Plugins screen."
 msgstr ""
 
-#: src/admin/documentation.php:188
-msgid "Contents"
+#: src/admin/documentation.php:194
+msgid "Quick Navigation"
+msgstr ""
+
+#: src/admin/documentation.php:195
+msgid "Search documentation"
+msgstr ""
+
+#: src/admin/documentation.php:195
+msgid "Search documentation…"
+msgstr ""
+
+#: src/admin/documentation.php:199
+msgid "No topic matches this search."
 msgstr ""
 
 #. translators: %s: settings tab name.
-#: src/admin/documentation.php:215
+#: src/admin/documentation.php:221
 #, php-format
 msgid "Open the %s tab"
 msgstr ""
 
 #. translators: %s: plugin author's name, linked to the author's page.
-#: src/admin/documentation.php:241
+#: src/admin/documentation.php:250
 #, php-format
 msgid "Developed by %s."
 msgstr ""
 
 #. translators: %s: link to the plugin's source repository.
-#: src/admin/documentation.php:247
+#: src/admin/documentation.php:256
 #, php-format
 msgid "Source code and issue tracker: %s"
 msgstr ""

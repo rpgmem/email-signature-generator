@@ -263,6 +263,39 @@
 	}
 
 	/**
+	 * Documentation search: hides the topics, in the quick navigation and
+	 * as cards, whose text does not contain what was typed. Empty shows all.
+	 */
+	var docSearch = document.getElementById( 'esg-doc-search' );
+	if ( docSearch ) {
+		var docRows = document.querySelectorAll( '.esg-doc-contents li' );
+		var docCards = document.querySelectorAll( '.esg-doc-topics .esg-doc' );
+		var docEmpty = document.querySelector( '.esg-doc-search-empty' );
+		docSearch.addEventListener( 'input', function () {
+			var query = docSearch.value.trim().toLowerCase();
+			var shown = 0;
+			function match( element ) {
+				var hit = '' === query || -1 !== element.textContent.toLowerCase().indexOf( query );
+				element.hidden = ! hit;
+				return hit;
+			}
+			docCards.forEach( match );
+			// A row follows its card, whose text includes the title.
+			docRows.forEach( function ( row ) {
+				var link = row.querySelector( 'a' );
+				var heading = link && document.getElementById( link.getAttribute( 'href' ).slice( 1 ) );
+				var card = heading && heading.closest( '.esg-doc' );
+				var hit = card ? ! card.hidden : match( row );
+				row.hidden = ! hit;
+				shown += hit ? 1 : 0;
+			} );
+			if ( docEmpty ) {
+				docEmpty.hidden = 0 !== shown;
+			}
+		} );
+	}
+
+	/**
 	 * Regional offices: add a row from the template, remove a row, and keep
 	 * acronyms in capitals as they are typed.
 	 */

@@ -167,7 +167,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.esg-settings .esg-tabs__tab {
+	.esg-settings .esg-tabs__tab,
+	.esg-settings .esg-doc-contents a {
 		transition: none;
 	}
 }
@@ -181,9 +182,67 @@
 }
 
 /* Documentation tab. */
+/* Quick navigation, drawn like Free Form Certificate's: one row per topic,
+   a bordered tile with the topic's icon that fills with the admin colour on
+   hover. */
+.esg-settings .esg-doc-search {
+	margin: 0 0 12px;
+}
+
+.esg-settings .esg-doc-search input {
+	width: 100%;
+}
+
 .esg-settings .esg-doc-contents ul {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
 	margin: 0;
-	columns: 2 16em;
+}
+
+.esg-settings .esg-doc-contents li {
+	margin: 0;
+}
+
+.esg-settings .esg-doc-contents li[hidden],
+.esg-settings .esg-doc[hidden] {
+	display: none;
+}
+
+.esg-settings .esg-doc-contents a {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	background: #ffffff;
+	color: var(--wp-admin-theme-color, #2271b1);
+	font-weight: 500;
+	text-decoration: none;
+	transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.esg-settings .esg-doc-contents a .esg-icon {
+	flex: 0 0 auto;
+	color: #646970;
+}
+
+.esg-settings .esg-doc-contents a:hover,
+.esg-settings .esg-doc-contents a:focus {
+	border-color: var(--wp-admin-theme-color, #2271b1);
+	background: var(--wp-admin-theme-color, #2271b1);
+	color: #ffffff;
+}
+
+.esg-settings .esg-doc-contents a:hover .esg-icon,
+.esg-settings .esg-doc-contents a:focus .esg-icon {
+	color: #ffffff;
+}
+
+.esg-settings .esg-doc-search-empty {
+	margin: 0;
+	color: #50575e;
 }
 
 /* A topic reached from the contents lands just below the admin bar: core
