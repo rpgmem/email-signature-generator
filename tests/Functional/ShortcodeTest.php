@@ -7,14 +7,23 @@ namespace ESG\Tests\Functional;
 use EmailSignatureGenerator\Plugin;
 use EmailSignatureGenerator\Settings;
 use EmailSignatureGenerator\Shortcode;
+use EmailSignatureGenerator\Theme;
 use WP_UnitTestCase;
 
 /**
  * The shortcode inside a real WordPress.
  *
  * @covers \EmailSignatureGenerator\Shortcode
+ * @covers \EmailSignatureGenerator\Theme
  */
 final class ShortcodeTest extends WP_UnitTestCase {
+
+	public function set_up(): void {
+		parent::set_up();
+		// Each test reads what it enqueued, not what an earlier one left.
+		$GLOBALS['wp_scripts'] = null;
+		$GLOBALS['wp_styles']  = null;
+	}
 
 	public function test_the_shortcode_is_registered(): void {
 		self::assertTrue( shortcode_exists( Shortcode::TAG ) );
@@ -36,12 +45,26 @@ final class ShortcodeTest extends WP_UnitTestCase {
 		self::assertStringContainsString( 'style="max-width:900px"', do_shortcode( '[email_signature]' ) );
 	}
 
-	public function test_a_custom_design_reaches_the_container(): void {
+	public function test_a_custom_design_reaches_the_stylesheet_once_and_in_the_light_look(): void {
 		update_option( Settings::OPTION, array( 'custom_style' => true, 'colors' => array( 'accent' => '#aa0000' ), 'radius' => 0, 'font' => 'theme' ) );
 
-		self::assertSame( 1, preg_match( '/<div class="esg-generator" style="([^"]+)"/', do_shortcode( '[email_signature]' ), $m ) );
-		self::assertStringStartsWith( 'max-width:640px; --esg-accent: #aa0000; ', $m[1] );
-		self::assertStringContainsString( '--esg-radius: 0px; --esg-font: inherit', $m[1] );
+		self::assertStringContainsString( 'style="max-width:640px"', do_shortcode( '[email_signature]' ), 'The colours left the style attribute, where the dark block could not override them.' );
+		do_shortcode( '[email_signature]' );
+
+		$after = wp_styles()->get_data( Shortcode::STYLE_HANDLE, 'after' );
+		self::assertIsArray( $after );
+		self::assertCount( 1, $after, 'Two generators on a page add the rule once.' );
+		self::assertStringContainsString( ':root:not(.esg-dark-mode) .esg-generator { --esg-accent: #aa0000;', $after[0] );
+	}
+
+	public function test_the_dark_mode_switch_loads_with_the_form_and_runs_before_it(): void {
+		update_option( Settings::OPTION, array( 'dark_mode' => 'on' ) );
+
+		do_shortcode( '[email_signature]' );
+
+		self::assertTrue( wp_script_is( Theme::HANDLE, 'enqueued' ) );
+		self::assertContains( Theme::HANDLE, wp_scripts()->registered[ Shortcode::SCRIPT_HANDLE ]->deps );
+		self::assertStringEndsWith( '})("on");', implode( '', (array) wp_scripts()->get_data( Theme::HANDLE, 'after' ) ) );
 	}
 
 	public function test_the_models_attribute_limits_the_form(): void {
@@ -89,8 +112,10 @@ final class ShortcodeTest extends WP_UnitTestCase {
 
 		$js  = wp_scripts()->registered[ Shortcode::SCRIPT_HANDLE ]->ver;
 		$css = wp_styles()->registered[ Shortcode::STYLE_HANDLE ]->ver;
-		self::assertSame( Plugin::VERSION . '.' . filemtime( Plugin::dir() . 'assets/js/signature-generator.js' ), $js, 'A deploy changes the file time, so a cached script is replaced.' );
-		self::assertSame( Plugin::VERSION . '.' . filemtime( Plugin::dir() . 'assets/css/signature-generator.css' ), $css );
+		// The time of the file that loads: the `.min` build, unless SCRIPT_DEBUG.
+		self::assertSame( Plugin::VERSION . '.' . filemtime( Plugin::dir() . Plugin::asset( 'assets/js/signature-generator.js' ) ), $js, 'A deploy changes the file time, so a cached script is replaced.' );
+		self::assertSame( Plugin::VERSION . '.' . filemtime( Plugin::dir() . Plugin::asset( 'assets/css/signature-generator.css' ) ), $css );
+		self::assertStringEndsWith( 'assets/js/signature-generator.min.js', wp_scripts()->registered[ Shortcode::SCRIPT_HANDLE ]->src );
 	}
 
 	public function test_a_missing_asset_falls_back_to_the_version(): void {

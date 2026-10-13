@@ -92,7 +92,8 @@ The same standard as Free Form Certificate (its `CLAUDE.md` → "Issues, pull re
 1. **On `develop`,** through a dedicated `release: X.Y.Z` PR:
    - bump the three version sites;
    - rename `[Unreleased]` to `## [X.Y.Z] (YYYY-MM-DD)`;
-   - add a fresh `[Unreleased]` above it.
+   - add a fresh `[Unreleased]` above it;
+   - read `git diff origin/main...origin/develop -- readme.txt languages/readme-pt_BR.txt`: a change on one side only is a translation left behind (see "Translations").
 2. **Open the `develop → main` PR.** Keep it draft until the maintainer confirms the production release.
 3. **After it lands on `main`,** tag that commit (`vX.Y.Z`) and push the tag. `.github/workflows/release.yml` then:
    - checks the tag against the header version;
@@ -130,6 +131,7 @@ These run in CI on every PR and on pushes to `main` and `develop`:
 - PHPUnit `unit` suite on PHP 8.3 and 8.4, and the functional suite against a real WordPress and MySQL (`phpunit.functional.xml.dist`). The functional suite runs on the latest WordPress and on **the declared floor**: the `floor` leg reads `Requires at least` from the plugin header, resolves it to that branch's newest patch release and swaps the WordPress test library to the same branch, so moving the floor moves the test. A floor nothing runs is a claim, not a requirement.
 - PHPStan level 8, and PHPCS with WPCS and PHPCompatibilityWP.
 - ESLint over `assets/js` and Stylelint over `assets/css`.
+- **Verify minified assets are up to date**: CI runs `npm run build` and fails when an `assets/**/*.min.*` file changes or appears. Run `npm run build` after editing any file under `assets/css` or `assets/js`, and commit the `.min` and `.map` beside it.
 - `composer validate --strict` and `composer audit --locked`.
 - The release build against the newest tag.
 - Vitest over the generator (`tests/js`), against the real configuration that `bin/build-standalone.php - ` prints.
@@ -146,15 +148,27 @@ Locally:
 ```bash
 composer install && npm ci
 vendor/bin/phpunit --testsuite unit
+# The functional suite needs MySQL. A cloud session's container ships MariaDB stopped;
+# the environment's setup script starts it with the CI credentials (root / root).
+service mariadb start
+bash bin/install-wp-tests.sh wp_esg_tests root root 127.0.0.1 false latest
+vendor/bin/phpunit -c phpunit.functional.xml.dist
 vendor/bin/phpstan analyse --no-progress
 vendor/bin/phpcs
 npm run lint
 npm run test:coverage
+npm run build   # after editing assets/css or assets/js
 ```
 
 ## Translations
 
-`languages/` holds the `.pot`, and per locale the `.po`, `.mo` and `.l10n.php`. After changing a translatable string, run `bin/i18n.sh` (needs GNU gettext): it re-extracts the `.pot`, merges it into each `.po` and recompiles. Translate the new entries in the `.po`, then run it again. `TranslationCoverageTest` fails when a source string has no translation, or when a `.po` and its `.l10n.php` disagree.
+`languages/` holds the `.pot`, and per locale the `.po`, `.mo` and `.l10n.php`. After changing a translatable string, run `bin/i18n.sh` (needs GNU gettext): it re-extracts the `.pot`, merges it into each `.po` and recompiles. Translate the new entries in the `.po`, then run it again. `TranslationCoverageTest` fails when a source string has no translation.
+
+- **Never edit a compiled catalogue by hand**, and never compile one with a tool outside the repository. `msgfmt` writes the `.mo` and `bin/po-to-l10n.php` the `.l10n.php`; a fix that reaches one and not the other depends on which file WordPress loaded. Before #88 the committed `.l10n.php` had come from a script outside the repository, in a format the committed compiler did not write.
+- **`bin/po-catalogue.php` is the one `.po` reader.** The compiler and the tests both use it, so they cannot disagree about what an entry is. It handles the shapes this catalogue does not carry yet (a context, a plural, a fuzzy entry); `PoCatalogueTest` exercises them on a synthetic file.
+- **The `.l10n.php` is in `wp i18n make-php`'s shape, byte for byte** — the same keys in the same order Loco and WP-CLI write, so a catalogue compiled here, saved from Loco or made by WP-CLI is the same file. WP-CLI reads the text domain from the `.po`'s `X-Domain` header, which is why the header is there; keep it. The reader sits inside PHPStan's and PHPCS's paths like the plugin's own code (#90).
+- **`TranslationCatalogueAgreementTest`** fails when the three files of a locale disagree, in either direction, or when the `.l10n.php` is not byte for byte what the compiler writes. Its self-check recounts the `.po`'s entries by a different route, so a reader that read nothing fails instead of passing.
+- **`languages/readme-pt_BR.txt` is the readme "View details" shows a pt_BR administrator.** A PR that changes `readme.txt` updates it in the same PR. `PluginDetailsAssetsTest` holds the two to the same structure (tab sections, the count of other sections, the screenshot captions) and cannot see the content: a changed sentence in English passes CI with the translation still saying the old thing (#87).
 
 Every string the browser shows travels in `Config::strings()`, so the JavaScript has no strings of its own. `ConfigTest` fails when the script reads a key the configuration lacks, or the configuration carries one the script never reads.
 
@@ -201,6 +215,8 @@ The signature links its logo by URL, because email clients drop embedded images.
 
 ## Code
 
+- **CSS lives in `assets/css`, never inline.** No `style=""` and no `wp_add_inline_style()`. What the script needs off screen takes the `.esg-offscreen` class. Three things stay inline, each because it cannot be a file: the shortcode's `--esg-*` custom properties (the configured design), whatever the script sets from a runtime value (the screenshot viewer's zoom transform), and the signature itself (mail clients ignore a stylesheet).
+- **Minified in production.** Every enqueue goes through `Plugin::asset()`: the `.min` build normally, the readable source when `SCRIPT_DEBUG` is on. The zip ships both and leaves the source maps out. The standalone HTML inlines the sources, not the builds, so its build depends on nothing but the repository.
 - Namespace `EmailSignatureGenerator`; no global functions. A class maps to a kebab-case file under `src/`, and `AutoloaderTest` fails when one does not.
 - Escape on output; check a nonce and a capability on every request entry point; sanitize every setting on save.
 - **Every option the plugin writes is deleted in `uninstall.php`**, in the same change that adds it.

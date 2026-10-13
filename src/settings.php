@@ -89,7 +89,8 @@ final class Settings {
 
 	/**
 	 * Values `dark_mode` accepts: never, always, or what the operating
-	 * system prefers. It colours this plugin's settings screen only.
+	 * system prefers. It colours this plugin's settings screen and the form
+	 * on the site, never the signature itself.
 	 */
 	public const DARK_MODES = array( 'off', 'on', 'auto' );
 
@@ -219,7 +220,7 @@ final class Settings {
 			'custom_style'          => $custom,
 			'colors'                => $custom ? self::colors( $input['colors'] ?? array() ) : Config::COLORS,
 			'radius'                => $custom ? min( self::RADIUS_MAX, max( 0, self::number( $input['radius'] ?? null, Config::RADIUS ) ) ) : Config::RADIUS,
-			'font'                  => $custom && in_array( $input['font'] ?? '', Config::FONTS, true ) ? (string) $input['font'] : Config::FONTS[0],
+			'font'                  => $custom ? self::font( $input['font'] ?? '' ) : Config::FONTS[0],
 			'fields'                => self::sanitizeFields( self::legacyUnitLabel( $input, self::legacyCapitals( $input ) ) ),
 			'dark_mode'             => in_array( $input['dark_mode'] ?? '', self::DARK_MODES, true ) ? (string) $input['dark_mode'] : 'off',
 		);
@@ -352,6 +353,18 @@ final class Settings {
 	}
 
 	/**
+	 * A known font. `form` is how Arial was stored before the three options,
+	 * when it was the form's own font; it is read as Arial, so no stored row
+	 * needs a migration.
+	 *
+	 * @param mixed $raw Posted or stored value.
+	 */
+	private static function font( $raw ): string {
+		$font = 'form' === $raw ? 'arial' : $raw;
+		return in_array( $font, Config::FONTS, true ) ? (string) $font : Config::FONTS[0];
+	}
+
+	/**
 	 * The relative luminance of a #rrggbb colour, as WCAG defines it.
 	 *
 	 * @param string $hex Colour.
@@ -369,27 +382,36 @@ final class Settings {
 	}
 
 	/**
-	 * The CSS custom properties the container carries when the look is
+	 * The stylesheet rule the Design tab adds to the form when the look is
 	 * customised; '' when it is not, so the stylesheet's own look applies.
 	 *
+	 * The corners and the font hold in both themes. The colours are scoped
+	 * to the light one: a colour chosen against white does not keep its
+	 * contrast on the dark ground, so the dark theme keeps its own palette.
+	 *
 	 * Every value is built from validated settings (#rrggbb colours, an
-	 * integer radius, a known font), so it is safe inside a style attribute.
+	 * integer radius, a known font), so it is safe inside a style element.
 	 *
 	 * @param array<string, mixed> $settings Sanitized settings.
 	 */
-	public static function styleVars( array $settings ): string {
+	public static function styleRule( array $settings ): string {
 		if ( empty( $settings['custom_style'] ) ) {
 			return '';
 		}
-		$vars = array();
+		$shape = array( '--esg-radius: ' . (int) $settings['radius'] . 'px' );
+		$fonts = array(
+			'plugin' => Config::PLUGIN_FONT,
+			'arial'  => 'arial, sans-serif',
+		);
+		if ( isset( $fonts[ $settings['font'] ?? '' ] ) ) {
+			$shape[] = '--esg-font: ' . $fonts[ $settings['font'] ];
+		}
+		$colors = array();
 		foreach ( self::colors( $settings['colors'] ?? array() ) as $key => $color ) {
-			$vars[] = '--esg-' . str_replace( '_', '-', $key ) . ': ' . $color;
+			$colors[] = '--esg-' . str_replace( '_', '-', $key ) . ': ' . $color;
 		}
-		$vars[] = '--esg-radius: ' . (int) $settings['radius'] . 'px';
-		if ( 'theme' === ( $settings['font'] ?? '' ) ) {
-			$vars[] = '--esg-font: inherit';
-		}
-		return implode( '; ', $vars );
+		return '.esg-generator { ' . implode( '; ', $shape ) . '; }'
+			. "\n" . ':root:not(.' . Theme::CSS_CLASS . ') .esg-generator { ' . implode( '; ', $colors ) . '; }';
 	}
 
 	/**

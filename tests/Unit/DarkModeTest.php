@@ -7,18 +7,19 @@ namespace ESG\Tests\Unit;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EmailSignatureGenerator\Admin\Autosave;
-use EmailSignatureGenerator\Admin\SettingsPage;
 use EmailSignatureGenerator\Settings;
+use EmailSignatureGenerator\Theme;
 use PHPUnit\Framework\TestCase;
 use WP_Error;
 
 /**
- * Dark mode for the settings screen: the setting, its autosave, the head
- * script that applies it, and the palette that makes it dark.
+ * Dark mode for the settings screen and the form: the setting, its
+ * autosave, the script that applies it, and the palettes that make each one
+ * dark.
  *
  * @covers \EmailSignatureGenerator\Settings
  * @covers \EmailSignatureGenerator\Admin\Autosave
- * @covers \EmailSignatureGenerator\Admin\SettingsPage
+ * @covers \EmailSignatureGenerator\Theme
  */
 final class DarkModeTest extends TestCase {
 
@@ -59,13 +60,13 @@ final class DarkModeTest extends TestCase {
 	}
 
 	public function test_the_head_script_applies_the_mode_and_follows_a_save(): void {
-		$script = SettingsPage::darkModeScript( 'auto' );
+		$script = Theme::script( 'auto' );
 		self::assertStringEndsWith( '})("auto");', $script );
 		self::assertStringContainsString( 'classList.toggle("esg-dark-mode",', $script );
 		self::assertStringContainsString( 'prefers-color-scheme: dark', $script );
 		self::assertStringContainsString( 'addEventListener("esg:setting-saved"', $script );
 
-		self::assertStringEndsWith( '})("off");', SettingsPage::darkModeScript( '"); alert(1); ("' ), 'An unknown value is never printed.' );
+		self::assertStringEndsWith( '})("off");', Theme::script( '"); alert(1); ("' ), 'An unknown value is never printed.' );
 	}
 
 	/**
@@ -84,6 +85,86 @@ final class DarkModeTest extends TestCase {
 		preg_match_all( '/var\(--(esg-[a-z0-9-]+)\)/', $css, $used );
 		self::assertNotEmpty( $used[1] );
 		self::assertSame( array(), array_values( array_diff( array_unique( $used[1] ), $light ) ), 'A token read but never declared.' );
+	}
+
+	/**
+	 * The form's dark block redefines colour tokens the light block declares,
+	 * and nothing else. Nothing in the sheet keys on the operating system.
+	 */
+	public function test_the_form_dark_palette_redefines_declared_tokens_only(): void {
+		$css   = self::formCss();
+		$light = self::tokens( $css, '.esg-generator {' );
+		$dark  = self::tokens( $css, ':root.esg-dark-mode .esg-generator {' );
+
+		self::assertSame( array(), array_values( array_diff( $dark, $light ) ) );
+		self::assertStringNotContainsString( 'prefers-color-scheme', $css, 'The setting decides, not the operating system.' );
+	}
+
+	/**
+	 * Every pair the form draws text with reads at 4.5:1 or more, in both
+	 * looks: the dark block merged over the light one, as the browser does.
+	 *
+	 * @dataProvider looks
+	 *
+	 * @param bool $dark Whether to measure the dark look.
+	 */
+	public function test_the_form_pairs_read_well( bool $dark ): void {
+		$light = self::values( self::formCss(), '.esg-generator {' );
+		$dark  = $dark ? array_merge( $light, self::values( self::formCss(), ':root.esg-dark-mode .esg-generator {' ) ) : $light;
+		$pairs = array(
+			array( 'esg-text', 'esg-surface' ),
+			array( 'esg-muted', 'esg-surface' ),
+			array( 'esg-accent', 'esg-surface' ),
+			array( 'esg-error', 'esg-surface' ),
+			array( 'esg-accent-text', 'esg-accent' ),
+			array( 'esg-accent', 'esg-accent-text' ),
+			array( 'esg-muted', 'esg-readonly-bg' ),
+			array( 'esg-text', 'esg-field-bg' ),
+			array( 'esg-placeholder', 'esg-field-bg' ),
+		);
+		foreach ( $pairs as $pair ) {
+			$ratio = Settings::contrast( $dark[ $pair[0] ], $dark[ $pair[1] ] );
+			self::assertGreaterThanOrEqual( 4.5, $ratio, sprintf( '%s on %s: %.2f:1', $pair[0], $pair[1], $ratio ) );
+		}
+	}
+
+	/**
+	 * The two looks.
+	 *
+	 * @return array<string, array{bool}>
+	 */
+	public static function looks(): array {
+		return array(
+			'light' => array( false ),
+			'dark'  => array( true ),
+		);
+	}
+
+	public function test_the_script_names_the_class_the_stylesheets_read(): void {
+		self::assertStringContainsString( '.' . Theme::CSS_CLASS . ' .esg-generator', self::formCss() );
+		self::assertStringContainsString( '"' . Theme::CSS_CLASS . '"', Theme::script( 'on' ) );
+	}
+
+	/**
+	 * The form's stylesheet.
+	 */
+	private static function formCss(): string {
+		return (string) file_get_contents( dirname( __DIR__, 2 ) . '/assets/css/signature-generator.css' );
+	}
+
+	/**
+	 * Token => value declared in the block that opens with $selector.
+	 *
+	 * @param string $css      Stylesheet.
+	 * @param string $selector Opening of the block.
+	 * @return array<string, string>
+	 */
+	private static function values( string $css, string $selector ): array {
+		$start = strpos( $css, $selector );
+		self::assertNotFalse( $start, $selector );
+		$block = substr( $css, $start, (int) strpos( $css, "\n}", $start ) - $start );
+		preg_match_all( '/--(esg-[a-z0-9-]+):\s*(#[0-9a-f]{6});/', $block, $m );
+		return array_combine( $m[1], $m[2] );
 	}
 
 	/**

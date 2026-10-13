@@ -70,7 +70,7 @@ final class Documentation {
 					array( __( 'Who can use the form', 'email-signature-generator' ), __( 'Everyone who can see the page, or logged-in users only; the others see a link to log in.', 'email-signature-generator' ) ),
 					array( __( 'Google Analytics', 'email-signature-generator' ), __( 'Off by default, and then nothing of Google\'s is loaded. Switched on with a measurement ID (G-XXXXXXXXXX), the pages that show the form load Google\'s tag and record when a signature is generated, copied or downloaded, with only the model and the image format.', 'email-signature-generator' ) ),
 					array( __( 'Allowed email domain', 'email-signature-generator' ), __( 'On: the person types only the part before the "@" and the domain is shown beside the field, as a list when there is more than one. Off: any valid address is accepted, except the refused domains, a list of placeholder and disposable domains such as test.com that you can edit.', 'email-signature-generator' ) ),
-					array( __( 'Dark Mode', 'email-signature-generator' ), __( 'Off by default. On, or Auto when the operating system is set to dark, this settings screen turns dark at once. It is this screen only: the form on the site keeps its own look.', 'email-signature-generator' ) ),
+					array( __( 'Dark Mode', 'email-signature-generator' ), __( 'Off by default. On, or Auto when the operating system is set to dark, this settings screen and the form on the site turn dark. The signature preview keeps its white ground, as email programs show it, and the Design tab\'s colours apply to the light look only.', 'email-signature-generator' ) ),
 				),
 				'note'  => __( 'The on/off switches and Dark Mode save as soon as they change. Everything else saves with "Save Changes".', 'email-signature-generator' ),
 			),
@@ -144,7 +144,7 @@ final class Documentation {
 				'intro' => __( 'The form\'s colours, corners and font, to match the site. The signature keeps its own look, since that is what email programs receive.', 'email-signature-generator' ),
 				'items' => array(
 					array( __( 'Customise', 'email-signature-generator' ), __( 'Off by default, and the form keeps its own look. Switching it off again puts every value back to its default.', 'email-signature-generator' ) ),
-					array( __( 'Colours', 'email-signature-generator' ), __( 'The accent of the buttons and links, the text on it, the field borders, the notes and the errors. A pair hard to read (below 4.5:1, as WCAG asks) is saved with a warning naming it.', 'email-signature-generator' ) ),
+					array( __( 'Colours', 'email-signature-generator' ), __( 'The accent of the buttons and links, the text on it, the field borders, the notes and the errors, in the light look; in dark mode the form keeps its own dark colours. A pair hard to read (below 4.5:1, as WCAG asks) is saved with a warning naming it.', 'email-signature-generator' ) ),
 					array(
 						__( 'Rounded corners', 'email-signature-generator' ),
 						sprintf(
@@ -154,7 +154,7 @@ final class Documentation {
 							Settings::RADIUS_MAX
 						),
 					),
-					array( __( 'Font', 'email-signature-generator' ), __( 'The form\'s own (Arial) or the site theme\'s.', 'email-signature-generator' ) ),
+					array( __( 'Font', 'email-signature-generator' ), __( 'The site theme\'s (the default), the plugin\'s system font, or Arial: the same three choices as Free Form Certificate\'s forms.', 'email-signature-generator' ) ),
 					array( __( 'Standalone HTML', 'email-signature-generator' ), __( 'Always keeps the form\'s own look: it never reads these settings.', 'email-signature-generator' ) ),
 				),
 			),
@@ -175,6 +175,7 @@ final class Documentation {
 				'items' => array(
 					array( __( 'Checked package', 'email-signature-generator' ), __( 'Each package is checked against its published SHA-256 before it is installed.', 'email-signature-generator' ) ),
 					array( __( 'Automatic updates', 'email-signature-generator' ), __( 'Turned on or off with WordPress\'s own link on the Plugins screen.', 'email-signature-generator' ) ),
+					array( __( 'View details', 'email-signature-generator' ), __( 'Shows the description, installation steps and screenshots, in your language when the plugin ships a translation of them. A screenshot opens larger without leaving the window: the arrows move between them, and the wheel, a pinch or a click zooms in.', 'email-signature-generator' ) ),
 				),
 			),
 		);

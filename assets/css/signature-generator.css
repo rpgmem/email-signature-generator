@@ -2,53 +2,120 @@
  * Email Signature Generator: the form.
  *
  * Every rule is scoped under .esg-generator, because the form lives inside
- * someone else's theme. The signature itself carries inline styles only, so
- * nothing here reaches what is copied.
+ * someone else's theme, except the two off-screen copies below, which the
+ * script appends to <body>. The signature itself carries inline styles only,
+ * so nothing here reaches what is copied.
+ *
+ * Colours read the tokens below. Dark mode is the `esg-dark-mode` class the
+ * plugin's theme script puts on <html>, never the operating system's media
+ * query, so the Dark Mode setting stays the one source of truth.
+ *
+ * The sizes follow Free Form Certificate's public forms, so the plugins look
+ * like one family on a site: the same type scale (each step a px floor with
+ * a rem that honours the browser's font size), the same field and button
+ * measures, and the same card. The values are copied rather than shared,
+ * because this plugin must work without that one installed.
  */
+
+/* What the script draws off screen and outside the form: the copy it selects
+   for the legacy clipboard path, and the stage html2canvas renders the PNG
+   from. Both are `aria-hidden`. */
+.esg-offscreen {
+	position: fixed;
+	top: 0;
+	left: -9999px;
+}
+
+/* The PNG's ground: a signature is drawn on white in every mail client. */
+.esg-stage {
+	background: #ffffff;
+}
 
 .esg-generator {
 	--esg-border: #8c8f94;
 	--esg-muted: #50575e;
 	--esg-accent: #2271b1;
+	--esg-accent-hover: #135e96;
 	--esg-accent-text: #ffffff;
 	--esg-error: #b32d2e;
 	--esg-preview-bg: #ffffff;
+	--esg-readonly-bg: #f0f0f1;
+	--esg-field-bg: #ffffff;
+	--esg-placeholder: #646970;
+	--esg-surface: #ffffff;
+	--esg-text: #1d2327;
+	--esg-focus-ring: rgb(34 113 177 / 75%);
+	--esg-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 	--esg-radius: 4px;
-	--esg-font: arial, sans-serif;
+	--esg-font-size-sm: max(13px, 0.8125rem);
+	--esg-font-size-base: max(14px, 0.875rem);
+	--esg-font-size-xl: max(18px, 1.125rem);
 
 	/* The shortcode sets the configured width inline; this is the standalone HTML's. */
 	max-width: 640px;
-	font-family: var(--esg-font);
+	box-sizing: border-box;
+	margin: 30px auto;
+	padding: 30px;
+	border-radius: 8px;
+	background: var(--esg-surface);
+	box-shadow: var(--esg-shadow);
+	color: var(--esg-text);
+
+	/* The theme's typeface, as in Free Form Certificate; the Design tab can
+	   pick the form's own instead. */
+	font-family: var(--esg-font, inherit);
+	font-size: var(--esg-font-size-xl);
+	line-height: 1.5;
 }
 
 .esg-generator .esg-field {
-	margin: 0 0 12px;
+	margin: 0 0 20px;
 }
 
 .esg-generator .esg-field label {
 	display: block;
-	margin-bottom: 4px;
-	font-weight: 600;
+	margin-bottom: 8px;
+	color: var(--esg-muted);
+	font-weight: 500;
 }
 
 .esg-generator .esg-field input,
 .esg-generator .esg-field select {
 	box-sizing: border-box;
 	width: 100%;
-	padding: 6px 8px;
+	height: 45px;
+	padding: 10px 12px;
 	border: 1px solid var(--esg-border);
 	border-radius: var(--esg-radius);
-	font: inherit;
+	background-color: var(--esg-field-bg);
+	color: var(--esg-text);
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: 400;
+	line-height: 1.5;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.esg-generator .esg-field input:focus,
+.esg-generator .esg-field select:focus {
+	border-color: var(--esg-accent);
+	outline: none;
+	box-shadow: 0 0 0 3px var(--esg-focus-ring);
+}
+
+.esg-generator ::placeholder {
+	color: var(--esg-placeholder);
+	opacity: 1;
 }
 
 .esg-generator .esg-field input[readonly] {
-	background: #f0f0f1;
+	background: var(--esg-readonly-bg);
 }
 
-/* A select paints like the text fields, not like a button; a locked one keeps the browser's disabled look. */
-.esg-generator .esg-field select:not(:disabled) {
-	background-color: Field;
-	color: FieldText;
+/* A locked select keeps the browser's disabled look. */
+.esg-generator .esg-field select:disabled {
+	background-color: revert;
+	color: revert;
 }
 
 .esg-generator .esg-field [aria-invalid="true"] {
@@ -82,11 +149,12 @@
 	flex: 0 1 auto;
 	width: auto;
 	min-width: 0;
-	padding: 6px 8px;
+	padding: 10px 12px;
 	border: 1px solid var(--esg-border);
 	border-left: 0;
+	line-height: 23px; /* The 45px of the field beside it, less padding and border. */
 	border-radius: 0 var(--esg-radius) var(--esg-radius) 0;
-	background: #f0f0f1;
+	background: var(--esg-readonly-bg);
 	color: var(--esg-muted);
 	white-space: nowrap;
 	overflow: hidden;
@@ -118,13 +186,15 @@
 	display: block;
 	margin-top: 4px;
 	color: var(--esg-error);
+	font-size: var(--esg-font-size-base);
 }
 
 .esg-generator .esg-errors {
-	margin: 0 0 12px;
+	margin: 0 0 20px;
 	padding: 0;
 	list-style: none;
 	color: var(--esg-error);
+	font-size: var(--esg-font-size-base);
 }
 
 .esg-generator .esg-errors:empty {
@@ -138,18 +208,41 @@
 }
 
 .esg-generator .esg-button {
-	padding: 8px 16px;
+	box-sizing: border-box;
+	padding: 10px 16px;
 	border: 1px solid var(--esg-accent);
 	border-radius: var(--esg-radius);
 	background: var(--esg-accent-text);
 	color: var(--esg-accent);
-	font: inherit;
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: 600;
+	line-height: normal;
 	cursor: pointer;
+	transition: background 0.3s ease, transform 0.1s;
 }
 
+.esg-generator .esg-button:active {
+	transform: scale(0.98);
+}
+
+.esg-generator .esg-button:focus-visible {
+	outline: 2px solid var(--esg-accent);
+	outline-offset: 2px;
+}
+
+/* The main action spans the form, as Free Form Certificate's submit does. */
 .esg-generator .esg-generate {
+	width: 100%;
+	padding: 16px;
+	border: 0;
 	background: var(--esg-accent);
 	color: var(--esg-accent-text);
+}
+
+.esg-generator .esg-generate:hover,
+.esg-generator .esg-copy:hover {
+	background: var(--esg-accent-hover);
 }
 
 /* Copying the HTML is the recommended way: its button is filled like the
@@ -158,7 +251,6 @@
 .esg-generator .esg-copy {
 	background: var(--esg-accent);
 	color: var(--esg-accent-text);
-	font-weight: 600;
 }
 
 .esg-generator .esg-download {
@@ -191,8 +283,8 @@
 
 .esg-generator .esg-hint {
 	margin: 8px 0 0;
-	font-size: 0.9em;
-	opacity: 0.85;
+	color: var(--esg-muted);
+	font-size: var(--esg-font-size-base);
 }
 
 .esg-generator .esg-status:empty {
@@ -208,6 +300,13 @@
 	background: var(--esg-preview-bg);
 }
 
+@media (max-width: 768px) {
+	.esg-generator {
+		margin: 16px auto;
+		padding: 20px;
+	}
+}
+
 @media (max-width: 600px) {
 	.esg-generator .esg-button {
 		width: 100%;
@@ -216,7 +315,8 @@
 
 /* Where to paste the signature, collapsed until asked for. */
 .esg-generator .esg-howto {
-	margin: 0 0 12px;
+	margin: 0 0 20px;
+	font-size: var(--esg-font-size-base);
 }
 
 .esg-generator .esg-howto summary {
@@ -236,9 +336,9 @@
 /* "This browser remembers…" and its link to forget. */
 .esg-generator .esg-remember,
 .esg-generator .esg-privacy {
-	margin: 0 0 12px;
+	margin: 0 0 20px;
 	color: var(--esg-muted);
-	font-size: 0.875em;
+	font-size: var(--esg-font-size-sm);
 }
 
 .esg-generator .esg-forget {
@@ -249,6 +349,16 @@
 	font: inherit;
 	text-decoration: underline;
 	cursor: pointer;
+}
+
+/* The preview's title: a label's size, set rather than inherited from the
+   theme's headings. */
+.esg-generator .esg-preview-title {
+	margin: 0 0 8px;
+	color: var(--esg-text);
+	font-size: var(--esg-font-size-xl);
+	font-weight: 600;
+	line-height: 1.5;
 }
 
 /* The preview's title and its dark-mode switch on one line. */
@@ -262,10 +372,38 @@
 
 .esg-generator .esg-dark {
 	color: var(--esg-muted);
-	font-size: 0.875em;
+	font-size: var(--esg-font-size-base);
 }
 
 /* Email programs in dark mode invert text and backgrounds. */
 .esg-generator .esg-preview--dark {
 	filter: invert(1) hue-rotate(180deg);
+}
+
+/*
+ * Dark mode. The block redefines the colour tokens only; the light values
+ * above stay as they were. The preview and the PNG keep their white ground on
+ * purpose: that is how a mail client shows the signature, and the preview's
+ * own switch simulates a dark client.
+ *
+ * `color-scheme` turns the browser's own parts of the controls dark (the
+ * select's arrow, the date picker), and only inside the form, because <html>
+ * belongs to the theme.
+ */
+:root.esg-dark-mode .esg-generator {
+	--esg-border: #6f7c89;
+	--esg-muted: #c3c4c7;
+	--esg-accent: #5dabde;
+	--esg-accent-hover: #7cbde8;
+	--esg-accent-text: #1d2327;
+	--esg-error: #ef9a9a;
+	--esg-readonly-bg: #1d2327;
+	--esg-field-bg: #23282d;
+	--esg-placeholder: #a7aaad;
+	--esg-surface: #2c3338;
+	--esg-text: #e7e8ea;
+	--esg-focus-ring: rgb(93 171 222 / 60%);
+	--esg-shadow: 0 2px 8px rgb(0 0 0 / 30%);
+
+	color-scheme: dark;
 }

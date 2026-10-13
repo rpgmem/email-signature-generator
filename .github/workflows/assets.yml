@@ -1,0 +1,40 @@
+name: Asset Build Verification
+
+on:
+  pull_request:
+    branches: [main, develop]
+# No path filter: a check that skips never reports, and a required one would
+# then leave every PR waiting on it.
+
+# Every job only reads the repository; nothing here writes to it.
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify minified assets are up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build assets
+        run: npm run build
+      - name: Check for uncommitted changes
+        # `git status --porcelain` and not `git diff`: a new source file
+        # builds a `.min` that is untracked, which `git diff` never reports.
+        run: |
+          if [ -n "$(git status --porcelain assets/)" ]; then
+            echo "::error::Minified assets are stale or missing. Run 'npm run build' and commit the results."
+            git status --porcelain assets/
+            exit 1
+          fi
+          echo "All minified assets are up to date."

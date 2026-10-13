@@ -65,6 +65,9 @@ final class Plugin {
 
 		// Not behind is_admin(): WordPress also scans for updates from cron.
 		Update\GithubUpdater::register();
+
+		// Screenshot viewer in that update's "View details" modal.
+		Update\ScreenshotViewer::register();
 	}
 
 	/**
@@ -93,6 +96,21 @@ final class Plugin {
 	 */
 	public static function url(): string {
 		return plugin_dir_url( self::$file );
+	}
+
+	/**
+	 * The path of one of the plugin's own CSS or JS files as it should load:
+	 * the `.min` build in production, the readable source when `SCRIPT_DEBUG`
+	 * is on. `npm run build` writes the `.min` files, and CI fails when one is
+	 * older than its source.
+	 *
+	 * @param string $relative Source path under the plugin directory, e.g. `assets/js/x.js`.
+	 */
+	public static function asset( string $relative ): string {
+		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+			return $relative;
+		}
+		return (string) preg_replace( '/\.(css|js)$/', '.min.$1', $relative );
 	}
 
 	/**

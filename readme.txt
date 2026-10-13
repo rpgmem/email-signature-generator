@@ -3,7 +3,7 @@ Contributors: rpgmem
 Tags: email signature, signature generator, outlook, shortcode
 Requires at least: 6.8
 Tested up to: 7.1.3
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 Requires PHP: 8.3
 License: AGPLv3 or later
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
@@ -48,7 +48,7 @@ Settings → Email Signature sets, for every form on the site:
 * per field: the label the form shows, a default value, whether it is required, whether it is locked to that default, and whether it is printed in capitals.
 * optional Google Analytics, with a GA4 measurement ID (off by default);
 * the form's colours, rounded corners and font, to match the site (off by default; the signature keeps its own look).
-* this settings screen's Dark Mode: off, on, or following the operating system (off by default).
+* Dark Mode for this settings screen and the form on the site: off, on, or following the operating system (off by default).
 
 A Documentation tab on the same screen explains every setting, how the form behaves, privacy and updates.
 
@@ -104,5 +104,5 @@ The full history of every release is in [CHANGELOG.md](https://github.com/rpgmem
 
 == Upgrade Notice ==
 
-= 1.3.0 =
-⚠ The licence is now AGPLv3 or later: reuse and forks stay free, and a modified copy offered as a service must publish its source. CI also tests the WordPress floor and runs with a read-only token. Details in CHANGELOG.md.
+= 1.4.0 =
+The form on the site now looks like Free Form Certificate's and follows Dark Mode. A plugin icon on Dashboard → Updates, and "View details" with the readme tabs, Portuguese and screenshots that open in place. Assets ship minified. Details in CHANGELOG.md.

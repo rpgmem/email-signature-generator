@@ -111,9 +111,17 @@ final class Config {
 	public const RADIUS = 4;
 
 	/**
-	 * The fonts the form can use: its own (the stylesheet's) or the theme's.
+	 * The fonts the form can use, the same three as the other plugins of the
+	 * family: the theme's (the default), the plugins' own system font stack,
+	 * or Arial.
 	 */
-	public const FONTS = array( 'form', 'theme' );
+	public const FONTS = array( 'theme', 'plugin', 'arial' );
+
+	/**
+	 * The plugins' own font: the system stack Free Form Certificate's forms
+	 * use, so the two read as one family whatever the theme.
+	 */
+	public const PLUGIN_FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif';
 
 	/**
 	 * Width of the signature table, in CSS pixels. Mirrors SIGNATURE_WIDTH in
