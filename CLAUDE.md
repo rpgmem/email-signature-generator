@@ -147,6 +147,11 @@ Locally:
 ```bash
 composer install && npm ci
 vendor/bin/phpunit --testsuite unit
+# The functional suite needs MySQL. A cloud session's container ships MariaDB stopped;
+# the environment's setup script starts it with the CI credentials (root / root).
+service mariadb start
+bash bin/install-wp-tests.sh wp_esg_tests root root 127.0.0.1 false latest
+vendor/bin/phpunit -c phpunit.functional.xml.dist
 vendor/bin/phpstan analyse --no-progress
 vendor/bin/phpcs
 npm run lint
@@ -159,6 +164,7 @@ npm run test:coverage
 
 - **Never edit a compiled catalogue by hand**, and never compile one with a tool outside the repository. `msgfmt` writes the `.mo` and `bin/po-to-l10n.php` the `.l10n.php`; a fix that reaches one and not the other depends on which file WordPress loaded. Before #88 the committed `.l10n.php` had come from a script outside the repository, in a format the committed compiler did not write.
 - **`bin/po-catalogue.php` is the one `.po` reader.** The compiler and the tests both use it, so they cannot disagree about what an entry is. It handles the shapes this catalogue does not carry yet (a context, a plural, a fuzzy entry); `PoCatalogueTest` exercises them on a synthetic file.
+- **The `.l10n.php` is in `wp i18n make-php`'s shape, byte for byte** — the same keys in the same order Loco and WP-CLI write, so a catalogue compiled here, saved from Loco or made by WP-CLI is the same file. WP-CLI reads the text domain from the `.po`'s `X-Domain` header, which is why the header is there; keep it. The reader sits inside PHPStan's and PHPCS's paths like the plugin's own code (#90).
 - **`TranslationCatalogueAgreementTest`** fails when the three files of a locale disagree, in either direction, or when the `.l10n.php` is not byte for byte what the compiler writes. Its self-check recounts the `.po`'s entries by a different route, so a reader that read nothing fails instead of passing.
 - **`languages/readme-pt_BR.txt` is the readme "View details" shows a pt_BR administrator.** A PR that changes `readme.txt` updates it in the same PR. `PluginDetailsAssetsTest` holds the two to the same structure (tab sections, the count of other sections, the screenshot captions) and cannot see the content: a changed sentence in English passes CI with the translation still saying the old thing (#87).
 
