@@ -40,7 +40,7 @@ Configurações → Assinatura de E-mail define, para todos os formulários do s
 * por campo: o rótulo que o formulário mostra, um valor padrão, se é obrigatório, se fica travado nesse valor e se é impresso em maiúsculas;
 * o Google Analytics opcional, com um ID de métricas GA4 (desligado por padrão);
 * as cores, os cantos arredondados e a fonte do formulário, para combinar com o site (desligado por padrão; a assinatura mantém o próprio visual);
-* o Modo Escuro desta tela de configurações: desligado, ligado ou seguindo o sistema operacional (desligado por padrão).
+* o Modo Escuro desta tela de configurações e do formulário no site: desligado, ligado ou seguindo o sistema operacional (desligado por padrão).
 
 Uma aba Documentação, na mesma tela, explica cada configuração, como o formulário se comporta, a privacidade e as atualizações.
 

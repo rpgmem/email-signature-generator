@@ -194,8 +194,8 @@ msgid "Dark Mode"
 msgstr "Modo Escuro"
 
 #: src/admin/documentation.php:73
-msgid "Off by default. On, or Auto when the operating system is set to dark, this settings screen turns dark at once. It is this screen only: the form on the site keeps its own look."
-msgstr "Desligado por padrão. Ligado, ou Auto quando o sistema operacional está no tema escuro, esta tela de configurações fica escura na hora. Vale só para esta tela: o formulário no site mantém o próprio visual."
+msgid "Off by default. On, or Auto when the operating system is set to dark, this settings screen and the form on the site turn dark. The signature preview keeps its white ground, as email programs show it, and the Design tab's colours apply to the light look only."
+msgstr "Desligado por padrão. Ligado, ou Auto quando o sistema operacional está no tema escuro, esta tela de configurações e o formulário no site ficam escuros. A prévia da assinatura mantém o fundo branco, como os programas de e-mail a mostram, e as cores da aba Design valem só para o visual claro."
 
 #: src/admin/documentation.php:75
 msgid "The on/off switches and Dark Mode save as soon as they change. Everything else saves with \"Save Changes\"."
@@ -379,8 +379,8 @@ msgid "Colours"
 msgstr "Cores"
 
 #: src/admin/documentation.php:147
-msgid "The accent of the buttons and links, the text on it, the field borders, the notes and the errors. A pair hard to read (below 4.5:1, as WCAG asks) is saved with a warning naming it."
-msgstr "O destaque dos botões e links, o texto sobre ele, as bordas dos campos, as notas e os erros. Um par difícil de ler (abaixo de 4,5:1, como pede a WCAG) é salvo com um aviso que o nomeia."
+msgid "The accent of the buttons and links, the text on it, the field borders, the notes and the errors, in the light look; in dark mode the form keeps its own dark colours. A pair hard to read (below 4.5:1, as WCAG asks) is saved with a warning naming it."
+msgstr "O destaque dos botões e links, o texto sobre ele, as bordas dos campos, as notas e os erros, no visual claro; no modo escuro o formulário mantém as próprias cores escuras. Um par difícil de ler (abaixo de 4,5:1, como pede a WCAG) é salvo com um aviso que o nomeia."
 
 #: src/admin/documentation.php:149 src/admin/settings-page.php:590
 msgid "Rounded corners"
@@ -632,8 +632,8 @@ msgid "Auto (follow OS)"
 msgstr "Auto (seguir SO)"
 
 #: src/admin/settings-page.php:295
-msgid "Applies to this settings screen only; the form on the site keeps its own look. \"Auto\" follows your operating system preference."
-msgstr "Vale só para esta tela de configurações; o formulário no site mantém o próprio visual. \"Auto\" segue a preferência do sistema operacional."
+msgid "Applies to this settings screen and to the form on the site. \"Auto\" follows your operating system preference."
+msgstr "Vale para esta tela de configurações e para o formulário no site. \"Auto\" segue a preferência do sistema operacional."
 
 #: src/admin/settings-page.php:302
 msgid "Form on the page"

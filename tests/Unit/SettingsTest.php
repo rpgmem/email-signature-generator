@@ -49,7 +49,7 @@ final class SettingsTest extends TestCase {
 		$defaults = Settings::defaults();
 		self::assertFalse( $defaults['custom_style'] );
 		self::assertSame( Config::COLORS, $defaults['colors'] );
-		self::assertSame( '', Settings::styleVars( $defaults ) );
+		self::assertSame( '', Settings::styleRule( $defaults ) );
 
 		$off = Settings::sanitize( array( 'custom_style' => '0', 'colors' => array( 'accent' => '#aa0000' ), 'radius' => 0, 'font' => 'theme' ) );
 		self::assertSame( Config::COLORS, $off['colors'] );
@@ -73,11 +73,13 @@ final class SettingsTest extends TestCase {
 		self::assertSame( 'form', $on['font'] );
 	}
 
-	public function test_style_vars_carry_the_colours_the_radius_and_the_font(): void {
-		$vars = Settings::styleVars( Settings::sanitize( array( 'custom_style' => '1', 'colors' => array( 'accent' => '#aa0000' ), 'radius' => 0, 'font' => 'theme' ) ) );
-		self::assertStringStartsWith( '--esg-accent: #aa0000; --esg-accent-text: #ffffff; ', $vars );
-		self::assertStringEndsWith( '--esg-radius: 0px; --esg-font: inherit', $vars );
-		self::assertStringNotContainsString( '"', $vars );
+	public function test_the_style_rule_keeps_the_colours_to_the_light_look(): void {
+		$rule = Settings::styleRule( Settings::sanitize( array( 'custom_style' => '1', 'colors' => array( 'accent' => '#aa0000' ), 'radius' => 0, 'font' => 'theme' ) ) );
+		$lines = explode( "\n", $rule );
+
+		self::assertSame( '.esg-generator { --esg-radius: 0px; --esg-font: inherit; }', $lines[0], 'The corners and the font hold in both looks.' );
+		self::assertStringStartsWith( ':root:not(.esg-dark-mode) .esg-generator { --esg-accent: #aa0000; --esg-accent-text: #ffffff; ', $lines[1] );
+		self::assertStringNotContainsString( '<', $rule, 'Nothing can close the style element.' );
 	}
 
 	public function test_contrast_follows_wcag(): void {

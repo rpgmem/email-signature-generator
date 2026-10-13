@@ -5,6 +5,10 @@
  * someone else's theme, except the two off-screen copies below, which the
  * script appends to <body>. The signature itself carries inline styles only,
  * so nothing here reaches what is copied.
+ *
+ * Colours read the tokens below. Dark mode is the `esg-dark-mode` class the
+ * plugin's theme script puts on <html>, never the operating system's media
+ * query, so the Dark Mode setting stays the one source of truth.
  */
 
 /* What the script draws off screen and outside the form: the copy it selects
@@ -28,6 +32,7 @@
 	--esg-accent-text: #ffffff;
 	--esg-error: #b32d2e;
 	--esg-preview-bg: #ffffff;
+	--esg-readonly-bg: #f0f0f1;
 	--esg-radius: 4px;
 	--esg-font: arial, sans-serif;
 
@@ -57,7 +62,7 @@
 }
 
 .esg-generator .esg-field input[readonly] {
-	background: #f0f0f1;
+	background: var(--esg-readonly-bg);
 }
 
 /* A select paints like the text fields, not like a button; a locked one keeps the browser's disabled look. */
@@ -101,7 +106,7 @@
 	border: 1px solid var(--esg-border);
 	border-left: 0;
 	border-radius: 0 var(--esg-radius) var(--esg-radius) 0;
-	background: #f0f0f1;
+	background: var(--esg-readonly-bg);
 	color: var(--esg-muted);
 	white-space: nowrap;
 	overflow: hidden;
@@ -283,4 +288,40 @@
 /* Email programs in dark mode invert text and backgrounds. */
 .esg-generator .esg-preview--dark {
 	filter: invert(1) hue-rotate(180deg);
+}
+
+/*
+ * Dark mode. The block redefines the colour tokens only; the light values
+ * above stay as they were. The preview and the PNG keep their white ground on
+ * purpose: that is how a mail client shows the signature, and the preview's
+ * own switch simulates a dark client.
+ *
+ * The form paints its own ground and text: a theme's light page would
+ * otherwise leave dark text on the dark fields. `color-scheme` turns the
+ * browser's own parts of the controls dark (the fields' ground, the select's
+ * arrow), and only inside the form, because <html> belongs to the theme.
+ */
+:root.esg-dark-mode .esg-generator {
+	--esg-border: #6f7c89;
+	--esg-muted: #c3c4c7;
+	--esg-accent: #5dabde;
+	--esg-accent-text: #1d2327;
+	--esg-error: #ef9a9a;
+	--esg-placeholder: #a7aaad;
+	--esg-readonly-bg: #1d2327;
+	--esg-surface: #2c3338;
+	--esg-text: #e7e8ea;
+
+	box-sizing: border-box;
+	padding: 16px;
+	border-radius: var(--esg-radius);
+	background: var(--esg-surface);
+	color: var(--esg-text);
+	color-scheme: dark;
+}
+
+/* The browser's dark placeholder is too faint on the dark field. */
+:root.esg-dark-mode .esg-generator ::placeholder {
+	color: var(--esg-placeholder);
+	opacity: 1;
 }

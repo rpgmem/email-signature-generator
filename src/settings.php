@@ -89,7 +89,8 @@ final class Settings {
 
 	/**
 	 * Values `dark_mode` accepts: never, always, or what the operating
-	 * system prefers. It colours this plugin's settings screen only.
+	 * system prefers. It colours this plugin's settings screen and the form
+	 * on the site, never the signature itself.
 	 */
 	public const DARK_MODES = array( 'off', 'on', 'auto' );
 
@@ -369,27 +370,32 @@ final class Settings {
 	}
 
 	/**
-	 * The CSS custom properties the container carries when the look is
+	 * The stylesheet rule the Design tab adds to the form when the look is
 	 * customised; '' when it is not, so the stylesheet's own look applies.
 	 *
+	 * The corners and the font hold in both themes. The colours are scoped
+	 * to the light one: a colour chosen against white does not keep its
+	 * contrast on the dark ground, so the dark theme keeps its own palette.
+	 *
 	 * Every value is built from validated settings (#rrggbb colours, an
-	 * integer radius, a known font), so it is safe inside a style attribute.
+	 * integer radius, a known font), so it is safe inside a style element.
 	 *
 	 * @param array<string, mixed> $settings Sanitized settings.
 	 */
-	public static function styleVars( array $settings ): string {
+	public static function styleRule( array $settings ): string {
 		if ( empty( $settings['custom_style'] ) ) {
 			return '';
 		}
-		$vars = array();
-		foreach ( self::colors( $settings['colors'] ?? array() ) as $key => $color ) {
-			$vars[] = '--esg-' . str_replace( '_', '-', $key ) . ': ' . $color;
-		}
-		$vars[] = '--esg-radius: ' . (int) $settings['radius'] . 'px';
+		$shape = array( '--esg-radius: ' . (int) $settings['radius'] . 'px' );
 		if ( 'theme' === ( $settings['font'] ?? '' ) ) {
-			$vars[] = '--esg-font: inherit';
+			$shape[] = '--esg-font: inherit';
 		}
-		return implode( '; ', $vars );
+		$colors = array();
+		foreach ( self::colors( $settings['colors'] ?? array() ) as $key => $color ) {
+			$colors[] = '--esg-' . str_replace( '_', '-', $key ) . ': ' . $color;
+		}
+		return '.esg-generator { ' . implode( '; ', $shape ) . '; }'
+			. "\n" . ':root:not(.' . Theme::CSS_CLASS . ') .esg-generator { ' . implode( '; ', $colors ) . '; }';
 	}
 
 	/**
