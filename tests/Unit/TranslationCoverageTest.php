@@ -7,9 +7,10 @@ namespace ESG\Tests\Unit;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Every source string has a translation in each compiled catalogue, and the
- * compiled catalogues agree with their .po. Run bin/i18n.sh after changing a
- * string, translate it in the .po, then run it again.
+ * Every source string has a translation in each compiled catalogue. Run
+ * bin/i18n.sh after changing a string, translate it in the .po, then run it
+ * again. Whether the three files of a locale agree with each other is
+ * TranslationCatalogueAgreementTest's question.
  *
  * @coversNothing
  */
@@ -28,19 +29,6 @@ final class TranslationCoverageTest extends TestCase {
 			$messages = ( require $file )['messages'];
 			foreach ( $strings as $string ) {
 				self::assertArrayHasKey( $string, $messages, basename( $file ) . " has no translation for: {$string}" );
-			}
-		}
-	}
-
-	public function test_each_compiled_catalogue_is_newer_than_nothing_it_was_built_from(): void {
-		foreach ( glob( self::ROOT . '/languages/*.po' ) ?: array() as $po ) {
-			$l10n = ( require preg_replace( '/\.po$/', '.l10n.php', $po ) )['messages'];
-			self::assertFileExists( preg_replace( '/\.po$/', '.mo', $po ) );
-
-			preg_match_all( '/^msgid "(.+)"\nmsgstr "(.+)"$/m', (string) file_get_contents( $po ), $m, PREG_SET_ORDER );
-			foreach ( $m as $entry ) {
-				$id = stripcslashes( $entry[1] );
-				self::assertSame( stripcslashes( $entry[2] ), $l10n[ $id ] ?? null, basename( $po ) . " and its .l10n.php disagree on: {$id}" );
 			}
 		}
 	}
