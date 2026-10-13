@@ -75,15 +75,12 @@ final class Shortcode {
 		// configuration. It is inline because a block theme's constrained
 		// layout sets max-width on every child of the content at the same
 		// specificity as the stylesheet, and loads later.
-		// The Design tab's colours, corners and font ride on the same
-		// attribute, as custom properties the stylesheet reads.
 		$settings = Settings::get();
-		$vars     = Settings::styleVars( $settings );
 		return sprintf(
 			'<div class="esg-generator" style="%3$s" data-esg-config="%1$s"><noscript>%2$s</noscript></div>',
 			esc_attr( (string) wp_json_encode( $config ) ),
 			esc_html__( 'The signature generator needs JavaScript.', 'email-signature-generator' ),
-			esc_attr( 'max-width:' . (int) $settings['form_width'] . 'px' . ( '' !== $vars ? '; ' . $vars : '' ) )
+			esc_attr( 'max-width:' . (int) $settings['form_width'] . 'px' )
 		);
 	}
 
@@ -119,7 +116,8 @@ final class Shortcode {
 	}
 
 	/**
-	 * Load the script, its image library and the form's stylesheet. Called
+	 * Load the script, its image library, the dark-mode switch and the form's
+	 * stylesheet, with the Design tab's rule when it is on. Called
 	 * from render(), so they load only on pages that show the generator;
 	 * Google's tag too when the settings turn Analytics on, and nothing of
 	 * Google's otherwise.
@@ -128,6 +126,17 @@ final class Shortcode {
 	 */
 	private static function enqueue( array $settings ): void {
 		wp_enqueue_style( self::STYLE_HANDLE, Plugin::url() . Plugin::asset( 'assets/css/signature-generator.css' ), array(), Plugin::assetVersion( Plugin::asset( 'assets/css/signature-generator.css' ) ) );
+		// The Design tab's colours, corners and font, as custom properties the
+		// stylesheet reads. They are scoped to the light theme: a colour picked
+		// against white is not one to draw on the dark ground, and a property
+		// set in a style attribute could not be overridden by the dark block.
+		// A page with two generators needs the rule once.
+		$rule  = Settings::styleRule( $settings );
+		$added = wp_styles()->get_data( self::STYLE_HANDLE, 'after' );
+		if ( '' !== $rule && ! ( is_array( $added ) && in_array( $rule, $added, true ) ) ) {
+			wp_add_inline_style( self::STYLE_HANDLE, $rule );
+		}
+		Theme::enqueue( true );
 		wp_enqueue_script(
 			self::HTML2CANVAS_HANDLE,
 			Plugin::url() . 'assets/vendor/html2canvas-' . self::HTML2CANVAS_VERSION . '.min.js',
@@ -138,7 +147,7 @@ final class Shortcode {
 		wp_enqueue_script(
 			self::SCRIPT_HANDLE,
 			Plugin::url() . Plugin::asset( 'assets/js/signature-generator.js' ),
-			array( self::HTML2CANVAS_HANDLE ),
+			array( self::HTML2CANVAS_HANDLE, Theme::HANDLE ),
 			Plugin::assetVersion( Plugin::asset( 'assets/js/signature-generator.js' ) ),
 			array( 'in_footer' => true )
 		);

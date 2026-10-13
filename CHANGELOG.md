@@ -20,6 +20,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 
 - **Dark mode reaches what the browser paints itself** (#92). The settings screen declares `color-scheme: dark`, so scrollbars and native pickers stop painting light, and link-styled buttons read the palette.
+- **Dark Mode reaches the form on the site** (#96). The shortcode loads the theme switch and the form gets its own dark palette; the Design tab's colours apply to the light look only, the preview and the PNG stay white, and the standalone HTML follows the operating system.
 
 
 ## [1.3.0] (2026-10-12) — `dce0461`

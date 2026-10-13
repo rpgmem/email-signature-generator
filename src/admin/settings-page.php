@@ -14,6 +14,7 @@ use EmailSignatureGenerator\Plugin;
 use EmailSignatureGenerator\Regions;
 use EmailSignatureGenerator\Settings;
 use EmailSignatureGenerator\Shortcode;
+use EmailSignatureGenerator\Theme;
 
 /**
  * The settings screen. It saves through the Settings API (options.php), which
@@ -90,11 +91,8 @@ final class SettingsPage {
 		}
 		wp_enqueue_media();
 		// The theme class must be on <html> before the page paints, or a dark
-		// screen flashes light first: an inline script in the head, with no
-		// file behind it (as in Free Form Certificate and Total Mail Queue).
-		wp_register_script( 'email-signature-generator-theme', false, array(), Plugin::VERSION, false );
-		wp_enqueue_script( 'email-signature-generator-theme' );
-		wp_add_inline_script( 'email-signature-generator-theme', self::darkModeScript( (string) Settings::get()['dark_mode'] ) );
+		// screen flashes light first: the script goes in the head.
+		Theme::enqueue( false );
 		wp_enqueue_style( 'email-signature-generator-admin', Plugin::url() . Plugin::asset( 'assets/css/admin-settings.css' ), array(), Plugin::assetVersion( Plugin::asset( 'assets/css/admin-settings.css' ) ) );
 		wp_enqueue_script( 'email-signature-generator-admin', Plugin::url() . Plugin::asset( 'assets/js/admin-settings.js' ), array( 'media-editor' ), Plugin::assetVersion( Plugin::asset( 'assets/js/admin-settings.js' ) ), array( 'in_footer' => true ) );
 		wp_localize_script(
@@ -292,7 +290,7 @@ final class SettingsPage {
 		foreach ( $modes as $value => $label ) {
 			printf( '<option value="%1$s"%2$s>%3$s</option>', esc_attr( $value ), selected( $settings['dark_mode'], $value, false ), esc_html( $label ) );
 		}
-		echo '</select><p class="description">' . esc_html__( 'Applies to this settings screen only; the form on the site keeps its own look. "Auto" follows your operating system preference.', 'email-signature-generator' ) . '</p></td></tr>';
+		echo '</select><p class="description">' . esc_html__( 'Applies to this settings screen and to the form on the site. "Auto" follows your operating system preference.', 'email-signature-generator' ) . '</p></td></tr>';
 		echo '</tbody></table></div>';
 
 		echo '</div>';
@@ -686,30 +684,6 @@ final class SettingsPage {
 			'muted'       => __( 'Notes and hints', 'email-signature-generator' ),
 			'error'       => __( 'Errors', 'email-signature-generator' ),
 		);
-	}
-
-	/**
-	 * The script that puts `esg-dark-mode` on <html>.
-	 *
-	 * "on" and "off" are decided here; only "auto" asks the operating system,
-	 * and it keeps listening, so switching the system theme repaints the open
-	 * page. A saved change arrives as `esg:setting-saved` and repaints too.
-	 * An unknown value is treated as "off".
-	 *
-	 * @param string $mode The stored `dark_mode` setting.
-	 */
-	public static function darkModeScript( string $mode ): string {
-		if ( ! in_array( $mode, Settings::DARK_MODES, true ) ) {
-			$mode = 'off';
-		}
-		return '(function(mode){'
-			. 'var root=document.documentElement;'
-			. 'var query=window.matchMedia?window.matchMedia("(prefers-color-scheme: dark)"):null;'
-			. 'function apply(){root.classList.toggle("esg-dark-mode",mode==="on"||(mode==="auto"&&!!query&&query.matches));}'
-			. 'apply();'
-			. 'if(query&&query.addEventListener){query.addEventListener("change",apply);}'
-			. 'document.addEventListener("esg:setting-saved",function(e){if(e.detail&&e.detail.key==="dark_mode"){mode=String(e.detail.value);apply();}});'
-			. '})(' . wp_json_encode( $mode ) . ');';
 	}
 
 	/**

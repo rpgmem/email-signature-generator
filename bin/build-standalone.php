@@ -8,7 +8,9 @@
  * tests read the real configuration that way rather than a copy.
  *
  * The output is one self-contained HTML file: the form's stylesheet, the
- * vendored html2canvas and the generator script are inlined, and the
+ * vendored html2canvas, the generator script and the dark-mode switch are
+ * inlined (with no setting to read, the page follows the operating system,
+ * as the setting's "auto" does), and the
  * configuration is the plugin's own default (`Config::defaults()`),
  * translated into <locale> (default pt_BR) from the bundled catalogue.
  * So the standalone file and the plugin cannot drift apart.
@@ -70,6 +72,8 @@ require $esg_root . '/src/plugin.php';
 require $esg_root . '/src/regions.php';
 require $esg_root . '/src/config.php';
 require $esg_root . '/src/shortcode.php';
+require $esg_root . '/src/settings.php';
+require $esg_root . '/src/theme.php';
 
 $esg_config = \EmailSignatureGenerator\Config::defaults( $esg_logo );
 
@@ -116,8 +120,13 @@ $esg_html = '<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="generator" content="Email Signature Generator ' . $esg_e( $esg_version ) . '">
 <title>' . $esg_e( $esg_title ) . '</title>
+<script>
+' . esg_inline_script( \EmailSignatureGenerator\Theme::script( 'auto' ) ) . '
+</script>
 <style>
 body { margin: 0; padding: 16px; background: #ffffff; color: #1d2327; }
+:root.' . \EmailSignatureGenerator\Theme::CSS_CLASS . ' { color-scheme: dark; }
+:root.' . \EmailSignatureGenerator\Theme::CSS_CLASS . ' body { background: #1d2327; color: #e7e8ea; }
 ' . $esg_css . '
 </style>
 </head>
