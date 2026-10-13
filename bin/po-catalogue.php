@@ -30,6 +30,14 @@ namespace EmailSignatureGenerator\Build;
 final class PoCatalogue {
 
 	/**
+	 * The headers `wp i18n make-php` writes after `domain`, in its order.
+	 *
+	 * Writing the same keys in the same order is what makes a catalogue
+	 * compiled here, one saved from Loco and one made by WP-CLI the same file.
+	 */
+	private const L10N_HEADERS = array( 'plural-forms', 'language', 'project-id-version', 'pot-creation-date', 'po-revision-date', 'x-generator' );
+
+	/**
 	 * The entry key: `msgctxt \x04 msgid`, or the msgid alone.
 	 *
 	 * @param string|null $msgctxt Context, or null.
@@ -49,54 +57,36 @@ final class PoCatalogue {
 	 */
 	public static function read( string $path ): array {
 		$entries = array();
-		$cur     = array();
-		$field   = null;
+		/** @var array<string, string> $fields */
+		$fields = array();
+		$fuzzy  = false;
+		$field  = null;
 
-		$flush = static function () use ( &$cur, &$entries, &$field ): void {
-			if ( isset( $cur['msgid'] ) && '' !== $cur['msgid'] ) {
-				$forms = array();
-				if ( isset( $cur['msgid_plural'] ) ) {
-					for ( $i = 0; isset( $cur[ 'msgstr[' . $i . ']' ] ); $i++ ) {
-						$forms[] = $cur[ 'msgstr[' . $i . ']' ];
-					}
-				} else {
-					$forms[] = $cur['msgstr'] ?? '';
-				}
-				$entries[] = array(
-					'key'          => self::key( $cur['msgctxt'] ?? null, $cur['msgid'] ),
-					'msgctxt'      => $cur['msgctxt'] ?? null,
-					'msgid'        => $cur['msgid'],
-					'msgid_plural' => $cur['msgid_plural'] ?? null,
-					'forms'        => $forms,
-					'fuzzy'        => (bool) ( $cur['fuzzy'] ?? false ),
-				);
-			}
-			$cur   = array();
-			$field = null;
-		};
-
-		foreach ( explode( "\n", (string) file_get_contents( $path ) ) as $line ) {
+		foreach ( explode( "\n", self::contents( $path ) ) as $line ) {
 			$trimmed = trim( $line );
 			if ( '' === $trimmed ) {
-				$flush();
+				self::push( $entries, $fields, $fuzzy );
+				$fields = array();
+				$fuzzy  = false;
+				$field  = null;
 				continue;
 			}
 			if ( str_starts_with( $trimmed, '#' ) ) {
 				if ( str_starts_with( $trimmed, '#,' ) && str_contains( $trimmed, 'fuzzy' ) ) {
-					$cur['fuzzy'] = true;
+					$fuzzy = true;
 				}
 				continue;
 			}
-			if ( preg_match( '/^(msgctxt|msgid|msgid_plural|msgstr(?:\[\d+\])?)\s+"(.*)"$/s', $trimmed, $m ) ) {
-				$field         = $m[1];
-				$cur[ $field ] = ( $cur[ $field ] ?? '' ) . stripcslashes( $m[2] );
+			if ( 1 === preg_match( '/^(msgctxt|msgid|msgid_plural|msgstr(?:\[\d+\])?)\s+"(.*)"$/s', $trimmed, $m ) ) {
+				$field            = $m[1];
+				$fields[ $field ] = ( $fields[ $field ] ?? '' ) . stripcslashes( $m[2] );
 				continue;
 			}
-			if ( null !== $field && preg_match( '/^"(.*)"$/s', $trimmed, $m ) ) {
-				$cur[ $field ] .= stripcslashes( $m[1] );
+			if ( null !== $field && 1 === preg_match( '/^"(.*)"$/s', $trimmed, $m ) ) {
+				$fields[ $field ] = ( $fields[ $field ] ?? '' ) . stripcslashes( $m[1] );
 			}
 		}
-		$flush();
+		self::push( $entries, $fields, $fuzzy );
 
 		return $entries;
 	}
@@ -125,8 +115,7 @@ final class PoCatalogue {
 	 * @return array<string, string>
 	 */
 	public static function headers( string $path ): array {
-		$text = (string) file_get_contents( $path );
-		if ( 1 !== preg_match( '/^msgid ""\s*\nmsgstr ((?:".*"\s*\n?)+)/m', $text, $m ) ) {
+		if ( 1 !== preg_match( '/^msgid ""\s*\nmsgstr ((?:".*"\s*\n?)+)/m', self::contents( $path ), $m ) ) {
 			return array();
 		}
 		preg_match_all( '/"(.*)"/', $m[1], $lines );
@@ -143,28 +132,71 @@ final class PoCatalogue {
 	/**
 	 * The `.l10n.php` a `.po` compiles to, as file contents.
 	 *
-	 * Only translated, non-fuzzy entries are written, as `msgfmt` does for the
-	 * `.mo`, and a plural's forms travel as one value separated by NUL, which
-	 * is how WordPress reads them.
+	 * The shape is `wp i18n make-php`'s, byte for byte: `domain`, then the
+	 * headers in `L10N_HEADERS` the `.po` carries, then `messages` in the
+	 * `.po`'s order, on one line. Only translated, non-fuzzy entries are
+	 * written, as `msgfmt` does for the `.mo`, and a plural's forms travel as
+	 * one value separated by NUL, which is how WordPress reads them.
 	 *
 	 * @param string $path   Path to a `.po`.
-	 * @param string $domain Text domain.
+	 * @param string $domain Text domain. WP-CLI reads it from the `X-Domain` header.
 	 */
 	public static function l10n( string $path, string $domain ): string {
 		$headers = self::headers( $path );
-		$pairs   = array(
-			"'domain'=>" . var_export( $domain, true ),
-			"'plural-forms'=>" . var_export( $headers['plural-forms'] ?? 'nplurals=2; plural=(n > 1);', true ),
-			"'language'=>" . var_export( $headers['language'] ?? '', true ),
-		);
-		$items   = array();
+		// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_var_export -- var_export writes the PHP literals of a generated catalogue, not debug output.
+		$pairs = array( "'domain'=>" . var_export( $domain, true ) );
+		foreach ( self::L10N_HEADERS as $name ) {
+			if ( isset( $headers[ $name ] ) ) {
+				$pairs[] = var_export( $name, true ) . '=>' . var_export( $headers[ $name ], true );
+			}
+		}
+		$items = array();
 		foreach ( self::read( $path ) as $entry ) {
 			if ( self::is_translated( $entry ) ) {
 				$items[] = var_export( $entry['key'], true ) . '=>' . var_export( implode( "\0", $entry['forms'] ), true );
 			}
 		}
+		// phpcs:enable WordPress.PHP.DevelopmentFunctions.error_log_var_export
 		$pairs[] = "'messages'=>[" . implode( ',', $items ) . ']';
 
 		return "<?php\nreturn [" . implode( ',', $pairs ) . '];';
+	}
+
+	/**
+	 * Appends the entry being read, unless it is the header or empty.
+	 *
+	 * @param list<array{key: string, msgctxt: string|null, msgid: string, msgid_plural: string|null, forms: list<string>, fuzzy: bool}> $entries Entries so far.
+	 * @param array<string, string>                                                                                                      $fields  The entry's fields.
+	 * @param bool                                                                                                                       $fuzzy   Whether `#, fuzzy` preceded it.
+	 */
+	private static function push( array &$entries, array $fields, bool $fuzzy ): void {
+		if ( ! isset( $fields['msgid'] ) || '' === $fields['msgid'] ) {
+			return;
+		}
+		$forms = array();
+		if ( isset( $fields['msgid_plural'] ) ) {
+			for ( $i = 0; isset( $fields[ 'msgstr[' . $i . ']' ] ); $i++ ) {
+				$forms[] = $fields[ 'msgstr[' . $i . ']' ];
+			}
+		} else {
+			$forms[] = $fields['msgstr'] ?? '';
+		}
+		$entries[] = array(
+			'key'          => self::key( $fields['msgctxt'] ?? null, $fields['msgid'] ),
+			'msgctxt'      => $fields['msgctxt'] ?? null,
+			'msgid'        => $fields['msgid'],
+			'msgid_plural' => $fields['msgid_plural'] ?? null,
+			'forms'        => $forms,
+			'fuzzy'        => $fuzzy,
+		);
+	}
+
+	/**
+	 * A catalogue's text.
+	 *
+	 * @param string $path Path to a local `.po` or `.pot`.
+	 */
+	private static function contents( string $path ): string {
+		return (string) file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- reads a local catalogue, never a URL.
 	}
 }

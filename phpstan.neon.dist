@@ -7,6 +7,7 @@ parameters:
         - email-signature-generator.php
         - uninstall.php
         - src/
+        - bin/po-catalogue.php
     excludePaths:
         - tests/*
         - vendor/*
