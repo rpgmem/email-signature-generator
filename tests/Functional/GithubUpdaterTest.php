@@ -180,6 +180,62 @@ final class GithubUpdaterTest extends WP_UnitTestCase {
 		self::assertArrayHasKey( 'screenshots', $info->sections );
 	}
 
+	public function test_a_portuguese_viewer_reads_the_translated_readme_and_banner(): void {
+		add_filter( 'locale', array( $this, 'portuguese' ) );
+		$this->responses = array(
+			'api.github.com'             => $this->responses['api.github.com'],
+			'languages/readme-pt_BR.txt' => array(
+				'code' => 200,
+				'body' => "=== Email Signature Generator ===\n\n== Description ==\n\nMonta uma assinatura.\n\n== Screenshots ==\n\n1. O formulário\n",
+			),
+			'raw.githubusercontent.com'  => array(
+				'code' => 200,
+				'body' => "=== Email Signature Generator ===\n\n== Description ==\n\nBuilds a signature.\n",
+			),
+		);
+
+		$info = GithubUpdater::pluginInfo( false, 'plugin_information', (object) array( 'slug' => GithubUpdater::SLUG ) );
+		remove_filter( 'locale', array( $this, 'portuguese' ) );
+
+		self::assertSame( '<p>Monta uma assinatura.</p>', $info->sections['description'] );
+		self::assertStringContainsString( 'alt="O formulário"', $info->sections['screenshots'] );
+		self::assertStringContainsString( 'https://raw.githubusercontent.com/rpgmem/email-signature-generator/v9.0.0/languages/readme-pt_BR.txt', implode( ' ', $this->requested ) );
+		$base = plugin_dir_url( Plugin::file() ) . 'assets/img/brand/';
+		self::assertSame(
+			array(
+				'low'  => $base . 'banner-772x250-pt_BR.png',
+				'high' => $base . 'banner-1544x500-pt_BR.png',
+			),
+			$info->banners
+		);
+	}
+
+	public function test_a_missing_release_translation_falls_back_to_the_installed_one(): void {
+		add_filter( 'locale', array( $this, 'portuguese' ) );
+		$this->responses = array( 'languages/readme-pt_BR.txt' => array( 'code' => 404, 'body' => '' ) ) + $this->responses;
+
+		$info = GithubUpdater::pluginInfo( false, 'plugin_information', (object) array( 'slug' => GithubUpdater::SLUG ) );
+		remove_filter( 'locale', array( $this, 'portuguese' ) );
+
+		self::assertStringContainsString( 'mesmo formulário', $info->sections['description'], 'The installed languages/readme-pt_BR.txt is the fallback.' );
+	}
+
+	public function test_a_locale_with_no_translation_reads_english(): void {
+		$this->responses['raw.githubusercontent.com']['body'] = "=== Email Signature Generator ===\n\n== Description ==\n\nBuilds a signature.\n";
+
+		$info = GithubUpdater::pluginInfo( false, 'plugin_information', (object) array( 'slug' => GithubUpdater::SLUG ) );
+
+		self::assertSame( '<p>Builds a signature.</p>', $info->sections['description'] );
+		self::assertStringEndsWith( 'banner-1544x500.png', $info->banners['high'] );
+	}
+
+	/**
+	 * `locale` filter: the viewer reads Portuguese.
+	 */
+	public function portuguese(): string {
+		return 'pt_BR';
+	}
+
 	public function test_a_foreign_package_is_not_intercepted(): void {
 		self::assertFalse( GithubUpdater::verifyDownload( false, 'https://example.org/other.zip' ) );
 	}

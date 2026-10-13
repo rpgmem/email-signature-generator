@@ -183,16 +183,17 @@ final class GithubUpdater {
 	 * changelog.
 	 *
 	 * The readme is the one fetched with the release, so the tabs describe the
-	 * version being offered; a payload cached before it was kept falls back to
-	 * the installed copy. The release notes are Markdown, rendered rather than
-	 * printed raw.
+	 * version being offered, in the viewer's language when the plugin ships a
+	 * translation of it ({@see GithubUpdater::readme()}). The release notes are
+	 * Markdown, rendered rather than printed raw, and stay in English: they are
+	 * the CHANGELOG, which is not translated.
 	 *
 	 * @param array<string, string> $release Parsed release payload.
 	 * @return array<string, string>
 	 */
 	private static function sections( array $release ): array {
 		$repo   = (string) apply_filters( 'email_signature_generator_github_updater_repo', self::REPO );
-		$readme = '' !== $release['readme'] ? $release['readme'] : self::installedReadme();
+		$readme = self::readme( $release, self::locale() );
 		$tag    = 'v' . $release['version'];
 
 		$shots = array();
@@ -215,24 +216,84 @@ final class GithubUpdater {
 	}
 
 	/**
-	 * The installed copy's `readme.txt`, or an empty string.
+	 * The readme text the tabs are built from, in the first of these that
+	 * exists: the offered release's translation into `$locale`, the installed
+	 * translation, the offered release's English readme, the installed one.
+	 *
+	 * A translation outranks a newer English text on purpose: an operator who
+	 * reads Portuguese is better served by last release's description in
+	 * Portuguese than by this release's in English, and the two differ only
+	 * when the release's own translation could not be fetched.
+	 *
+	 * @param array<string, string> $release Parsed release payload.
+	 * @param string                $locale  Viewer's locale, e.g. `pt_BR`; empty for English.
 	 */
-	private static function installedReadme(): string {
-		$file = dirname( self::mainFile() ) . '/readme.txt';
+	private static function readme( array $release, string $locale ): string {
+		if ( '' !== $locale ) {
+			if ( '' !== ( $release[ 'readme_' . $locale ] ?? '' ) ) {
+				return $release[ 'readme_' . $locale ];
+			}
+			$translated = self::installedFile( 'languages/readme-' . $locale . '.txt' );
+			if ( '' !== $translated ) {
+				return $translated;
+			}
+		}
+		return '' !== $release['readme'] ? $release['readme'] : self::installedFile( 'readme.txt' );
+	}
+
+	/**
+	 * The viewer's locale when the plugin ships a readme or banner for it, or
+	 * an empty string for English.
+	 *
+	 * Checked against the shipped translations rather than passed through,
+	 * because it becomes part of a file path and of a payload key.
+	 */
+	private static function locale(): string {
+		$locale = get_user_locale();
+		return in_array( $locale, self::readmeLocales(), true ) ? $locale : '';
+	}
+
+	/**
+	 * Locales the installed copy ships a translated readme for, read from
+	 * `languages/readme-<locale>.txt`.
+	 *
+	 * @return list<string>
+	 */
+	public static function readmeLocales(): array {
+		$locales = array();
+		foreach ( glob( dirname( self::mainFile() ) . '/languages/readme-*.txt' ) ?: array() as $file ) { // phpcs:ignore Universal.Operators.DisallowShortTernary.Found -- glob() returns false only on an error, which means no translation.
+			if ( 1 === preg_match( '/^readme-([a-z]{2,3}(?:_[A-Z]{2})?)\.txt$/', basename( $file ), $m ) ) {
+				$locales[] = $m[1];
+			}
+		}
+		return $locales;
+	}
+
+	/**
+	 * A file of the installed copy, or an empty string.
+	 *
+	 * @param string $relative Path under the plugin folder.
+	 */
+	private static function installedFile( string $relative ): string {
+		$file = dirname( self::mainFile() ) . '/' . $relative;
 		return is_readable( $file ) ? (string) file_get_contents( $file ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Reading a file this plugin ships, not a remote resource.
 	}
 
 	/**
 	 * The banner at the top of the "View details" modal, from the installed
-	 * copy for the same reason as the icon.
+	 * copy for the same reason as the icon, in the viewer's language when one
+	 * ships (`banner-772x250-pt_BR.png`).
 	 *
 	 * @return array{low: string, high: string}
 	 */
 	private static function banners(): array {
-		$base = plugin_dir_url( self::mainFile() ) . 'assets/img/brand/';
+		$dir    = dirname( self::mainFile() ) . '/assets/img/brand/';
+		$base   = plugin_dir_url( self::mainFile() ) . 'assets/img/brand/';
+		$locale = self::locale();
+		$suffix = '' !== $locale && is_readable( $dir . 'banner-772x250-' . $locale . '.png' ) ? '-' . $locale : '';
 		return array(
-			'low'  => $base . 'banner-772x250.png',
-			'high' => $base . 'banner-1544x500.png',
+			'low'  => $base . 'banner-772x250' . $suffix . '.png',
+			'high' => $base . 'banner-1544x500' . $suffix . '.png',
 		);
 	}
 
@@ -459,6 +520,9 @@ final class GithubUpdater {
 		foreach ( array( 'version', 'sha256', 'url', 'changelog', 'published_at', 'requires', 'tested', 'requires_php', 'upgrade_notice', 'readme' ) as $key ) {
 			$out[ $key ] = (string) ( $raw[ $key ] ?? '' );
 		}
+		foreach ( self::readmeLocales() as $locale ) {
+			$out[ 'readme_' . $locale ] = (string) ( $raw[ 'readme_' . $locale ] ?? '' );
+		}
 		return $out;
 	}
 
@@ -562,33 +626,48 @@ final class GithubUpdater {
 
 	/**
 	 * Read the offered release's compatibility headers, Upgrade Notice and
-	 * full text from its own `readme.txt`, at the release tag. The text feeds
-	 * the "View details" tabs.
+	 * full text from its own `readme.txt`, at the release tag, plus each
+	 * translation of it the installed copy ships. The texts feed the
+	 * "View details" tabs.
 	 *
-	 * One extra request per new release: it runs only on a full (200) fetch,
-	 * never on a 304 or a cache hit. `raw.githubusercontent.com` is not the
+	 * One extra request per new release, and one per translation: they run
+	 * only on a full (200) fetch, never on a 304 or a cache hit. `raw.githubusercontent.com` is not the
 	 * API, so it does not spend the rate limit. Every failure returns empty
 	 * fields, which then fall back to the installed copy.
 	 *
 	 * @param string $repo `owner/repo`.
 	 * @param string $tag  Release tag, e.g. `v1.0.0`.
-	 * @return array{requires: string, tested: string, requires_php: string, upgrade_notice: string, readme: string}
+	 * @return array<string, string> The metadata fields, `readme`, and `readme_<locale>` per translation.
 	 */
 	private static function fetchReleaseReadme( string $repo, string $tag ): array {
+		$body = self::fetchRaw( $repo, $tag, 'readme.txt' );
+		$out  = self::readmeMetadata( $body ) + array( 'readme' => $body );
+		foreach ( self::readmeLocales() as $locale ) {
+			$out[ 'readme_' . $locale ] = self::fetchRaw( $repo, $tag, 'languages/readme-' . $locale . '.txt' );
+		}
+		return $out;
+	}
+
+	/**
+	 * One file of the repository at a tag, or an empty string on any failure.
+	 *
+	 * @param string $repo `owner/repo`.
+	 * @param string $tag  Release tag.
+	 * @param string $path Path in the repository.
+	 */
+	private static function fetchRaw( string $repo, string $tag, string $path ): string {
 		$response = wp_remote_get(
-			sprintf( 'https://raw.githubusercontent.com/%s/%s/readme.txt', $repo, rawurlencode( $tag ) ),
+			sprintf( 'https://raw.githubusercontent.com/%s/%s/%s', $repo, rawurlencode( $tag ), $path ),
 			array(
 				'timeout' => 10,
 				'headers' => array( 'User-Agent' => 'email-signature-generator-updater' ),
 			)
 		);
 
-		$body = '';
-		if ( ! is_wp_error( $response ) && 200 === (int) wp_remote_retrieve_response_code( $response ) ) {
-			$body = (string) wp_remote_retrieve_body( $response );
+		if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
+			return '';
 		}
-
-		return self::readmeMetadata( $body ) + array( 'readme' => $body );
+		return (string) wp_remote_retrieve_body( $response );
 	}
 
 	/**

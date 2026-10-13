@@ -1194,3 +1194,41 @@ msgstr "Um formulário, inserido por shortcode, que monta uma assinatura de e-ma
 
 #~ msgid "Every visitor gets the same image, whatever their screen. 2× stays sharp on high-density screens."
 #~ msgstr "Todos recebem a mesma imagem, seja qual for a tela. 2× continua nítido em telas de alta densidade."
+
+#: src/update/screenshot-viewer.php
+msgid "Screenshots"
+msgstr "Capturas de tela"
+
+#: src/update/screenshot-viewer.php
+msgid "Close"
+msgstr "Fechar"
+
+#: src/update/screenshot-viewer.php
+msgid "Previous screenshot"
+msgstr "Captura anterior"
+
+#: src/update/screenshot-viewer.php
+msgid "Next screenshot"
+msgstr "Próxima captura"
+
+#: src/update/screenshot-viewer.php
+msgid "Zoom in"
+msgstr "Ampliar"
+
+#: src/update/screenshot-viewer.php
+msgid "Zoom out"
+msgstr "Reduzir"
+
+#. translators: %1$s: number of the screenshot shown, %2$s: number of screenshots
+#: src/update/screenshot-viewer.php
+#, php-format
+msgid "%1$s of %2$s"
+msgstr "%1$s de %2$s"
+
+#: src/admin/documentation.php
+msgid "View details"
+msgstr "Ver detalhes"
+
+#: src/admin/documentation.php
+msgid "Shows the description, installation steps and screenshots, in your language when the plugin ships a translation of them. A screenshot opens larger without leaving the window: the arrows move between them, and the wheel, a pinch or a click zooms in."
+msgstr "Mostra a descrição, os passos de instalação e as capturas de tela, no seu idioma quando o plugin traz uma tradução deles. Uma captura abre ampliada sem sair da janela: as setas passam de uma para outra, e a roda do mouse, o gesto de pinça ou um clique aproximam a imagem."

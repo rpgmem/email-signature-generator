@@ -175,6 +175,7 @@ final class Documentation {
 				'items' => array(
 					array( __( 'Checked package', 'email-signature-generator' ), __( 'Each package is checked against its published SHA-256 before it is installed.', 'email-signature-generator' ) ),
 					array( __( 'Automatic updates', 'email-signature-generator' ), __( 'Turned on or off with WordPress\'s own link on the Plugins screen.', 'email-signature-generator' ) ),
+					array( __( 'View details', 'email-signature-generator' ), __( 'Shows the description, installation steps and screenshots, in your language when the plugin ships a translation of them. A screenshot opens larger without leaving the window: the arrows move between them, and the wheel, a pinch or a click zooms in.', 'email-signature-generator' ) ),
 				),
 			),
 		);
