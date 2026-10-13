@@ -92,7 +92,8 @@ The same standard as Free Form Certificate (its `CLAUDE.md` → "Issues, pull re
 1. **On `develop`,** through a dedicated `release: X.Y.Z` PR:
    - bump the three version sites;
    - rename `[Unreleased]` to `## [X.Y.Z] (YYYY-MM-DD)`;
-   - add a fresh `[Unreleased]` above it.
+   - add a fresh `[Unreleased]` above it;
+   - read `git diff origin/main...origin/develop -- readme.txt languages/readme-pt_BR.txt`: a change on one side only is a translation left behind (see "Translations").
 2. **Open the `develop → main` PR.** Keep it draft until the maintainer confirms the production release.
 3. **After it lands on `main`,** tag that commit (`vX.Y.Z`) and push the tag. `.github/workflows/release.yml` then:
    - checks the tag against the header version;
@@ -154,7 +155,12 @@ npm run test:coverage
 
 ## Translations
 
-`languages/` holds the `.pot`, and per locale the `.po`, `.mo` and `.l10n.php`. After changing a translatable string, run `bin/i18n.sh` (needs GNU gettext): it re-extracts the `.pot`, merges it into each `.po` and recompiles. Translate the new entries in the `.po`, then run it again. `TranslationCoverageTest` fails when a source string has no translation, or when a `.po` and its `.l10n.php` disagree.
+`languages/` holds the `.pot`, and per locale the `.po`, `.mo` and `.l10n.php`. After changing a translatable string, run `bin/i18n.sh` (needs GNU gettext): it re-extracts the `.pot`, merges it into each `.po` and recompiles. Translate the new entries in the `.po`, then run it again. `TranslationCoverageTest` fails when a source string has no translation.
+
+- **Never edit a compiled catalogue by hand**, and never compile one with a tool outside the repository. `msgfmt` writes the `.mo` and `bin/po-to-l10n.php` the `.l10n.php`; a fix that reaches one and not the other depends on which file WordPress loaded. Before #88 the committed `.l10n.php` had come from a script outside the repository, in a format the committed compiler did not write.
+- **`bin/po-catalogue.php` is the one `.po` reader.** The compiler and the tests both use it, so they cannot disagree about what an entry is. It handles the shapes this catalogue does not carry yet (a context, a plural, a fuzzy entry); `PoCatalogueTest` exercises them on a synthetic file.
+- **`TranslationCatalogueAgreementTest`** fails when the three files of a locale disagree, in either direction, or when the `.l10n.php` is not byte for byte what the compiler writes. Its self-check recounts the `.po`'s entries by a different route, so a reader that read nothing fails instead of passing.
+- **`languages/readme-pt_BR.txt` is the readme "View details" shows a pt_BR administrator.** A PR that changes `readme.txt` updates it in the same PR. `PluginDetailsAssetsTest` holds the two to the same structure (tab sections, the count of other sections, the screenshot captions) and cannot see the content: a changed sentence in English passes CI with the translation still saying the old thing (#87).
 
 Every string the browser shows travels in `Config::strings()`, so the JavaScript has no strings of its own. `ConfigTest` fails when the script reads a key the configuration lacks, or the configuration carries one the script never reads.
 

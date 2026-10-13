@@ -11,6 +11,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **"View details" shows a banner and the readme's tabs** (#83). Description, Installation, FAQ, Screenshots and Other notes come from the offered release's `readme.txt`, and the changelog renders its Markdown instead of printing it raw.
 - **"View details" speaks Portuguese and opens screenshots in place** (#85). The tabs and banner follow the viewer's language when the plugin ships a translation (`languages/readme-pt_BR.txt`), and a screenshot opens in an overlay with arrows, swipe and zoom instead of a new tab.
 
+### Changed
+
+- **The three translation files of each locale are checked against each other** (#88). `bin/po-to-l10n.php` and a new test share one `.po` reader, and CI fails when the `.po`, `.mo` and `.l10n.php` disagree in either direction. A readme change now carries its pt_BR copy in the same PR (#87).
+
 ## [1.3.0] (2026-10-12) — `dce0461`
 
 The licence moves to AGPLv3 or later. The rest is the release process catching up with Free Form Certificate: CI tests the declared WordPress floor, both coverage floors rise to 90%, Dependabot's minor updates merge on their own, and every workflow runs with a read-only token. Nothing changes in what the plugin does.
