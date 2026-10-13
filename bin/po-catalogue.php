@@ -153,13 +153,27 @@ final class PoCatalogue {
 		$items = array();
 		foreach ( self::read( $path ) as $entry ) {
 			if ( self::is_translated( $entry ) ) {
-				$items[] = var_export( $entry['key'], true ) . '=>' . var_export( implode( "\0", $entry['forms'] ), true );
+				$items[] = var_export( self::array_key( $entry['key'] ), true ) . '=>' . var_export( implode( "\0", $entry['forms'] ), true );
 			}
 		}
 		// phpcs:enable WordPress.PHP.DevelopmentFunctions.error_log_var_export
 		$pairs[] = "'messages'=>[" . implode( ',', $items ) . ']';
 
 		return "<?php\nreturn [" . implode( ',', $pairs ) . '];';
+	}
+
+	/**
+	 * The key as PHP stores it: an integer-like string becomes an int.
+	 *
+	 * WP-CLI writes `302=>'302'`, not `'302'=>'302'`, because PHP turns a
+	 * decimal key into an int, so writing it quoted breaks the byte-for-byte
+	 * match with `wp i18n make-php` on the first such msgid.
+	 *
+	 * @param string $key Entry key.
+	 * @return int|string
+	 */
+	private static function array_key( string $key ): int|string {
+		return (string) (int) $key === $key ? (int) $key : $key;
 	}
 
 	/**

@@ -111,4 +111,14 @@ PO
 			$data['messages']
 		);
 	}
+
+	public function test_an_integer_like_key_is_written_bare_as_wp_cli_writes_it(): void {
+		file_put_contents( $this->file, "msgid \"\"\nmsgstr \"\"\n\"Language: pt_BR\\n\"\n\nmsgid \"302\"\nmsgstr \"302\"\n\nmsgid \"0302\"\nmsgstr \"0302\"\n" );
+
+		$php = PoCatalogue::l10n( $this->file, 'demo' );
+
+		self::assertStringContainsString( "302=>'302'", $php );
+		self::assertStringNotContainsString( "'302'=>", $php );
+		self::assertStringContainsString( "'0302'=>'0302'", $php, 'A leading zero keeps the key a string, as PHP does.' );
+	}
 }
