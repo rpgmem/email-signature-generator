@@ -47,8 +47,8 @@ final class ScreenshotViewer {
 			return;
 		}
 
-		wp_enqueue_style( self::HANDLE, Plugin::url() . 'assets/css/screenshots.css', array(), Plugin::assetVersion( 'assets/css/screenshots.css' ) );
-		wp_enqueue_script( self::HANDLE, Plugin::url() . 'assets/js/screenshots.js', array(), Plugin::assetVersion( 'assets/js/screenshots.js' ), array( 'in_footer' => true ) );
+		wp_enqueue_style( self::HANDLE, Plugin::url() . Plugin::asset( 'assets/css/screenshots.css' ), array(), Plugin::assetVersion( Plugin::asset( 'assets/css/screenshots.css' ) ) );
+		wp_enqueue_script( self::HANDLE, Plugin::url() . Plugin::asset( 'assets/js/screenshots.js' ), array(), Plugin::assetVersion( Plugin::asset( 'assets/js/screenshots.js' ) ), array( 'in_footer' => true ) );
 		wp_localize_script(
 			self::HANDLE,
 			'esgScreenshots',

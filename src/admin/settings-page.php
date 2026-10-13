@@ -95,8 +95,8 @@ final class SettingsPage {
 		wp_register_script( 'email-signature-generator-theme', false, array(), Plugin::VERSION, false );
 		wp_enqueue_script( 'email-signature-generator-theme' );
 		wp_add_inline_script( 'email-signature-generator-theme', self::darkModeScript( (string) Settings::get()['dark_mode'] ) );
-		wp_enqueue_style( 'email-signature-generator-admin', Plugin::url() . 'assets/css/admin-settings.css', array(), Plugin::assetVersion( 'assets/css/admin-settings.css' ) );
-		wp_enqueue_script( 'email-signature-generator-admin', Plugin::url() . 'assets/js/admin-settings.js', array( 'media-editor' ), Plugin::assetVersion( 'assets/js/admin-settings.js' ), array( 'in_footer' => true ) );
+		wp_enqueue_style( 'email-signature-generator-admin', Plugin::url() . Plugin::asset( 'assets/css/admin-settings.css' ), array(), Plugin::assetVersion( Plugin::asset( 'assets/css/admin-settings.css' ) ) );
+		wp_enqueue_script( 'email-signature-generator-admin', Plugin::url() . Plugin::asset( 'assets/js/admin-settings.js' ), array( 'media-editor' ), Plugin::assetVersion( Plugin::asset( 'assets/js/admin-settings.js' ) ), array( 'in_footer' => true ) );
 		wp_localize_script(
 			'email-signature-generator-admin',
 			'esgAdmin',

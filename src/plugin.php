@@ -99,6 +99,21 @@ final class Plugin {
 	}
 
 	/**
+	 * The path of one of the plugin's own CSS or JS files as it should load:
+	 * the `.min` build in production, the readable source when `SCRIPT_DEBUG`
+	 * is on. `npm run build` writes the `.min` files, and CI fails when one is
+	 * older than its source.
+	 *
+	 * @param string $relative Source path under the plugin directory, e.g. `assets/js/x.js`.
+	 */
+	public static function asset( string $relative ): string {
+		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+			return $relative;
+		}
+		return (string) preg_replace( '/\.(css|js)$/', '.min.$1', $relative );
+	}
+
+	/**
 	 * The `?ver=` of one of the plugin's own assets: the plugin version plus
 	 * the file's modification time.
 	 *

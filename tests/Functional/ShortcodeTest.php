@@ -89,8 +89,10 @@ final class ShortcodeTest extends WP_UnitTestCase {
 
 		$js  = wp_scripts()->registered[ Shortcode::SCRIPT_HANDLE ]->ver;
 		$css = wp_styles()->registered[ Shortcode::STYLE_HANDLE ]->ver;
-		self::assertSame( Plugin::VERSION . '.' . filemtime( Plugin::dir() . 'assets/js/signature-generator.js' ), $js, 'A deploy changes the file time, so a cached script is replaced.' );
-		self::assertSame( Plugin::VERSION . '.' . filemtime( Plugin::dir() . 'assets/css/signature-generator.css' ), $css );
+		// The time of the file that loads: the `.min` build, unless SCRIPT_DEBUG.
+		self::assertSame( Plugin::VERSION . '.' . filemtime( Plugin::dir() . Plugin::asset( 'assets/js/signature-generator.js' ) ), $js, 'A deploy changes the file time, so a cached script is replaced.' );
+		self::assertSame( Plugin::VERSION . '.' . filemtime( Plugin::dir() . Plugin::asset( 'assets/css/signature-generator.css' ) ), $css );
+		self::assertStringEndsWith( 'assets/js/signature-generator.min.js', wp_scripts()->registered[ Shortcode::SCRIPT_HANDLE ]->src );
 	}
 
 	public function test_a_missing_asset_falls_back_to_the_version(): void {

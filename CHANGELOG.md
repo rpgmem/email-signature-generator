@@ -15,6 +15,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - **The three translation files of each locale are checked against each other** (#88). `bin/po-to-l10n.php` and a new test share one `.po` reader, and CI fails when the `.po`, `.mo` and `.l10n.php` disagree in either direction. A readme change now carries its pt_BR copy in the same PR (#87).
 - **The translation compiler writes WP-CLI's `.l10n.php` shape, and its reader is linted** (#90). The committed catalogue is byte-identical to `wp i18n make-php`'s output, and `bin/po-catalogue.php` now runs through PHPStan and PHPCS.
+- **CSS and JS ship minified, and the off-screen copies use a class** (#94). `npm run build` writes `.min` files, loaded unless `SCRIPT_DEBUG` is on, and CI fails when one is stale. The clipboard copy and the PNG stage take `.esg-offscreen` instead of inline styles.
 
 ### Fixed
 

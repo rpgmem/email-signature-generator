@@ -441,8 +441,7 @@
 	function legacyCopy( html, doc ) {
 		var holder = doc.createElement( 'div' );
 		holder.setAttribute( 'aria-hidden', 'true' );
-		holder.style.position = 'fixed';
-		holder.style.left = '-9999px';
+		holder.className = 'esg-offscreen';
 		holder.innerHTML = html;
 		doc.body.appendChild( holder );
 
@@ -948,12 +947,9 @@
 			}
 			// html2canvas cannot read inside a shadow root, so it draws a copy
 			// placed off screen in the document.
-			var stage = el( doc, 'div', { 'aria-hidden': 'true', class: 'esg-stage' } );
-			stage.style.position = 'fixed';
-			stage.style.left = '-9999px';
-			stage.style.top = '0';
+			var stage = el( doc, 'div', { 'aria-hidden': 'true', class: 'esg-stage esg-offscreen' } );
+			// The width is the signature's own, a constant this script owns.
 			stage.style.width = SIGNATURE_WIDTH + 'px';
-			stage.style.background = '#ffffff';
 			stage.innerHTML = html;
 			doc.body.appendChild( stage );
 			var name = fileName( current, readValues() );
