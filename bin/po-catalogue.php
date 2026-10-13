@@ -57,10 +57,9 @@ final class PoCatalogue {
 	 */
 	public static function read( string $path ): array {
 		$entries = array();
-		/** @var array<string, string> $fields */
-		$fields = array();
-		$fuzzy  = false;
-		$field  = null;
+		$fields  = array();
+		$fuzzy   = false;
+		$field   = null;
 
 		foreach ( explode( "\n", self::contents( $path ) ) as $line ) {
 			$trimmed = trim( $line );
