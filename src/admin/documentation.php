@@ -154,7 +154,7 @@ final class Documentation {
 							Settings::RADIUS_MAX
 						),
 					),
-					array( __( 'Font', 'email-signature-generator' ), __( 'The form\'s own (Arial) or the site theme\'s.', 'email-signature-generator' ) ),
+					array( __( 'Font', 'email-signature-generator' ), __( 'The site theme\'s (the default), the plugin\'s system font, or Arial: the same three choices as Free Form Certificate\'s forms.', 'email-signature-generator' ) ),
 					array( __( 'Standalone HTML', 'email-signature-generator' ), __( 'Always keeps the form\'s own look: it never reads these settings.', 'email-signature-generator' ) ),
 				),
 			),

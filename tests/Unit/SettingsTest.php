@@ -54,7 +54,7 @@ final class SettingsTest extends TestCase {
 		$off = Settings::sanitize( array( 'custom_style' => '0', 'colors' => array( 'accent' => '#aa0000' ), 'radius' => 0, 'font' => 'theme' ) );
 		self::assertSame( Config::COLORS, $off['colors'] );
 		self::assertSame( Config::RADIUS, $off['radius'] );
-		self::assertSame( 'form', $off['font'] );
+		self::assertSame( 'theme', $off['font'], 'Off, the font goes back to the theme\'s.' );
 	}
 
 	public function test_a_custom_design_keeps_only_valid_values(): void {
@@ -70,16 +70,26 @@ final class SettingsTest extends TestCase {
 		self::assertSame( Config::COLORS['border'], $on['colors']['border'] );
 		self::assertSame( Config::COLORS['muted'], $on['colors']['muted'] );
 		self::assertSame( Settings::RADIUS_MAX, $on['radius'] );
-		self::assertSame( 'form', $on['font'] );
+		self::assertSame( 'theme', $on['font'], 'An unknown font falls back to the theme\'s.' );
 	}
 
 	public function test_the_style_rule_keeps_the_colours_to_the_light_look(): void {
-		$rule = Settings::styleRule( Settings::sanitize( array( 'custom_style' => '1', 'colors' => array( 'accent' => '#aa0000' ), 'radius' => 0, 'font' => 'theme' ) ) );
+		$rule = Settings::styleRule( Settings::sanitize( array( 'custom_style' => '1', 'colors' => array( 'accent' => '#aa0000' ), 'radius' => 0, 'font' => 'form' ) ) );
 		$lines = explode( "\n", $rule );
 
-		self::assertSame( '.esg-generator { --esg-radius: 0px; --esg-font: inherit; }', $lines[0], 'The corners and the font hold in both looks.' );
+		self::assertSame( '.esg-generator { --esg-radius: 0px; --esg-font: arial, sans-serif; }', $lines[0], 'The corners and the font hold in both looks.' );
 		self::assertStringStartsWith( ':root:not(.esg-dark-mode) .esg-generator { --esg-accent: #aa0000; --esg-accent-text: #ffffff; ', $lines[1] );
 		self::assertStringNotContainsString( '<', $rule, 'Nothing can close the style element.' );
+	}
+
+	public function test_the_three_fonts_and_the_legacy_arial_value(): void {
+		$with = static fn( string $font ): array => Settings::sanitize( array( 'custom_style' => '1', 'font' => $font ) );
+
+		self::assertSame( 'arial', $with( 'form' )['font'], 'Arial was stored as `form` before the three options.' );
+		self::assertStringNotContainsString( '--esg-font', Settings::styleRule( $with( 'theme' ) ), 'The theme\'s font is the stylesheet\'s default.' );
+		self::assertStringContainsString( '--esg-font: ' . Config::PLUGIN_FONT, Settings::styleRule( $with( 'plugin' ) ) );
+		self::assertStringContainsString( '--esg-font: arial, sans-serif', Settings::styleRule( $with( 'arial' ) ) );
+		self::assertSame( 'theme', $with( 'comic' )['font'] );
 	}
 
 	public function test_contrast_follows_wcag(): void {
