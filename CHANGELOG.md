@@ -16,6 +16,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **The three translation files of each locale are checked against each other** (#88). `bin/po-to-l10n.php` and a new test share one `.po` reader, and CI fails when the `.po`, `.mo` and `.l10n.php` disagree in either direction. A readme change now carries its pt_BR copy in the same PR (#87).
 - **The translation compiler writes WP-CLI's `.l10n.php` shape, and its reader is linted** (#90). The committed catalogue is byte-identical to `wp i18n make-php`'s output, and `bin/po-catalogue.php` now runs through PHPStan and PHPCS.
 
+### Fixed
+
+- **Dark mode reaches what the browser paints itself** (#92). The settings screen declares `color-scheme: dark`, so scrollbars and native pickers stop painting light, and link-styled buttons read the palette.
+
+
 ## [1.3.0] (2026-10-12) — `dce0461`
 
 The licence moves to AGPLv3 or later. The rest is the release process catching up with Free Form Certificate: CI tests the declared WordPress floor, both coverage floors rise to 90%, Dependabot's minor updates merge on their own, and every workflow runs with a read-only token. Nothing changes in what the plugin does.

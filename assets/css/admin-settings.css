@@ -60,6 +60,19 @@
 	background-color: var(--esg-bg);
 }
 
+/* What the browser paints itself: scrollbars, the date and colour pickers'
+   chrome, an unstyled control. Without this they stay light on the dark
+   canvas. The class only lands on this plugin's settings screen. */
+:root.esg-dark-mode {
+	color-scheme: dark;
+}
+
+/* A link-styled button ("Reset" beside the logo) keeps core's `#2271b1`,
+   too dark to read on the dark card. Core's red delete link keeps its own. */
+:root.esg-dark-mode .button-link:not(.button-link-delete) {
+	color: var(--esg-primary);
+}
+
 :root.esg-dark-mode .esg-settings h1,
 :root.esg-dark-mode .esg-settings h2,
 :root.esg-dark-mode .esg-settings h3,
