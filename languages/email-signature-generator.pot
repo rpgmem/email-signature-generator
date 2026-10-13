@@ -1110,3 +1110,41 @@ msgstr ""
 #. Plugin header: Description
 msgid "A form, placed with a shortcode, that builds a consistent HTML email signature for your organisation and copies it to Outlook or downloads it as an image."
 msgstr ""
+
+#: src/update/screenshot-viewer.php
+msgid "Screenshots"
+msgstr ""
+
+#: src/update/screenshot-viewer.php
+msgid "Close"
+msgstr ""
+
+#: src/update/screenshot-viewer.php
+msgid "Previous screenshot"
+msgstr ""
+
+#: src/update/screenshot-viewer.php
+msgid "Next screenshot"
+msgstr ""
+
+#: src/update/screenshot-viewer.php
+msgid "Zoom in"
+msgstr ""
+
+#: src/update/screenshot-viewer.php
+msgid "Zoom out"
+msgstr ""
+
+#. translators: %1$s: number of the screenshot shown, %2$s: number of screenshots
+#: src/update/screenshot-viewer.php
+#, php-format
+msgid "%1$s of %2$s"
+msgstr ""
+
+#: src/admin/documentation.php
+msgid "View details"
+msgstr ""
+
+#: src/admin/documentation.php
+msgid "Shows the description, installation steps and screenshots, in your language when the plugin ships a translation of them. A screenshot opens larger without leaving the window: the arrows move between them, and the wheel, a pinch or a click zooms in."
+msgstr ""
