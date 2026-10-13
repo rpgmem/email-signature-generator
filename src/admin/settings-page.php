@@ -600,8 +600,9 @@ final class SettingsPage {
 			esc_html__( 'Font', 'email-signature-generator' )
 		);
 		foreach ( array(
-			'form'  => __( 'The form\'s own (Arial)', 'email-signature-generator' ),
-			'theme' => __( 'The site theme\'s', 'email-signature-generator' ),
+			'theme'  => __( 'The site theme\'s', 'email-signature-generator' ),
+			'plugin' => __( 'The plugin\'s (the system font)', 'email-signature-generator' ),
+			'arial'  => __( 'Arial', 'email-signature-generator' ),
 		) as $value => $label ) {
 			printf(
 				'<label><input type="radio" name="%1$s[font]" value="%2$s" data-esg-default="%5$s"%3$s> %4$s</label><br>',

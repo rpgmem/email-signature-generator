@@ -124,7 +124,7 @@ $esg_html = '<!DOCTYPE html>
 ' . esg_inline_script( \EmailSignatureGenerator\Theme::script( 'auto' ) ) . '
 </script>
 <style>
-body { margin: 0; padding: 16px; background: #ffffff; color: #1d2327; }
+body { margin: 0; padding: 16px; background: #f0f0f1; color: #1d2327; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif; }
 :root.' . \EmailSignatureGenerator\Theme::CSS_CLASS . ' { color-scheme: dark; }
 :root.' . \EmailSignatureGenerator\Theme::CSS_CLASS . ' body { background: #1d2327; color: #e7e8ea; }
 ' . $esg_css . '
