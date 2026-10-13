@@ -52,3 +52,7 @@
 Thumbs.db
 .vscode
 .idea
+
+# Source maps of the minified assets: a debugging aid, not runtime code.
+*.min.js.map
+*.min.css.map

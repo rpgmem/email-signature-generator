@@ -10,6 +10,8 @@ export default defineConfig( {
 			// than vanishing from the figure. Vendored libraries live in
 			// assets/vendor, outside this pattern.
 			include: [ 'assets/js/**/*.js' ],
+			// The `.min.js` build outputs are the same code, minified.
+			exclude: [ 'assets/js/**/*.min.js' ],
 			reporter: [ 'text-summary' ],
 			// The highest of 90%, the measured figure minus 5 points, and the
 			// current value; never lowered (CLAUDE.md). Raised 81 -> 90 in #67,

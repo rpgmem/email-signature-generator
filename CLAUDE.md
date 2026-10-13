@@ -131,6 +131,7 @@ These run in CI on every PR and on pushes to `main` and `develop`:
 - PHPUnit `unit` suite on PHP 8.3 and 8.4, and the functional suite against a real WordPress and MySQL (`phpunit.functional.xml.dist`). The functional suite runs on the latest WordPress and on **the declared floor**: the `floor` leg reads `Requires at least` from the plugin header, resolves it to that branch's newest patch release and swaps the WordPress test library to the same branch, so moving the floor moves the test. A floor nothing runs is a claim, not a requirement.
 - PHPStan level 8, and PHPCS with WPCS and PHPCompatibilityWP.
 - ESLint over `assets/js` and Stylelint over `assets/css`.
+- **Verify minified assets are up to date**: CI runs `npm run build` and fails when an `assets/**/*.min.*` file changes or appears. Run `npm run build` after editing any file under `assets/css` or `assets/js`, and commit the `.min` and `.map` beside it.
 - `composer validate --strict` and `composer audit --locked`.
 - The release build against the newest tag.
 - Vitest over the generator (`tests/js`), against the real configuration that `bin/build-standalone.php - ` prints.
@@ -156,6 +157,7 @@ vendor/bin/phpstan analyse --no-progress
 vendor/bin/phpcs
 npm run lint
 npm run test:coverage
+npm run build   # after editing assets/css or assets/js
 ```
 
 ## Translations
@@ -213,6 +215,8 @@ The signature links its logo by URL, because email clients drop embedded images.
 
 ## Code
 
+- **CSS lives in `assets/css`, never inline.** No `style=""` and no `wp_add_inline_style()`. What the script needs off screen takes the `.esg-offscreen` class. Three things stay inline, each because it cannot be a file: the shortcode's `--esg-*` custom properties (the configured design), whatever the script sets from a runtime value (the screenshot viewer's zoom transform), and the signature itself (mail clients ignore a stylesheet).
+- **Minified in production.** Every enqueue goes through `Plugin::asset()`: the `.min` build normally, the readable source when `SCRIPT_DEBUG` is on. The zip ships both and leaves the source maps out. The standalone HTML inlines the sources, not the builds, so its build depends on nothing but the repository.
 - Namespace `EmailSignatureGenerator`; no global functions. A class maps to a kebab-case file under `src/`, and `AutoloaderTest` fails when one does not.
 - Escape on output; check a nonce and a capability on every request entry point; sanitize every setting on save.
 - **Every option the plugin writes is deleted in `uninstall.php`**, in the same change that adds it.

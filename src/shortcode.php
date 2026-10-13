@@ -127,7 +127,7 @@ final class Shortcode {
 	 * @param array<string, mixed> $settings Sanitized settings.
 	 */
 	private static function enqueue( array $settings ): void {
-		wp_enqueue_style( self::STYLE_HANDLE, Plugin::url() . 'assets/css/signature-generator.css', array(), Plugin::assetVersion( 'assets/css/signature-generator.css' ) );
+		wp_enqueue_style( self::STYLE_HANDLE, Plugin::url() . Plugin::asset( 'assets/css/signature-generator.css' ), array(), Plugin::assetVersion( Plugin::asset( 'assets/css/signature-generator.css' ) ) );
 		wp_enqueue_script(
 			self::HTML2CANVAS_HANDLE,
 			Plugin::url() . 'assets/vendor/html2canvas-' . self::HTML2CANVAS_VERSION . '.min.js',
@@ -137,9 +137,9 @@ final class Shortcode {
 		);
 		wp_enqueue_script(
 			self::SCRIPT_HANDLE,
-			Plugin::url() . 'assets/js/signature-generator.js',
+			Plugin::url() . Plugin::asset( 'assets/js/signature-generator.js' ),
 			array( self::HTML2CANVAS_HANDLE ),
-			Plugin::assetVersion( 'assets/js/signature-generator.js' ),
+			Plugin::assetVersion( Plugin::asset( 'assets/js/signature-generator.js' ) ),
 			array( 'in_footer' => true )
 		);
 

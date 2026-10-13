@@ -2,9 +2,24 @@
  * Email Signature Generator: the form.
  *
  * Every rule is scoped under .esg-generator, because the form lives inside
- * someone else's theme. The signature itself carries inline styles only, so
- * nothing here reaches what is copied.
+ * someone else's theme, except the two off-screen copies below, which the
+ * script appends to <body>. The signature itself carries inline styles only,
+ * so nothing here reaches what is copied.
  */
+
+/* What the script draws off screen and outside the form: the copy it selects
+   for the legacy clipboard path, and the stage html2canvas renders the PNG
+   from. Both are `aria-hidden`. */
+.esg-offscreen {
+	position: fixed;
+	top: 0;
+	left: -9999px;
+}
+
+/* The PNG's ground: a signature is drawn on white in every mail client. */
+.esg-stage {
+	background: #ffffff;
+}
 
 .esg-generator {
 	--esg-border: #8c8f94;
