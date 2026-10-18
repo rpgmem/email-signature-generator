@@ -30,7 +30,7 @@ To offer only some of the models, list them in the order to show them:
 
 The models are `staff_regional` (staff at a regional office), `staff_school` (staff at a school) and `department` (a department or a school building). With one model, the form does not ask which.
 
-The signature is built in the visitor's browser: nothing they type is sent to the site. Phone numbers are formatted as they are typed and become links that dial them, the preview can be seen in dark mode, and a collapsible section explains how to add the signature in Outlook, Gmail and on a phone.
+The signature is built in the visitor's browser: nothing they type is sent to the site. Phone numbers are formatted as they are typed and become links that dial them, the preview can be seen in dark mode, and a collapsible section explains how to add the signature in the email program the address's domain uses, Outlook or Gmail.
 
 == Settings ==
 
@@ -39,6 +39,7 @@ Settings → Email Signature sets, for every form on the site:
 * which models are offered, and whether only logged-in users may use the form;
 * whether each browser may remember what its user typed, for 60 minutes after the signature was last generated (off by default);
 * which email domains are accepted: only the ones listed, shown beside the field, or any address except placeholder domains such as test.com;
+* which install instructions each address domain gets: Outlook, Gmail or none;
 * how wide the form gets on the page (640 px by default);
 * the logo, from the media library (the bundled one is the default), its width and its alternative text;
 * the space above the signature (4 px by default);

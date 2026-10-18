@@ -23,7 +23,7 @@ The default layout and logo are those of the São Paulo Municipal Department of 
 
 In **Settings → Email Signature** an administrator sets, for every form on the site:
 
-- **General:** the models offered, who may use the form, whether each browser may remember what was typed, optional Google Analytics (off by default; only a GA4 measurement ID, never a pasted snippet), and the email domains (only some allowed, shown beside the field so people type only the part before the "@", or any address except placeholder domains such as `test.com`), and Dark Mode for this screen and the form on the site (off, on, or following the operating system). When Free Form Certificate is active, its own Dark Mode decides, and this field is shown disabled.
+- **General:** the models offered, who may use the form, whether each browser may remember what was typed, optional Google Analytics (off by default; only a GA4 measurement ID, never a pasted snippet), and the email domains (only some allowed, shown beside the field so people type only the part before the "@", or any address except placeholder domains such as `test.com`), which install instructions (Outlook, Gmail or none) each address domain gets, and Dark Mode for this screen and the form on the site (off, on, or following the operating system). When Free Form Certificate is active, its own Dark Mode decides, and this field is shown disabled.
 - **Layout:** how wide the form gets on the page, the logo (from the media library), its width and its alternative text, and the space above the signature.
 - **Downloaded image:** whether and how the download is offered, and the image's format (PNG or JPG) and resolution.
 - **Units:** the units people choose from (name and acronym), and which one the form starts on.
@@ -44,7 +44,7 @@ Then:
 1. Choose a model and fill in the fields.
 2. Click **Generate signature** to see the preview.
 3. Phone numbers are formatted as you leave the field, and each one becomes a link that dials it. **See it in dark mode** shows how the signature looks in an email program's dark theme.
-4. Once the signature is generated, click **Copy HTML** and paste it into your email client's signature settings, such as Outlook's or Gmail's. This is the recommended way: the text stays sharp at any size and the links work. **Download image** saves it as a PNG (or a JPG, if the site chose that) for programs that do not accept an HTML signature, where the site offers it. **How to add the signature to your email** explains the steps for Outlook on the web, classic Outlook, Gmail and phones.
+4. Once the signature is generated, click **Copy HTML** and paste it into your email client's signature settings, such as Outlook's or Gmail's. This is the recommended way: the text stays sharp at any size and the links work. **Download image** saves it as a PNG (or a JPG, if the site chose that) for programs that do not accept an HTML signature, where the site offers it. Below the form, a collapsed section explains how to add the signature in the email program the address's domain uses: Outlook (on the web, the new Outlook and classic Outlook for Windows) for `@sme.prefeitura.sp.gov.br`, Gmail on the web for `@edu.sme.prefeitura.sp.gov.br`, and nothing for other domains. An administrator maps the domains on the General tab.
 
 ## Privacy
 

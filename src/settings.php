@@ -97,7 +97,7 @@ final class Settings {
 	/**
 	 * The stored settings, completed with their defaults.
 	 *
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, custom_style: bool, colors: array<string, string>, radius: int, font: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>, dark_mode: string}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, mail_clients: list<array{domain: string, client: string}>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, custom_style: bool, colors: array<string, string>, radius: int, font: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>, dark_mode: string}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -126,6 +126,7 @@ final class Settings {
 			'restrict_email_domain' => false,
 			'email_domains'         => array(),
 			'blocked_email_domains' => Config::BLOCKED_EMAIL_DOMAINS,
+			'mail_clients'          => array(),
 			'regions'               => array(),
 			'default_unit'          => '',
 			'access'                => self::ACCESS_EVERYONE,
@@ -146,7 +147,7 @@ final class Settings {
 	 * value written by an older version still yields a usable configuration.
 	 *
 	 * @param array<string, mixed> $input Raw settings.
-	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, custom_style: bool, colors: array<string, string>, radius: int, font: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>, dark_mode: string}
+	 * @return array{models: list<string>, offer_download: bool, download_style: string, remember_values: bool, logo_id: int, logo_alt: string, logo_width: int, top_space: int, form_width: int, image_format: string, image_quality: int, image_scale: int, restrict_email_domain: bool, email_domains: list<string>, blocked_email_domains: list<string>, mail_clients: list<array{domain: string, client: string}>, regions: list<array{name: string, acronym: string}>, default_unit: string, access: string, analytics: bool, analytics_id: string, custom_style: bool, colors: array<string, string>, radius: int, font: string, fields: array<string, array<string, array{default?: string, label?: string, required?: bool, locked?: bool, uppercase?: bool}>>, dark_mode: string}
 	 */
 	public static function sanitize( $input ): array {
 		$input = is_array( $input ) ? $input : array();
@@ -212,6 +213,9 @@ final class Settings {
 			// Absent means "never saved": the built-in list. An emptied box
 			// is a choice and stays empty.
 			'blocked_email_domains' => array_key_exists( 'blocked_email_domains', $input ) ? self::parseDomains( $input['blocked_email_domains'] )['domains'] : Config::BLOCKED_EMAIL_DOMAINS,
+			// Empty means the built-in domains, as for the units: to show no
+			// instructions for one, its row says "None".
+			'mail_clients'          => self::parseMailClients( $input['mail_clients'] ?? array() )['rows'],
 			'regions'               => $regions,
 			'default_unit'          => $default_unit,
 			'access'                => self::ACCESS_LOGGED_IN === $access ? self::ACCESS_LOGGED_IN : self::ACCESS_EVERYONE,
@@ -257,7 +261,8 @@ final class Settings {
 		}
 		$bad = array_merge(
 			self::parseDomains( $input['email_domains'] ?? array() )['rejected'],
-			self::parseDomains( $input['blocked_email_domains'] ?? array() )['rejected']
+			self::parseDomains( $input['blocked_email_domains'] ?? array() )['rejected'],
+			self::parseMailClients( $input['mail_clients'] ?? array() )['rejected']
 		);
 		if ( ! $reported_domains && array() !== $bad && function_exists( 'add_settings_error' ) ) {
 			$reported_domains = true;
@@ -494,6 +499,68 @@ final class Settings {
 	}
 
 	/**
+	 * Clean the install-instruction rows: a domain and the client whose
+	 * instructions its addresses get (`outlook`, `gmail` or `none`). A row
+	 * without a domain is dropped quietly, one whose domain is not a domain
+	 * name is dropped and reported, and a repeated domain keeps its first
+	 * row. "None" rows are kept, so a built-in domain can be switched off.
+	 *
+	 * @param mixed $input Raw rows, each `{domain, client}`.
+	 * @return array{rows: list<array{domain: string, client: string}>, rejected: list<string>}
+	 */
+	public static function parseMailClients( $input ): array {
+		$rows     = array();
+		$seen     = array();
+		$rejected = array();
+		foreach ( is_array( $input ) ? $input : array() as $raw ) {
+			if ( ! is_array( $raw ) || ! is_scalar( $raw['domain'] ?? null ) ) {
+				continue;
+			}
+			$parsed = self::parseDomains( array( $raw['domain'] ) );
+			if ( array() !== $parsed['rejected'] ) {
+				$rejected = array_merge( $rejected, $parsed['rejected'] );
+				continue;
+			}
+			$domain = $parsed['domains'][0] ?? '';
+			if ( '' === $domain || in_array( $domain, $seen, true ) ) {
+				continue;
+			}
+			$client = $raw['client'] ?? 'none';
+			$seen[] = $domain;
+			$rows[] = array(
+				'domain' => $domain,
+				'client' => in_array( $client, Config::MAIL_CLIENTS, true ) ? (string) $client : 'none',
+			);
+		}
+		return array(
+			'rows'     => $rows,
+			'rejected' => $rejected,
+		);
+	}
+
+	/**
+	 * The install-instruction rows the settings screen shows: the stored
+	 * ones, or the built-in domains when none are stored.
+	 *
+	 * @param array<string, mixed> $settings Sanitized settings.
+	 * @return list<array{domain: string, client: string}>
+	 */
+	public static function mailClientRows( array $settings ): array {
+		$rows = is_array( $settings['mail_clients'] ?? null ) ? $settings['mail_clients'] : array();
+		if ( array() !== $rows ) {
+			return array_values( $rows );
+		}
+		$defaults = array();
+		foreach ( Config::MAIL_CLIENT_DOMAINS as $domain => $client ) {
+			$defaults[] = array(
+				'domain' => $domain,
+				'client' => $client,
+			);
+		}
+		return $defaults;
+	}
+
+	/**
 	 * Apply settings to a configuration.
 	 *
 	 * @param array<string, mixed> $config   The default configuration.
@@ -520,6 +587,13 @@ final class Settings {
 			'quality' => (int) $settings['image_quality'],
 			'scale'   => (int) $settings['image_scale'],
 		);
+		// Only the domains that get instructions reach the form.
+		$config['mailClients'] = array();
+		foreach ( self::mailClientRows( $settings ) as $row ) {
+			if ( 'none' !== $row['client'] ) {
+				$config['mailClients'][ $row['domain'] ] = $row['client'];
+			}
+		}
 		if ( '' !== $logo_url ) {
 			$config['logo']['url'] = $logo_url;
 			// The bundled logo's description does not fit another image.

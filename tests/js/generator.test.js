@@ -490,19 +490,121 @@ describe( 'settings in the configuration', () => {
 		expect( gen.validate( model( 'staff_regional' ), { ...valid, email: 'a@example.com' }, config ) ).toHaveLength( 1 );
 	} );
 
-	it( 'explains where to paste the signature, collapsed under the result', () => {
-		document.body.innerHTML = '<div id="c"></div>';
-		gen.mount( document.getElementById( 'c' ), config );
-		const howto = document.querySelector( '.esg-output details.esg-howto' );
-		expect( howto ).not.toBeNull();
-		expect( howto.open ).toBe( false );
-		expect( howto.querySelector( 'summary' ).textContent ).toBe( config.strings.howTo );
-		expect( [ ...howto.querySelectorAll( 'li' ) ].map( ( li ) => li.textContent ) ).toEqual( [
-			config.strings.howToOutlookWeb,
-			config.strings.howToOutlook,
-			config.strings.howToGmail,
-			config.strings.howToPhone,
-		] );
+	describe( 'install instructions (#107)', () => {
+		const SME = 'sme.prefeitura.sp.gov.br';
+		const EDU = 'edu.sme.prefeitura.sp.gov.br';
+
+		function shown() {
+			return [ ...document.querySelectorAll( 'details.esg-install' ) ].filter( ( d ) => ! d.hidden ).map( ( d ) => d.dataset.esgClient );
+		}
+
+		function type( value ) {
+			const email = document.querySelector( '[name="email"]' );
+			email.value = value;
+			email.dispatchEvent( new window.Event( 'input', { bubbles: true } ) );
+		}
+
+		it( 'ships @sme on Outlook and @edu on Gmail', () => {
+			expect( config.mailClients ).toEqual( { [ SME ]: 'outlook', [ EDU ]: 'gmail' } );
+			expect( gen.mailClientFor( config, SME ) ).toBe( 'outlook' );
+			expect( gen.mailClientFor( config, EDU ) ).toBe( 'gmail' );
+			expect( gen.mailClientFor( config, 'gmail.com' ) ).toBe( '' );
+			expect( gen.mailClientFor( config, 'x.' + SME ) ).toBe( '' );
+		} );
+
+		it( 'ignores a missing or malformed map and unknown clients', () => {
+			expect( gen.mailClientFor( {}, SME ) ).toBe( '' );
+			expect( gen.mailClientFor( { mailClients: [] }, SME ) ).toBe( '' );
+			expect( gen.mailClientFor( { mailClients: { [ SME ]: 'thunderbird' } }, SME ) ).toBe( '' );
+			expect( gen.mailClientFor( { mailClients: {} }, 'hasOwnProperty' ) ).toBe( '' );
+		} );
+
+		it( 'shows nothing until an address names a domain', () => {
+			document.body.innerHTML = '<div id="c"></div>';
+			gen.mount( document.getElementById( 'c' ), config );
+			expect( document.querySelectorAll( 'details.esg-install' ) ).toHaveLength( 2 );
+			expect( shown() ).toEqual( [] );
+		} );
+
+		it( 'shows Outlook for @sme, closed, with its three clients', () => {
+			document.body.innerHTML = '<div id="c"></div>';
+			gen.mount( document.getElementById( 'c' ), config );
+			type( 'maria@' + SME );
+			expect( shown() ).toEqual( [ 'outlook' ] );
+			const outlook = document.querySelector( '[data-esg-client="outlook"]' );
+			expect( outlook.closest( '.esg-output' ) ).toBeNull();
+			expect( outlook.open ).toBe( false );
+			expect( outlook.querySelector( 'summary' ).textContent ).toBe( config.strings.installOutlook );
+			expect( [ ...outlook.querySelectorAll( 'section.esg-install-client h4' ) ].map( ( h ) => h.textContent ) ).toEqual( [
+				config.strings.outlookWeb,
+				config.strings.outlookNew,
+				config.strings.outlookClassic,
+			] );
+			expect( [ ...outlook.querySelectorAll( 'section' ) ].map( ( s ) => s.querySelectorAll( 'ol li' ).length ) ).toEqual( [ 3, 3, 3 ] );
+			expect( outlook.querySelector( '.esg-install-note' ).textContent ).toBe( config.strings.howToPhone );
+		} );
+
+		it( 'shows Gmail for @edu, with its steps in order', () => {
+			document.body.innerHTML = '<div id="c"></div>';
+			gen.mount( document.getElementById( 'c' ), config );
+			type( 'MARIA@' + EDU.toUpperCase() );
+			expect( shown() ).toEqual( [ 'gmail' ] );
+			const gmail = document.querySelector( '[data-esg-client="gmail"]' );
+			expect( gmail.querySelector( 'summary' ).textContent ).toBe( config.strings.installGmail );
+			expect( [ ...gmail.querySelectorAll( 'ol li' ) ].map( ( li ) => li.textContent ) ).toEqual( [
+				config.strings.gmailOpen,
+				config.strings.gmailNew,
+				config.strings.gmailPaste,
+				config.strings.gmailDefaults,
+				config.strings.gmailSave,
+			] );
+		} );
+
+		it( 'shows nothing for another domain', () => {
+			document.body.innerHTML = '<div id="c"></div>';
+			gen.mount( document.getElementById( 'c' ), config );
+			type( 'maria@gmail.com' );
+			expect( shown() ).toEqual( [] );
+		} );
+
+		it( 'follows the address as it changes', () => {
+			document.body.innerHTML = '<div id="c"></div>';
+			gen.mount( document.getElementById( 'c' ), config );
+			type( 'maria@' + SME );
+			expect( shown() ).toEqual( [ 'outlook' ] );
+			type( 'maria@' + EDU );
+			expect( shown() ).toEqual( [ 'gmail' ] );
+			type( 'maria@prefeitura.sp.gov.br' );
+			expect( shown() ).toEqual( [] );
+		} );
+
+		it( 'follows the domain picked beside the field, before anything is typed', () => {
+			document.body.innerHTML = '<div id="c"></div>';
+			gen.mount( document.getElementById( 'c' ), { ...config, emailDomains: [ SME, EDU, 'example.org' ] } );
+			expect( shown() ).toEqual( [ 'outlook' ] );
+			const domain = document.querySelector( 'select.esg-email-domain' );
+			domain.value = EDU;
+			domain.dispatchEvent( new window.Event( 'change', { bubbles: true } ) );
+			expect( shown() ).toEqual( [ 'gmail' ] );
+			domain.value = 'example.org';
+			domain.dispatchEvent( new window.Event( 'change', { bubbles: true } ) );
+			expect( shown() ).toEqual( [] );
+		} );
+
+		it( 'reads a fixed domain and keeps following when the model changes', () => {
+			document.body.innerHTML = '<div id="c"></div>';
+			const ui = gen.mount( document.getElementById( 'c' ), { ...config, emailDomains: [ EDU ] } );
+			expect( shown() ).toEqual( [ 'gmail' ] );
+			ui.select( 'department' );
+			expect( shown() ).toEqual( [ 'gmail' ] );
+		} );
+
+		it( 'shows nothing when the site maps no domain', () => {
+			document.body.innerHTML = '<div id="c"></div>';
+			gen.mount( document.getElementById( 'c' ), { ...config, mailClients: [] } );
+			type( 'maria@' + SME );
+			expect( shown() ).toEqual( [] );
+		} );
 	} );
 
 	it( 'formats the phone on leaving the field and when generating', () => {

@@ -314,15 +314,22 @@
 	}
 
 	/**
-	 * Regional offices: add a row from the template, remove a row, and keep
-	 * acronyms in capitals as they are typed.
+	 * A table of rows the administrator adds to and removes from: the units
+	 * and the install-instruction domains. "Add" copies the template with
+	 * the next index, and the new row's first field takes the focus.
+	 *
+	 * @param {string} prefix Class prefix: `<prefix>-rows`, `-template`, `-add` and `-delete`.
+	 * @return {?Element} The rows' container, or null when the table is absent.
 	 */
-	var rows = document.querySelector( '.esg-regions-rows' );
-	var template = document.querySelector( '.esg-regions-template' );
-	var addOffice = document.querySelector( '.esg-regions-add' );
-	if ( rows && template && addOffice ) {
+	function rowTable( prefix ) {
+		var rows = document.querySelector( '.' + prefix + '-rows' );
+		var template = document.querySelector( '.' + prefix + '-template' );
+		var add = document.querySelector( '.' + prefix + '-add' );
+		if ( ! rows || ! template || ! add ) {
+			return null;
+		}
 		var next = rows.children.length;
-		addOffice.addEventListener( 'click', function () {
+		add.addEventListener( 'click', function () {
 			var html = template.innerHTML.split( '__i__' ).join( String( next++ ) );
 			rows.insertAdjacentHTML( 'beforeend', html );
 			var added = rows.lastElementChild.querySelector( 'input' );
@@ -331,12 +338,18 @@
 			}
 		} );
 		rows.addEventListener( 'click', function ( event ) {
-			var remove = event.target.closest( '.esg-regions-delete' );
+			var remove = event.target.closest( '.' + prefix + '-delete' );
 			if ( remove ) {
 				remove.closest( 'tr' ).remove();
 			}
 		} );
-		rows.addEventListener( 'input', function ( event ) {
+		return rows;
+	}
+
+	// Regional offices keep their acronyms in capitals as they are typed.
+	var regionRows = rowTable( 'esg-regions' );
+	if ( regionRows ) {
+		regionRows.addEventListener( 'input', function ( event ) {
 			if ( event.target.classList.contains( 'esg-acronym' ) ) {
 				var upper = event.target.value.toUpperCase().replace( /\s+/g, '' );
 				if ( upper !== event.target.value ) {
@@ -345,6 +358,7 @@
 			}
 		} );
 	}
+	rowTable( 'esg-mail-clients' );
 
 	var preview = document.querySelector( '.esg-logo-preview' );
 	var input = document.querySelector( '.esg-logo-id' );

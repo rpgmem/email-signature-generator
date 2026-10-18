@@ -8,6 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - **Dark mode follows Free Form Certificate when it is active** (#106). Its `dark_mode` setting applies to the settings screen and the form; the local field is shown disabled with "Controlled by Free Form Certificate", and saving keeps its stored value. Without that plugin nothing changes.
+- **The form explains how to install the signature in the client the address's domain uses** (#107). A collapsed section under the generator shows Outlook (web, new and classic for Windows) for `@sme` and Gmail for `@edu`, nothing for other domains, and follows the domain as it changes. General → Install instructions maps each domain to Outlook, Gmail or None.
 
 ### Changed
 
