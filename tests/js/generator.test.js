@@ -320,6 +320,27 @@ describe( 'mount', () => {
 		expect( document.querySelector( '.esg-remember' ) ).not.toBeNull();
 	} );
 
+	it( 'draws every button from the family, with its category and icon (#106)', () => {
+		document.body.innerHTML = '<div id="c"></div>';
+		gen.mount( document.getElementById( 'c' ), { ...config, rememberValues: true } );
+		const expected = {
+			'esg-generate': [ 'esg-btn-primary', 'esg-icon-edit', 'esg-btn-block' ],
+			'esg-copy': [ 'esg-btn-primary', 'esg-icon-copy' ],
+			'esg-download': [ 'esg-btn-neutral', 'esg-icon-download' ],
+			'esg-forget': [ 'esg-btn-danger', 'esg-icon-eraser' ],
+		};
+		Object.keys( expected ).forEach( ( hook ) => {
+			const button = document.querySelector( '.' + hook );
+			expect( button.tagName ).toBe( 'BUTTON' );
+			expect( button.classList.contains( 'esg-btn' ) ).toBe( true );
+			expected[ hook ].forEach( ( cls ) => expect( button.classList.contains( cls ) ).toBe( true ) );
+		} );
+		expect( document.querySelector( '.esg-generate' ).type ).toBe( 'submit' );
+		expect( document.querySelector( '.esg-copy' ).type ).toBe( 'button' );
+		expect( document.querySelectorAll( 'button' ) ).toHaveLength( document.querySelectorAll( 'button.esg-btn' ).length );
+		expect( document.querySelector( '.esg-button' ) ).toBeNull();
+	} );
+
 	it( 'offers the download unless the site turned it off', () => {
 		document.body.innerHTML = '<div id="c"></div>';
 		gen.mount( document.getElementById( 'c' ), config );

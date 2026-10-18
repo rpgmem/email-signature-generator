@@ -284,6 +284,12 @@ final class Settings {
 				)
 			);
 		}
+		// While Free Form Certificate controls the theme, the Dark Mode field
+		// is disabled and posts nothing: keep the stored value, which applies
+		// again the day that plugin is deactivated, instead of resetting it.
+		if ( Theme::followsFfc() && ! array_key_exists( 'dark_mode', $input ) ) {
+			$input['dark_mode'] = self::get()['dark_mode'];
+		}
 		$clean = self::sanitize( $input );
 		$weak  = $clean['custom_style'] ? self::weakContrasts( $clean['colors'] ) : array();
 		if ( ! $reported_colors && array() !== $weak && function_exists( 'add_settings_error' ) ) {

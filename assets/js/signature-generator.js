@@ -489,6 +489,29 @@
 	}
 
 	/**
+	 * A button of the family in buttons.css, the same markup as the PHP
+	 * `Button::html()` prints: `esg-btn`, its category, its icon class from
+	 * the registry, and the hook class the script and the tests find it by.
+	 *
+	 * @param {Document} doc  Document.
+	 * @param {Object}   args type, category, icon, block, hook and text.
+	 * @return {HTMLButtonElement} The button.
+	 */
+	function button( doc, args ) {
+		var classes = [ 'esg-btn', 'esg-btn-' + ( args.category || 'neutral' ) ];
+		if ( args.icon ) {
+			classes.push( 'esg-icon-' + args.icon );
+		}
+		if ( args.block ) {
+			classes.push( 'esg-btn-block' );
+		}
+		if ( args.hook ) {
+			classes.push( args.hook );
+		}
+		return el( doc, 'button', { type: args.type || 'button', class: classes.join( ' ' ), text: args.text } );
+	}
+
+	/**
 	 * What a person typed, kept in their own browser when the site allows
 	 * it, so updating a signature later does not mean typing it again.
 	 * Nothing is sent anywhere. Storage that is blocked or full is ignored.
@@ -613,9 +636,13 @@
 		var errorsBox = el( doc, 'ul', { class: 'esg-errors', role: 'alert' } );
 		form.appendChild( errorsBox );
 
-		var generateBtn = el( doc, 'button', { type: 'submit', class: 'esg-button esg-generate', text: strings.generate } );
-		var copyBtn = el( doc, 'button', { type: 'button', class: 'esg-button esg-copy', text: strings.copy } );
-		var downloadBtn = el( doc, 'button', { type: 'button', class: 'esg-button esg-download', text: strings.download } );
+		// The button family (buttons.css): the category says what the action
+		// does, and the last class is the hook the tests and themes read.
+		// Copying is the recommended way to deliver the signature, so it is
+		// filled like the form's own action; the image stays neutral.
+		var generateBtn = button( doc, { type: 'submit', category: 'primary', icon: 'edit', block: true, hook: 'esg-generate', text: strings.generate } );
+		var copyBtn = button( doc, { category: 'primary', icon: 'copy', hook: 'esg-copy', text: strings.copy } );
+		var downloadBtn = button( doc, { category: 'neutral', icon: 'download', hook: 'esg-download', text: strings.download } );
 		// The site chooses whether the image is offered at all, and how: a
 		// button (the default), the same inside a collapsed "More options",
 		// or a button with no note recommending Copy HTML afterwards.
@@ -645,7 +672,7 @@
 			} ) ),
 		] ) );
 
-		var forgetBtn = el( doc, 'button', { type: 'button', class: 'esg-forget', text: strings.forget } );
+		var forgetBtn = button( doc, { category: 'danger', icon: 'eraser', hook: 'esg-forget', text: strings.forget } );
 		// Where what is typed goes: said always, and by the remember note
 		// when that is on, since it says the same and more.
 		if ( remember ) {

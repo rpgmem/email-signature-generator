@@ -207,55 +207,23 @@
 	gap: 8px;
 }
 
-.esg-generator .esg-button {
-	box-sizing: border-box;
-	padding: 10px 16px;
-	border: 1px solid var(--esg-accent);
-	border-radius: var(--esg-radius);
-	background: var(--esg-accent-text);
-	color: var(--esg-accent);
-	font-family: inherit;
-	font-size: inherit;
-	font-weight: 600;
-	line-height: normal;
-	cursor: pointer;
-	transition: background 0.3s ease, transform 0.1s;
+/* The buttons are the family in buttons.css, which this sheet loads after.
+   Here the family's primary reads the form's accent, so the Design tab's
+   colour and its dark counterpart reach the buttons, and the corner reads
+   the form's radius. */
+.esg-generator {
+	--esg-btn-primary: var(--esg-accent);
+	--esg-btn-primary-hover: var(--esg-accent-hover);
+	--esg-btn-on-primary: var(--esg-accent-text);
+	--esg-btn-focus: var(--esg-accent);
+	--esg-btn-radius: var(--esg-radius);
+	--esg-btn-font-size: var(--esg-font-size-base);
 }
 
-.esg-generator .esg-button:active {
-	transform: scale(0.98);
-}
-
-.esg-generator .esg-button:focus-visible {
-	outline: 2px solid var(--esg-accent);
-	outline-offset: 2px;
-}
-
-/* The main action spans the form, as Free Form Certificate's submit does. */
+/* The main action spans the form, as Free Form Certificate's submit does,
+   and stands a little taller. */
 .esg-generator .esg-generate {
-	width: 100%;
-	padding: 16px;
-	border: 0;
-	background: var(--esg-accent);
-	color: var(--esg-accent-text);
-}
-
-.esg-generator .esg-generate:hover,
-.esg-generator .esg-copy:hover {
-	background: var(--esg-accent-hover);
-}
-
-/* Copying the HTML is the recommended way: its button is filled like the
-   main action, and the note under the buttons says why. The image keeps a
-   full button, in grey. */
-.esg-generator .esg-copy {
-	background: var(--esg-accent);
-	color: var(--esg-accent-text);
-}
-
-.esg-generator .esg-download {
-	border-color: var(--esg-border);
-	color: var(--esg-muted);
+	min-height: 48px;
 }
 
 /* A theme's display rule must not reveal the buttons before a signature
@@ -308,7 +276,7 @@
 }
 
 @media (max-width: 600px) {
-	.esg-generator .esg-button {
+	.esg-generator .esg-btn:not(.esg-forget) {
 		width: 100%;
 	}
 }
@@ -341,14 +309,11 @@
 	font-size: var(--esg-font-size-sm);
 }
 
+/* Forgetting sits in a sentence, so its button is the family's, compact. */
 .esg-generator .esg-forget {
-	padding: 0;
-	border: 0;
-	background: none;
-	color: var(--esg-accent);
-	font: inherit;
-	text-decoration: underline;
-	cursor: pointer;
+	min-height: 32px;
+	padding: 0 12px;
+	font-size: var(--esg-font-size-sm);
 }
 
 /* The preview's title: a label's size, set rather than inherited from the

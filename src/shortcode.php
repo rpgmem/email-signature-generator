@@ -117,7 +117,7 @@ final class Shortcode {
 
 	/**
 	 * Load the script, its image library, the dark-mode switch and the form's
-	 * stylesheet, with the Design tab's rule when it is on. Called
+	 * stylesheet (after the button family's, which it builds on), with the Design tab's rule when it is on. Called
 	 * from render(), so they load only on pages that show the generator;
 	 * Google's tag too when the settings turn Analytics on, and nothing of
 	 * Google's otherwise.
@@ -125,7 +125,8 @@ final class Shortcode {
 	 * @param array<string, mixed> $settings Sanitized settings.
 	 */
 	private static function enqueue( array $settings ): void {
-		wp_enqueue_style( self::STYLE_HANDLE, Plugin::url() . Plugin::asset( 'assets/css/signature-generator.css' ), array(), Plugin::assetVersion( Plugin::asset( 'assets/css/signature-generator.css' ) ) );
+		Button::registerStyle();
+		wp_enqueue_style( self::STYLE_HANDLE, Plugin::url() . Plugin::asset( 'assets/css/signature-generator.css' ), array( Button::STYLE_HANDLE ), Plugin::assetVersion( Plugin::asset( 'assets/css/signature-generator.css' ) ) );
 		// The Design tab's colours, corners and font, as custom properties the
 		// stylesheet reads. They are scoped to the light theme: a colour picked
 		// against white is not one to draw on the dark ground, and a property

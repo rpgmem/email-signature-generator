@@ -23,7 +23,7 @@ The default layout and logo are those of the São Paulo Municipal Department of 
 
 In **Settings → Email Signature** an administrator sets, for every form on the site:
 
-- **General:** the models offered, who may use the form, whether each browser may remember what was typed, optional Google Analytics (off by default; only a GA4 measurement ID, never a pasted snippet), and the email domains (only some allowed, shown beside the field so people type only the part before the "@", or any address except placeholder domains such as `test.com`), and Dark Mode for this screen and the form on the site (off, on, or following the operating system).
+- **General:** the models offered, who may use the form, whether each browser may remember what was typed, optional Google Analytics (off by default; only a GA4 measurement ID, never a pasted snippet), and the email domains (only some allowed, shown beside the field so people type only the part before the "@", or any address except placeholder domains such as `test.com`), and Dark Mode for this screen and the form on the site (off, on, or following the operating system). When Free Form Certificate is active, its own Dark Mode decides, and this field is shown disabled.
 - **Layout:** how wide the form gets on the page, the logo (from the media library), its width and its alternative text, and the space above the signature.
 - **Downloaded image:** whether and how the download is offered, and the image's format (PNG or JPG) and resolution.
 - **Units:** the units people choose from (name and acronym), and which one the form starts on.

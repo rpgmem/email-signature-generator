@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace EmailSignatureGenerator\Admin;
 
 use EmailSignatureGenerator\Config;
+use EmailSignatureGenerator\Icons;
 use EmailSignatureGenerator\Plugin;
 use EmailSignatureGenerator\Settings;
 
@@ -70,7 +71,7 @@ final class Documentation {
 					array( __( 'Who can use the form', 'email-signature-generator' ), __( 'Everyone who can see the page, or logged-in users only; the others see a link to log in.', 'email-signature-generator' ) ),
 					array( __( 'Google Analytics', 'email-signature-generator' ), __( 'Off by default, and then nothing of Google\'s is loaded. Switched on with a measurement ID (G-XXXXXXXXXX), the pages that show the form load Google\'s tag and record when a signature is generated, copied or downloaded, with only the model and the image format.', 'email-signature-generator' ) ),
 					array( __( 'Allowed email domain', 'email-signature-generator' ), __( 'On: the person types only the part before the "@" and the domain is shown beside the field, as a list when there is more than one. Off: any valid address is accepted, except the refused domains, a list of placeholder and disposable domains such as test.com that you can edit.', 'email-signature-generator' ) ),
-					array( __( 'Dark Mode', 'email-signature-generator' ), __( 'Off by default. On, or Auto when the operating system is set to dark, this settings screen and the form on the site turn dark. The signature preview keeps its white ground, as email programs show it, and the Design tab\'s colours apply to the light look only.', 'email-signature-generator' ) ),
+					array( __( 'Dark Mode', 'email-signature-generator' ), __( 'Off by default. On, or Auto when the operating system is set to dark, this settings screen and the form on the site turn dark. The signature preview keeps its white ground, as email programs show it, and the Design tab\'s colours apply to the light look only. When Free Form Certificate is active, its own Dark Mode decides instead: this field is shown disabled, keeping the value that applies again if that plugin is deactivated.', 'email-signature-generator' ) ),
 				),
 				'note'  => __( 'The on/off switches and Dark Mode save as soon as they change. Everything else saves with "Save Changes".', 'email-signature-generator' ),
 			),

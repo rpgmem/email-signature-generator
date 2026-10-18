@@ -70,6 +70,109 @@ final class DarkModeTest extends TestCase {
 	}
 
 	/**
+	 * Without Free Form Certificate, this plugin's own setting decides, and a
+	 * save that posts no Dark Mode is the default, as before (#106).
+	 */
+	public function test_without_ffc_the_local_setting_decides(): void {
+		self::assertFalse( defined( 'FFC_VERSION' ), 'Another test leaked FFC_VERSION into this process.' );
+		self::stubOptions( array( 'dark_mode' => 'on' ), array( 'dark_mode' => 'auto' ) );
+
+		self::assertFalse( Theme::followsFfc() );
+		self::assertSame( 'on', Theme::mode() );
+		self::assertSame( 'off', Settings::save( array() )['dark_mode'] );
+		self::assertSame( 'auto', Autosave::read( (array) Autosave::apply( Settings::get(), 'dark_mode', 'auto' ), 'dark_mode' ) );
+	}
+
+	/**
+	 * With Free Form Certificate active, its Dark Mode decides; an unknown
+	 * or missing value is its own default, "off".
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_with_ffc_its_setting_decides(): void {
+		define( 'FFC_VERSION', '9.9.9' );
+		self::assertTrue( Theme::followsFfc() );
+
+		foreach ( array( 'off', 'on', 'auto' ) as $mode ) {
+			self::stubOptions( array( 'dark_mode' => 'off' ), array( 'dark_mode' => $mode ) );
+			self::assertSame( $mode, Theme::mode() );
+		}
+		foreach ( array( array( 'dark_mode' => 'dim' ), array( 'dark_mode' => array( 'on' ) ), array(), 'garbage' ) as $stored ) {
+			self::stubOptions( array( 'dark_mode' => 'on' ), $stored );
+			self::assertSame( 'off', Theme::mode(), 'An unknown value is Free Form Certificate\'s default, never the local one.' );
+		}
+
+		self::stubOptions( array( 'dark_mode' => 'off' ), array( 'dark_mode' => 'auto' ) );
+		Functions\when( 'wp_script_is' )->justReturn( false );
+		Functions\when( 'wp_register_script' )->justReturn( true );
+		Functions\when( 'wp_enqueue_script' )->justReturn( null );
+		Functions\expect( 'wp_add_inline_script' )->once()->with( Theme::HANDLE, Theme::script( 'auto' ) );
+		Theme::enqueue( false );
+	}
+
+	/**
+	 * With Free Form Certificate active, the local field is disabled and
+	 * posts nothing: saving keeps the stored value instead of resetting it,
+	 * and the autosave refuses to change it.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_with_ffc_a_save_keeps_the_local_value(): void {
+		define( 'FFC_VERSION', '9.9.9' );
+		self::stubOptions( array( 'dark_mode' => 'on' ), array( 'dark_mode' => 'off' ) );
+
+		self::assertSame( 'on', Settings::save( array( 'analytics' => '1' ) )['dark_mode'] );
+		self::assertSame( 'auto', Settings::save( array( 'dark_mode' => 'auto' ) )['dark_mode'], 'A value that is posted is still taken.' );
+
+		$refused = Autosave::apply( Settings::get(), 'dark_mode', 'auto' );
+		self::assertInstanceOf( WP_Error::class, $refused );
+		self::assertSame( 'controlled_by_ffc', $refused->get_error_code() );
+	}
+
+	/**
+	 * Stub the two options: this plugin's settings and Free Form Certificate's.
+	 *
+	 * @param mixed $local This plugin's stored settings.
+	 * @param mixed $ffc   Free Form Certificate's stored settings.
+	 */
+	private static function stubOptions( $local, $ffc ): void {
+		Functions\when( 'get_option' )->alias(
+			static function ( string $name, $fallback = false ) use ( $local, $ffc ) {
+				if ( Settings::OPTION === $name ) {
+					return $local;
+				}
+				return Theme::FFC_OPTION === $name ? $ffc : $fallback;
+			}
+		);
+	}
+
+	/**
+	 * Every button the form draws reads at 4.5:1 or more in the form's own
+	 * palette, which the family's primary maps onto (#106): the label on the
+	 * accent, at rest and on hover, in both looks.
+	 *
+	 * @dataProvider looks
+	 *
+	 * @param bool $dark Whether to measure the dark look.
+	 */
+	public function test_the_form_buttons_read_well( bool $dark ): void {
+		$css    = self::formCss();
+		$tokens = self::values( $css, ".esg-generator {\n\t--esg-border" );
+		if ( $dark ) {
+			$tokens = array_merge( $tokens, self::values( $css, ':root.esg-dark-mode .esg-generator {' ) );
+		}
+		foreach ( array( 'esg-accent', 'esg-accent-hover' ) as $ground ) {
+			$ratio = Settings::contrast( $tokens['esg-accent-text'], $tokens[ $ground ] );
+			self::assertGreaterThanOrEqual( 4.5, $ratio, sprintf( 'accent-text on %s: %.2f:1', $ground, $ratio ) );
+		}
+		self::assertStringContainsString( '--esg-btn-primary: var(--esg-accent);', $css );
+		self::assertStringContainsString( '--esg-btn-primary-hover: var(--esg-accent-hover);', $css );
+		self::assertStringContainsString( '--esg-btn-on-primary: var(--esg-accent-text);', $css );
+	}
+
+	/**
 	 * The dark block only redefines tokens the light palette declares, and
 	 * every token the sheet reads is declared: an undeclared custom property
 	 * drops the whole declaration, so the element would lose its colour.
