@@ -618,7 +618,22 @@
 	text-transform: uppercase;
 }
 
-.esg-settings .esg-regions-remove {
+/* Install instructions: domain, client, remove. */
+.esg-settings .esg-mail-clients-table {
+	max-width: 960px;
+	margin-bottom: 8px;
+}
+
+.esg-settings .esg-mail-clients-table td {
+	vertical-align: middle;
+}
+
+.esg-settings .esg-mail-clients-client {
+	width: 180px;
+}
+
+.esg-settings .esg-regions-remove,
+.esg-settings .esg-mail-clients-remove {
 	width: 1%;
 	text-align: right;
 	white-space: nowrap;

@@ -281,24 +281,54 @@
 	}
 }
 
-/* Where to paste the signature, collapsed until asked for. */
-.esg-generator .esg-howto {
+/* How to install the signature in the client the address's domain uses
+   (#107): collapsed until asked for, and absent for any other domain. */
+.esg-generator .esg-install {
 	margin: 0 0 20px;
+	padding: 8px 12px;
+	border: 1px solid var(--esg-border);
+	border-radius: var(--esg-radius);
+	color: var(--esg-text);
 	font-size: var(--esg-font-size-base);
 }
 
-.esg-generator .esg-howto summary {
-	cursor: pointer;
-	color: var(--esg-accent);
+.esg-generator .esg-install[hidden] {
+	display: none;
 }
 
-.esg-generator .esg-howto ul {
+.esg-generator .esg-install summary {
+	cursor: pointer;
+	color: var(--esg-accent);
+	font-weight: 600;
+}
+
+.esg-generator .esg-install summary:focus-visible {
+	border-radius: var(--esg-radius);
+	outline: none;
+	box-shadow: 0 0 0 3px var(--esg-focus-ring);
+}
+
+.esg-generator .esg-install h4 {
+	margin: 12px 0 4px;
+	color: var(--esg-text);
+	font-size: var(--esg-font-size-base);
+	font-weight: 600;
+	line-height: 1.5;
+}
+
+.esg-generator .esg-install ol {
 	margin: 8px 0 0;
 	padding-left: 20px;
 }
 
-.esg-generator .esg-howto li {
+.esg-generator .esg-install li {
 	margin-bottom: 6px;
+}
+
+.esg-generator .esg-install .esg-install-note {
+	margin: 12px 0 4px;
+	color: var(--esg-muted);
+	font-size: var(--esg-font-size-sm);
 }
 
 /* "This browser remembers…" and its link to forget. */

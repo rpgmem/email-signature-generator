@@ -261,6 +261,32 @@ final class SettingsPage {
 		);
 		echo '</tbody></table></div>';
 
+		// Which install instructions the form shows under the signature, by
+		// the domain of the address typed (#107).
+		self::openCard( __( 'Install instructions', 'email-signature-generator' ), 'book' );
+		echo '<p class="description">' . esc_html__( 'Below the form, a collapsed section explains how to add the signature in the email program an address\'s domain uses. Each domain matches exactly, so a subdomain needs its own row. "None" shows no instructions for that domain; a domain not listed gets none either. With every row removed, the built-in domains come back.', 'email-signature-generator' ) . '</p>';
+		echo '<table class="widefat striped esg-mail-clients-table"><thead><tr>';
+		echo '<th scope="col">' . esc_html__( 'Domain', 'email-signature-generator' ) . '</th>';
+		echo '<th scope="col" class="esg-mail-clients-client">' . esc_html__( 'Instructions', 'email-signature-generator' ) . '</th>';
+		echo '<td class="esg-mail-clients-remove"></td>';
+		echo '</tr></thead><tbody class="esg-mail-clients-rows">';
+		foreach ( Settings::mailClientRows( $settings ) as $i => $row ) {
+			self::mailClientRow( $name, (string) $i, $row['domain'], $row['client'] );
+		}
+		echo '</tbody></table>';
+		echo '<template class="esg-mail-clients-template">';
+		self::mailClientRow( $name, '__i__', '', 'none' );
+		echo '</template>';
+		$add_domain = Button::html(
+			array(
+				'label'    => __( 'Add a domain', 'email-signature-generator' ),
+				'category' => 'create',
+				'icon'     => 'plus',
+				'class'    => 'esg-mail-clients-add',
+			)
+		);
+		echo '<p>' . $add_domain . '</p></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Button::html() escapes every value.
+
 		self::openCard( __( 'Google Analytics', 'email-signature-generator' ), 'chart' );
 		echo '<table class="form-table" role="presentation"><tbody>';
 		printf(
@@ -727,6 +753,47 @@ final class SettingsPage {
 			esc_attr( $base . '[acronym]' ),
 			esc_attr( $acronym ),
 			esc_attr__( 'Acronym', 'email-signature-generator' ),
+			$remove // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Button::html() escapes every value.
+		);
+	}
+
+	/**
+	 * One row of the install-instructions table: a domain and the client
+	 * whose instructions its addresses get.
+	 *
+	 * @param string $name   Option name.
+	 * @param string $index  Row index, or the template's placeholder.
+	 * @param string $domain Domain.
+	 * @param string $client `none`, `outlook` or `gmail`.
+	 */
+	private static function mailClientRow( string $name, string $index, string $domain, string $client ): void {
+		$base    = $name . '[mail_clients][' . $index . ']';
+		$remove  = Button::html(
+			array(
+				'label'    => __( 'Remove', 'email-signature-generator' ),
+				'category' => 'danger',
+				'icon'     => 'trash',
+				'class'    => 'esg-mail-clients-delete',
+				'attrs'    => array( 'aria-label' => __( 'Remove this domain', 'email-signature-generator' ) ),
+			)
+		);
+		$labels  = array(
+			'none'    => __( 'None', 'email-signature-generator' ),
+			'outlook' => __( 'Outlook', 'email-signature-generator' ),
+			'gmail'   => __( 'Gmail', 'email-signature-generator' ),
+		);
+		$options = '';
+		foreach ( $labels as $value => $label ) {
+			$options .= sprintf( '<option value="%1$s"%2$s>%3$s</option>', esc_attr( $value ), selected( $client, $value, false ), esc_html( $label ) );
+		}
+		printf(
+			'<tr><td><input type="text" class="regular-text code" name="%1$s" value="%2$s" aria-label="%3$s" placeholder="example.org" required></td><td class="esg-mail-clients-client"><select name="%4$s" aria-label="%5$s">%6$s</select></td><td class="esg-mail-clients-remove">%7$s</td></tr>',
+			esc_attr( $base . '[domain]' ),
+			esc_attr( $domain ),
+			esc_attr__( 'Domain', 'email-signature-generator' ),
+			esc_attr( $base . '[client]' ),
+			esc_attr__( 'Instructions', 'email-signature-generator' ),
+			$options, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- every value escaped above.
 			$remove // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Button::html() escapes every value.
 		);
 	}
