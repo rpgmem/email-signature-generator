@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace ESG\Tests\Unit;
 
-use EmailSignatureGenerator\Admin\Icons;
+use EmailSignatureGenerator\Icons;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \EmailSignatureGenerator\Admin\Icons
+ * @covers \EmailSignatureGenerator\Icons
  */
 final class IconsTest extends TestCase {
 

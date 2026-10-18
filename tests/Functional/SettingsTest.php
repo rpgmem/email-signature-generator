@@ -166,6 +166,28 @@ final class SettingsTest extends WP_UnitTestCase {
 		self::assertSame( count( SettingsPage::tabs() ), preg_match_all( '/data-esg-tab="[a-z]+"><svg class="esg-icon"/', $html ) );
 	}
 
+	/**
+	 * Every button on the screen is the family's, with its icon, and
+	 * without Free Form Certificate the Dark Mode field is this plugin's
+	 * own, saving on its own (#106).
+	 */
+	public function test_the_buttons_are_the_family_and_dark_mode_is_local(): void {
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		$html = $this->renderScreen();
+
+		preg_match_all( '/<button\b[^>]*>/', $html, $buttons );
+		self::assertGreaterThanOrEqual( 5, count( $buttons[0] ) );
+		foreach ( $buttons[0] as $button ) {
+			self::assertMatchesRegularExpression( '/class="esg-btn esg-btn-(primary|neutral|create|caution|danger) esg-icon-[a-z]+/', $button );
+		}
+		self::assertStringContainsString( '<button type="submit" class="esg-btn esg-btn-primary esg-icon-save" id="submit" name="submit">Save Changes</button>', $html );
+		self::assertStringNotContainsString( 'class="button', $html );
+
+		self::assertFalse( defined( 'FFC_VERSION' ) );
+		self::assertStringContainsString( 'name="' . Settings::OPTION . '[dark_mode]" data-esg-autosave="dark_mode">', $html );
+		self::assertStringNotContainsString( 'Controlled by Free Form Certificate', $html );
+	}
+
 	public function test_the_tab_parameter_chooses_the_first_panel(): void {
 		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
 

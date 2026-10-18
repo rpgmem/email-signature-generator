@@ -1,7 +1,8 @@
 /* Settings → Email Signature. Scoped to the screen's wrap.
    The layout follows Free Form Certificate's settings: a vertical tab menu
    with icons, and each section of a tab in a box whose heading carries the
-   icon of its subject. Colours are Free Form Certificate's, from the tokens below. */
+   icon of its subject. Colours are Free Form Certificate's, from the tokens below.
+   The buttons are the family in buttons.css, which this sheet loads after. */
 
 /* The palette: Free Form Certificate's light tokens, with its values, so the
    plugins share one look. Every colour below reads one of these. */
@@ -65,12 +66,6 @@
    canvas. The class only lands on this plugin's settings screen. */
 :root.esg-dark-mode {
 	color-scheme: dark;
-}
-
-/* A link-styled button ("Reset" beside the logo) keeps core's `#2271b1`,
-   too dark to read on the dark card. Core's red delete link keeps its own. */
-:root.esg-dark-mode .button-link:not(.button-link-delete) {
-	color: var(--esg-primary);
 }
 
 :root.esg-dark-mode .esg-settings h1,
@@ -148,32 +143,6 @@
 :root.esg-dark-mode .esg-settings input[type="radio"] {
 	background-color: var(--esg-bg-input);
 	border-color: var(--esg-border);
-}
-
-:root.esg-dark-mode .esg-settings .button,
-:root.esg-dark-mode .esg-settings .button-secondary {
-	color: var(--esg-text);
-	background: var(--esg-bg-alt);
-	border-color: var(--esg-border);
-}
-
-:root.esg-dark-mode .esg-settings .button:hover,
-:root.esg-dark-mode .esg-settings .button-secondary:hover {
-	color: var(--esg-text);
-	background: var(--esg-bg-card);
-	border-color: var(--esg-primary);
-}
-
-:root.esg-dark-mode .esg-settings .button-primary {
-	color: var(--esg-text-on-primary);
-	background: var(--esg-primary);
-	border-color: var(--esg-primary);
-}
-
-:root.esg-dark-mode .esg-settings .button-primary:hover {
-	color: var(--esg-text-on-primary);
-	background: var(--esg-primary-hover);
-	border-color: var(--esg-primary-hover);
 }
 
 :root.esg-dark-mode .esg-settings .notice,
@@ -650,10 +619,7 @@
 }
 
 .esg-settings .esg-regions-remove {
-	width: 80px;
+	width: 1%;
 	text-align: right;
-}
-
-.esg-settings .esg-regions-delete {
-	color: var(--esg-danger-text);
+	white-space: nowrap;
 }

@@ -5,6 +5,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **Dark mode follows Free Form Certificate when it is active** (#106). Its `dark_mode` setting applies to the settings screen and the form; the local field is shown disabled with "Controlled by Free Form Certificate", and saving keeps its stored value. Without that plugin nothing changes.
+
+### Changed
+
+- **Buttons and icons follow Free Form Certificate's families** (#106). Every button is an `.esg-btn` of one category (primary, neutral, create, caution, danger) with an icon from the plugin's own registry, in admin, the shortcode and the standalone HTML; core's `.button` classes are gone. `Admin\Icons` is now `Icons`.
+
 ## [1.4.0] (2026-10-13) — `827fddf`
 
 ### Added
