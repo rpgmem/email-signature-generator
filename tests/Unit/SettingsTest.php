@@ -482,6 +482,70 @@ final class SettingsTest extends TestCase {
 		self::assertArrayNotHasKey( 'locked', $fields['staff_school']['address'] );
 	}
 
+	public function test_install_instructions_ship_sme_on_outlook_and_edu_on_gmail(): void {
+		self::assertSame( array(), Settings::defaults()['mail_clients'], 'Empty stored rows mean the built-in domains.' );
+		self::assertSame(
+			array(
+				array( 'domain' => 'sme.prefeitura.sp.gov.br', 'client' => 'outlook' ),
+				array( 'domain' => 'edu.sme.prefeitura.sp.gov.br', 'client' => 'gmail' ),
+			),
+			Settings::mailClientRows( Settings::defaults() )
+		);
+		$config = Settings::apply( Config::defaults( '' ), Settings::defaults() );
+		self::assertSame(
+			array(
+				'sme.prefeitura.sp.gov.br'     => 'outlook',
+				'edu.sme.prefeitura.sp.gov.br' => 'gmail',
+			),
+			$config['mailClients']
+		);
+	}
+
+	public function test_install_instruction_rows_are_cleaned(): void {
+		$parsed = Settings::parseMailClients(
+			array(
+				array( 'domain' => ' @SME.Prefeitura.SP.gov.br ', 'client' => 'gmail' ),
+				array( 'domain' => 'sme.prefeitura.sp.gov.br', 'client' => 'outlook' ),
+				array( 'domain' => 'example.org', 'client' => 'thunderbird' ),
+				array( 'domain' => '', 'client' => 'outlook' ),
+				array( 'domain' => 'not a domain', 'client' => 'outlook' ),
+				'garbage',
+				array( 'client' => 'gmail' ),
+			)
+		);
+		self::assertSame(
+			array(
+				array( 'domain' => 'sme.prefeitura.sp.gov.br', 'client' => 'gmail' ),
+				array( 'domain' => 'example.org', 'client' => 'none' ),
+			),
+			$parsed['rows'],
+			'Lower-cased, the first of a repeated domain wins, and an unknown client is None.'
+		);
+		self::assertSame( array( 'not a domain' ), $parsed['rejected'] );
+		self::assertSame( array( 'rows' => array(), 'rejected' => array() ), Settings::parseMailClients( 'x' ) );
+	}
+
+	public function test_a_none_row_switches_a_domain_off_and_only_listed_domains_get_instructions(): void {
+		$settings = Settings::sanitize(
+			array(
+				'mail_clients' => array(
+					array( 'domain' => 'sme.prefeitura.sp.gov.br', 'client' => 'none' ),
+					array( 'domain' => 'edu.sme.prefeitura.sp.gov.br', 'client' => 'gmail' ),
+					array( 'domain' => 'example.org', 'client' => 'outlook' ),
+				),
+			)
+		);
+		self::assertCount( 3, Settings::mailClientRows( $settings ), 'The None row stays on the screen.' );
+		self::assertSame(
+			array(
+				'edu.sme.prefeitura.sp.gov.br' => 'gmail',
+				'example.org'                  => 'outlook',
+			),
+			Settings::apply( Config::defaults( '' ), $settings )['mailClients']
+		);
+		self::assertSame( $settings, Settings::sanitize( $settings ), 'Stored rows survive another sanitize, as the autosave runs it.' );
+	}
+
 	public function test_apply_with_defaults_changes_nothing_but_the_new_keys(): void {
 		$config  = Config::defaults( 'https://example.org/logo.png' );
 		$applied = Settings::apply( $config, Settings::defaults() );

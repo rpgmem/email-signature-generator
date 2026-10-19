@@ -11,6 +11,7 @@ namespace EmailSignatureGenerator\Admin;
 
 use EmailSignatureGenerator\Config;
 use EmailSignatureGenerator\Settings;
+use EmailSignatureGenerator\Theme;
 use WP_Error;
 
 /**
@@ -71,6 +72,9 @@ final class Autosave {
 		}
 
 		if ( 'dark_mode' === $key ) {
+			if ( Theme::followsFfc() ) {
+				return new WP_Error( 'controlled_by_ffc', __( 'Controlled by Free Form Certificate. Change it in that plugin\'s settings.', 'email-signature-generator' ) );
+			}
 			if ( ! in_array( $value, Settings::DARK_MODES, true ) ) {
 				return new WP_Error( 'unknown_value', __( 'This value is not one of the options.', 'email-signature-generator' ) );
 			}

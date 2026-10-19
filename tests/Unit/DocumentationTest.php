@@ -7,7 +7,7 @@ namespace ESG\Tests\Unit;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use EmailSignatureGenerator\Admin\Documentation;
-use EmailSignatureGenerator\Admin\Icons;
+use EmailSignatureGenerator\Icons;
 use EmailSignatureGenerator\Admin\SettingsPage;
 use EmailSignatureGenerator\Config;
 use EmailSignatureGenerator\Plugin;

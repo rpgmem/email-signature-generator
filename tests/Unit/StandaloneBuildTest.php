@@ -41,6 +41,41 @@ final class StandaloneBuildTest extends TestCase {
 		self::assertStringContainsString( 'lang="pt-BR"', self::$html );
 	}
 
+	/**
+	 * The page has no WordPress, so it carries the button family and its
+	 * icons itself, before the form's sheet that builds on them, and keeps
+	 * following the operating system for its theme (#106).
+	 */
+	public function test_it_carries_the_button_family_and_follows_the_system(): void {
+		$family = strpos( self::$html, '.esg-btn.esg-btn-primary' );
+		$form   = strpos( self::$html, '--esg-btn-primary: var(--esg-accent);' );
+		self::assertNotFalse( $family );
+		self::assertNotFalse( $form );
+		self::assertLessThan( $form, $family, 'The form maps the family\'s tokens, so it must come after it.' );
+		self::assertStringContainsString( '.esg-icon-copy::before', self::$html );
+		self::assertStringContainsString( '})("auto");', self::$html );
+	}
+
+	/**
+	 * The page carries the install instructions and the domains that pick
+	 * them, translated (#107).
+	 */
+	public function test_it_carries_the_install_instructions(): void {
+		self::assertSame( 1, preg_match( '/data-esg-config="([^"]+)"/', self::$html, $m ) );
+		$config = json_decode( html_entity_decode( $m[1], ENT_QUOTES, 'UTF-8' ), true );
+
+		self::assertSame(
+			array(
+				'sme.prefeitura.sp.gov.br'     => 'outlook',
+				'edu.sme.prefeitura.sp.gov.br' => 'gmail',
+			),
+			$config['mailClients']
+		);
+		self::assertSame( 'Como adicionar a assinatura no Outlook', $config['strings']['installOutlook'] );
+		self::assertSame( 'Como adicionar a assinatura no Gmail', $config['strings']['installGmail'] );
+		self::assertStringContainsString( '.esg-generator .esg-install', self::$html );
+	}
+
 	public function test_the_logo_is_pinned_to_the_release_tag(): void {
 		self::assertStringContainsString( 'raw.githubusercontent.com/rpgmem/email-signature-generator/v9.9.9/assets/img/default-logo.png', self::$html );
 	}

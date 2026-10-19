@@ -39,6 +39,40 @@ final class ShortcodeTest extends WP_UnitTestCase {
 		self::assertCount( 3, $config['models'] );
 	}
 
+	public function test_the_install_instructions_follow_the_settings(): void {
+		$config = $this->config( do_shortcode( '[email_signature]' ) );
+		self::assertSame(
+			array(
+				'sme.prefeitura.sp.gov.br'     => 'outlook',
+				'edu.sme.prefeitura.sp.gov.br' => 'gmail',
+			),
+			$config['mailClients']
+		);
+		self::assertNotSame( '', $config['strings']['installOutlook'] );
+
+		update_option(
+			Settings::OPTION,
+			array(
+				'mail_clients' => array(
+					array( 'domain' => 'sme.prefeitura.sp.gov.br', 'client' => 'none' ),
+					array( 'domain' => 'example.org', 'client' => 'gmail' ),
+				),
+			)
+		);
+		self::assertSame( array( 'example.org' => 'gmail' ), $this->config( do_shortcode( '[email_signature]' ) )['mailClients'] );
+	}
+
+	/**
+	 * The configuration a rendered shortcode carries.
+	 *
+	 * @param string $html The shortcode's output.
+	 * @return array<string, mixed>
+	 */
+	private function config( string $html ): array {
+		self::assertSame( 1, preg_match( '/data-esg-config="([^"]+)"/', $html, $m ) );
+		return json_decode( html_entity_decode( $m[1], ENT_QUOTES, 'UTF-8' ), true );
+	}
+
 	public function test_the_form_width_comes_from_the_settings(): void {
 		update_option( Settings::OPTION, array( 'form_width' => 900 ) );
 

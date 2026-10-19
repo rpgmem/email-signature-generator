@@ -22,7 +22,7 @@ Para oferecer só alguns dos modelos, liste-os na ordem em que devem aparecer:
 
 Os modelos são `staff_regional` (servidor em uma diretoria regional), `staff_school` (servidor em uma escola) e `department` (um setor ou um prédio escolar). Com um único modelo, o formulário não pergunta qual.
 
-A assinatura é montada no navegador do visitante: nada do que ele digita é enviado ao site. Os telefones são formatados enquanto são digitados e viram links que discam o número, a prévia pode ser vista no modo escuro, e uma seção recolhível explica como adicionar a assinatura no Outlook, no Gmail e no celular.
+A assinatura é montada no navegador do visitante: nada do que ele digita é enviado ao site. Os telefones são formatados enquanto são digitados e viram links que discam o número, a prévia pode ser vista no modo escuro, e uma seção recolhível explica como adicionar a assinatura no programa de e-mail que o domínio do endereço usa, Outlook ou Gmail.
 
 == Configurações ==
 
@@ -31,6 +31,7 @@ Configurações → Assinatura de E-mail define, para todos os formulários do s
 * quais modelos são oferecidos, e se só usuários conectados podem usar o formulário;
 * se cada navegador pode lembrar o que o usuário digitou, por 60 minutos depois da última assinatura gerada (desligado por padrão);
 * quais domínios de e-mail são aceitos: só os listados, mostrados ao lado do campo, ou qualquer endereço, exceto domínios de exemplo como test.com;
+* quais instruções de instalação cada domínio de endereço recebe: Outlook, Gmail ou nenhuma;
 * a largura máxima do formulário na página (640 px por padrão);
 * o logotipo, da biblioteca de mídia (o que acompanha o plugin é o padrão), sua largura e seu texto alternativo;
 * o espaço acima da assinatura (4 px por padrão);

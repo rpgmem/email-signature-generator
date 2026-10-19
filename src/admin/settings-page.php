@@ -9,7 +9,9 @@ declare(strict_types=1);
 
 namespace EmailSignatureGenerator\Admin;
 
+use EmailSignatureGenerator\Button;
 use EmailSignatureGenerator\Config;
+use EmailSignatureGenerator\Icons;
 use EmailSignatureGenerator\Plugin;
 use EmailSignatureGenerator\Regions;
 use EmailSignatureGenerator\Settings;
@@ -93,7 +95,8 @@ final class SettingsPage {
 		// The theme class must be on <html> before the page paints, or a dark
 		// screen flashes light first: the script goes in the head.
 		Theme::enqueue( false );
-		wp_enqueue_style( 'email-signature-generator-admin', Plugin::url() . Plugin::asset( 'assets/css/admin-settings.css' ), array(), Plugin::assetVersion( Plugin::asset( 'assets/css/admin-settings.css' ) ) );
+		Button::registerStyle();
+		wp_enqueue_style( 'email-signature-generator-admin', Plugin::url() . Plugin::asset( 'assets/css/admin-settings.css' ), array( Button::STYLE_HANDLE ), Plugin::assetVersion( Plugin::asset( 'assets/css/admin-settings.css' ) ) );
 		wp_enqueue_script( 'email-signature-generator-admin', Plugin::url() . Plugin::asset( 'assets/js/admin-settings.js' ), array( 'media-editor' ), Plugin::assetVersion( Plugin::asset( 'assets/js/admin-settings.js' ) ), array( 'in_footer' => true ) );
 		wp_localize_script(
 			'email-signature-generator-admin',
@@ -145,11 +148,19 @@ final class SettingsPage {
 		self::openCard( __( 'Form', 'email-signature-generator' ), 'settings' );
 		echo '<table class="form-table" role="presentation"><tbody>';
 
+		$copy = Button::html(
+			array(
+				'label' => __( 'Copy', 'email-signature-generator' ),
+				'icon'  => 'copy',
+				'class' => 'esg-copy',
+				'attrs' => array( 'data-esg-copy' => 'esg-shortcode' ),
+			)
+		);
 		printf(
-			'<tr><th scope="row"><label for="esg-shortcode">%1$s</label></th><td><input type="text" id="esg-shortcode" class="regular-text code" value="%2$s" readonly> <button type="button" class="button esg-copy" data-esg-copy="esg-shortcode">%3$s</button><p class="description">%4$s</p></td></tr>',
+			'<tr><th scope="row"><label for="esg-shortcode">%1$s</label></th><td><input type="text" id="esg-shortcode" class="regular-text code" value="%2$s" readonly> %3$s<p class="description">%4$s</p></td></tr>',
 			esc_html__( 'Shortcode', 'email-signature-generator' ),
 			esc_attr( '[' . Shortcode::TAG . ']' ),
-			esc_html__( 'Copy', 'email-signature-generator' ),
+			$copy, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Button::html() escapes every value.
 			wp_kses(
 				sprintf(
 					/* translators: 1: an example shortcode, 2: the model ids, separated by commas. */
@@ -250,6 +261,32 @@ final class SettingsPage {
 		);
 		echo '</tbody></table></div>';
 
+		// Which install instructions the form shows under the signature, by
+		// the domain of the address typed (#107).
+		self::openCard( __( 'Install instructions', 'email-signature-generator' ), 'book' );
+		echo '<p class="description">' . esc_html__( 'Below the form, a collapsed section explains how to add the signature in the email program an address\'s domain uses. Each domain matches exactly, so a subdomain needs its own row. "None" shows no instructions for that domain; a domain not listed gets none either. With every row removed, the built-in domains come back.', 'email-signature-generator' ) . '</p>';
+		echo '<table class="widefat striped esg-mail-clients-table"><thead><tr>';
+		echo '<th scope="col">' . esc_html__( 'Domain', 'email-signature-generator' ) . '</th>';
+		echo '<th scope="col" class="esg-mail-clients-client">' . esc_html__( 'Instructions', 'email-signature-generator' ) . '</th>';
+		echo '<td class="esg-mail-clients-remove"></td>';
+		echo '</tr></thead><tbody class="esg-mail-clients-rows">';
+		foreach ( Settings::mailClientRows( $settings ) as $i => $row ) {
+			self::mailClientRow( $name, (string) $i, $row['domain'], $row['client'] );
+		}
+		echo '</tbody></table>';
+		echo '<template class="esg-mail-clients-template">';
+		self::mailClientRow( $name, '__i__', '', 'none' );
+		echo '</template>';
+		$add_domain = Button::html(
+			array(
+				'label'    => __( 'Add a domain', 'email-signature-generator' ),
+				'category' => 'create',
+				'icon'     => 'plus',
+				'class'    => 'esg-mail-clients-add',
+			)
+		);
+		echo '<p>' . $add_domain . '</p></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Button::html() escapes every value.
+
 		self::openCard( __( 'Google Analytics', 'email-signature-generator' ), 'chart' );
 		echo '<table class="form-table" role="presentation"><tbody>';
 		printf(
@@ -277,10 +314,17 @@ final class SettingsPage {
 
 		self::openCard( __( 'Dark Mode', 'email-signature-generator' ), 'theme' );
 		echo '<table class="form-table" role="presentation"><tbody>';
+		// While Free Form Certificate is active its Dark Mode decides (#106):
+		// the field stays visible with the value stored here, which applies
+		// again if that plugin is deactivated, but disabled, and outside the
+		// autosave. A disabled field posts nothing; Settings::save() keeps
+		// the stored value instead of resetting it.
+		$ffc = Theme::followsFfc();
 		printf(
-			'<tr><th scope="row"><label for="esg-dark-mode">%1$s</label></th><td><select id="esg-dark-mode" name="%2$s[dark_mode]" data-esg-autosave="dark_mode">',
+			'<tr><th scope="row"><label for="esg-dark-mode">%1$s</label></th><td><select id="esg-dark-mode" name="%2$s[dark_mode]"%3$s>',
 			esc_html__( 'Dark Mode', 'email-signature-generator' ),
-			esc_attr( $name )
+			esc_attr( $name ),
+			$ffc ? ' disabled aria-describedby="esg-dark-mode-ffc"' : ' data-esg-autosave="dark_mode"'
 		);
 		$modes = array(
 			'off'  => __( 'Off', 'email-signature-generator' ),
@@ -290,7 +334,21 @@ final class SettingsPage {
 		foreach ( $modes as $value => $label ) {
 			printf( '<option value="%1$s"%2$s>%3$s</option>', esc_attr( $value ), selected( $settings['dark_mode'], $value, false ), esc_html( $label ) );
 		}
-		echo '</select><p class="description">' . esc_html__( 'Applies to this settings screen and to the form on the site. "Auto" follows your operating system preference.', 'email-signature-generator' ) . '</p></td></tr>';
+		echo '</select>';
+		if ( $ffc ) {
+			printf(
+				'<p class="description" id="esg-dark-mode-ffc"><strong>%1$s</strong> %2$s</p>',
+				esc_html__( 'Controlled by Free Form Certificate', 'email-signature-generator' ),
+				esc_html(
+					sprintf(
+						/* translators: %s: Free Form Certificate's Dark Mode, e.g. "Auto (follow OS)". */
+						__( 'Its Dark Mode applies here: %s. The value above applies again if Free Form Certificate is deactivated.', 'email-signature-generator' ),
+						$modes[ Theme::ffcMode() ]
+					)
+				)
+			);
+		}
+		echo '<p class="description">' . esc_html__( 'Applies to this settings screen and to the form on the site. "Auto" follows your operating system preference.', 'email-signature-generator' ) . '</p></td></tr>';
 		echo '</tbody></table></div>';
 
 		echo '</div>';
@@ -313,14 +371,29 @@ final class SettingsPage {
 
 		self::openCard( __( 'Logo', 'email-signature-generator' ), 'image' );
 		echo '<table class="form-table" role="presentation"><tbody>';
+		$choose = Button::html(
+			array(
+				'label' => __( 'Choose from the media library', 'email-signature-generator' ),
+				'icon'  => 'image',
+				'class' => 'esg-logo-choose',
+			)
+		);
+		$reset  = Button::html(
+			array(
+				'label'    => __( 'Use the bundled logo', 'email-signature-generator' ),
+				'category' => 'caution',
+				'icon'     => 'restore',
+				'class'    => 'esg-logo-reset',
+			)
+		);
 		printf(
-			'<tr><th scope="row">%1$s</th><td><img class="esg-logo-preview" src="%2$s" alt="" width="120"><input type="hidden" class="esg-logo-id" name="%3$s[logo_id]" value="%4$d"><p><button type="button" class="button esg-logo-choose">%5$s</button> <button type="button" class="button-link esg-logo-reset">%6$s</button></p><p class="description">%7$s</p></td></tr>',
+			'<tr><th scope="row">%1$s</th><td><img class="esg-logo-preview" src="%2$s" alt="" width="120"><input type="hidden" class="esg-logo-id" name="%3$s[logo_id]" value="%4$d"><p>%5$s %6$s</p><p class="description">%7$s</p></td></tr>',
 			esc_html__( 'Image', 'email-signature-generator' ),
 			esc_url( '' !== $logo_url ? $logo_url : Config::bundledLogoUrl() ),
 			esc_attr( $name ),
 			(int) $settings['logo_id'],
-			esc_html__( 'Choose from the media library', 'email-signature-generator' ),
-			esc_html__( 'Use the bundled logo', 'email-signature-generator' ),
+			$choose, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Button::html() escapes every value.
+			$reset, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Button::html() escapes every value.
 			esc_html__( 'The signature links to this image, so it must stay in the media library. A square image works best.', 'email-signature-generator' )
 		);
 		printf(
@@ -445,7 +518,15 @@ final class SettingsPage {
 		echo '<template class="esg-regions-template">';
 		self::regionRow( $name, '__i__', '', '', false );
 		echo '</template>';
-		printf( '<p><button type="button" class="button esg-regions-add">%s</button></p>', esc_html__( 'Add a unit', 'email-signature-generator' ) );
+		$add = Button::html(
+			array(
+				'label'    => __( 'Add a unit', 'email-signature-generator' ),
+				'category' => 'create',
+				'icon'     => 'plus',
+				'class'    => 'esg-regions-add',
+			)
+		);
+		echo '<p>' . $add . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Button::html() escapes every value.
 		echo '</div></div>';
 
 		// Fields.
@@ -623,7 +704,19 @@ final class SettingsPage {
 
 		echo '</div></div>';
 		echo '<div class="esg-submit"' . ( 'documentation' === $active ? ' hidden' : '' ) . '>';
-		submit_button();
+		// The family's primary, not core's submit input: an <input> has no
+		// ::before to draw the icon on. Same name and id as core's.
+		$save = Button::html(
+			array(
+				'label'    => __( 'Save Changes', 'email-signature-generator' ),
+				'category' => 'primary',
+				'icon'     => 'save',
+				'type'     => 'submit',
+				'id'       => 'submit',
+				'name'     => 'submit',
+			)
+		);
+		echo '<p class="submit">' . $save . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Button::html() escapes every value.
 		echo '</div>';
 		echo '</form></div>';
 	}
@@ -638,9 +731,18 @@ final class SettingsPage {
 	 * @param bool   $is_default Whether it is the form's default unit.
 	 */
 	private static function regionRow( string $name, string $index, string $office, string $acronym, bool $is_default ): void {
-		$base = $name . '[regions][' . $index . ']';
+		$base   = $name . '[regions][' . $index . ']';
+		$remove = Button::html(
+			array(
+				'label'    => __( 'Remove', 'email-signature-generator' ),
+				'category' => 'danger',
+				'icon'     => 'trash',
+				'class'    => 'esg-regions-delete',
+				'attrs'    => array( 'aria-label' => __( 'Remove this unit', 'email-signature-generator' ) ),
+			)
+		);
 		printf(
-			'<tr><td class="esg-regions-default"><input type="radio" name="%1$s" value="%2$s" aria-label="%3$s"%4$s></td><td><input type="text" class="large-text" name="%5$s" value="%6$s" aria-label="%7$s" required></td><td class="esg-regions-acronym"><input type="text" class="esg-acronym" name="%8$s" value="%9$s" aria-label="%10$s" pattern="[A-Za-z0-9]{1,12}" maxlength="12" required></td><td class="esg-regions-remove"><button type="button" class="button-link esg-regions-delete" aria-label="%11$s">%12$s</button></td></tr>',
+			'<tr><td class="esg-regions-default"><input type="radio" name="%1$s" value="%2$s" aria-label="%3$s"%4$s></td><td><input type="text" class="large-text" name="%5$s" value="%6$s" aria-label="%7$s" required></td><td class="esg-regions-acronym"><input type="text" class="esg-acronym" name="%8$s" value="%9$s" aria-label="%10$s" pattern="[A-Za-z0-9]{1,12}" maxlength="12" required></td><td class="esg-regions-remove">%11$s</td></tr>',
 			esc_attr( $name . '[default_unit_row]' ),
 			esc_attr( $index ),
 			esc_attr__( 'Default unit of the form', 'email-signature-generator' ),
@@ -651,8 +753,48 @@ final class SettingsPage {
 			esc_attr( $base . '[acronym]' ),
 			esc_attr( $acronym ),
 			esc_attr__( 'Acronym', 'email-signature-generator' ),
-			esc_attr__( 'Remove this unit', 'email-signature-generator' ),
-			esc_html__( 'Remove', 'email-signature-generator' )
+			$remove // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Button::html() escapes every value.
+		);
+	}
+
+	/**
+	 * One row of the install-instructions table: a domain and the client
+	 * whose instructions its addresses get.
+	 *
+	 * @param string $name   Option name.
+	 * @param string $index  Row index, or the template's placeholder.
+	 * @param string $domain Domain.
+	 * @param string $client `none`, `outlook` or `gmail`.
+	 */
+	private static function mailClientRow( string $name, string $index, string $domain, string $client ): void {
+		$base    = $name . '[mail_clients][' . $index . ']';
+		$remove  = Button::html(
+			array(
+				'label'    => __( 'Remove', 'email-signature-generator' ),
+				'category' => 'danger',
+				'icon'     => 'trash',
+				'class'    => 'esg-mail-clients-delete',
+				'attrs'    => array( 'aria-label' => __( 'Remove this domain', 'email-signature-generator' ) ),
+			)
+		);
+		$labels  = array(
+			'none'    => __( 'None', 'email-signature-generator' ),
+			'outlook' => __( 'Outlook', 'email-signature-generator' ),
+			'gmail'   => __( 'Gmail', 'email-signature-generator' ),
+		);
+		$options = '';
+		foreach ( $labels as $value => $label ) {
+			$options .= sprintf( '<option value="%1$s"%2$s>%3$s</option>', esc_attr( $value ), selected( $client, $value, false ), esc_html( $label ) );
+		}
+		printf(
+			'<tr><td><input type="text" class="regular-text code" name="%1$s" value="%2$s" aria-label="%3$s" placeholder="example.org" required></td><td class="esg-mail-clients-client"><select name="%4$s" aria-label="%5$s">%6$s</select></td><td class="esg-mail-clients-remove">%7$s</td></tr>',
+			esc_attr( $base . '[domain]' ),
+			esc_attr( $domain ),
+			esc_attr__( 'Domain', 'email-signature-generator' ),
+			esc_attr( $base . '[client]' ),
+			esc_attr__( 'Instructions', 'email-signature-generator' ),
+			$options, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- every value escaped above.
+			$remove // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Button::html() escapes every value.
 		);
 	}
 

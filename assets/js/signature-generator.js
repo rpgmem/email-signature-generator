@@ -489,6 +489,100 @@
 	}
 
 	/**
+	 * A button of the family in buttons.css, the same markup as the PHP
+	 * `Button::html()` prints: `esg-btn`, its category, its icon class from
+	 * the registry, and the hook class the script and the tests find it by.
+	 *
+	 * @param {Document} doc  Document.
+	 * @param {Object}   args type, category, icon, block, hook and text.
+	 * @return {HTMLButtonElement} The button.
+	 */
+	function button( doc, args ) {
+		var classes = [ 'esg-btn', 'esg-btn-' + ( args.category || 'neutral' ) ];
+		if ( args.icon ) {
+			classes.push( 'esg-icon-' + args.icon );
+		}
+		if ( args.block ) {
+			classes.push( 'esg-btn-block' );
+		}
+		if ( args.hook ) {
+			classes.push( args.hook );
+		}
+		return el( doc, 'button', { type: args.type || 'button', class: classes.join( ' ' ), text: args.text } );
+	}
+
+	/**
+	 * The client whose install instructions an address's domain gets, from
+	 * config.mailClients (domain => client). Domains match exactly, so a
+	 * subdomain never inherits its parent's client.
+	 *
+	 * @param {Object} config The configuration.
+	 * @param {string} domain Lower-case domain.
+	 * @return {string} 'outlook', 'gmail', or '' for none.
+	 */
+	function mailClientFor( config, domain ) {
+		var map = config.mailClients;
+		if ( ! map || 'object' !== typeof map || Array.isArray( map ) || ! Object.prototype.hasOwnProperty.call( map, domain ) ) {
+			return '';
+		}
+		return -1 === [ 'outlook', 'gmail' ].indexOf( map[ domain ] ) ? '' : map[ domain ];
+	}
+
+	/**
+	 * One client's steps under a heading.
+	 *
+	 * @param {Document} doc   Document.
+	 * @param {string}   title The client's name.
+	 * @param {string[]} steps The steps, in order.
+	 * @return {Element} The section.
+	 */
+	function installSteps( doc, title, steps ) {
+		return el( doc, 'section', { class: 'esg-install-client' }, [
+			el( doc, 'h4', { text: title } ),
+			stepList( doc, steps ),
+		] );
+	}
+
+	/**
+	 * Numbered steps.
+	 *
+	 * @param {Document} doc   Document.
+	 * @param {string[]} steps The steps, in order.
+	 * @return {Element} The list.
+	 */
+	function stepList( doc, steps ) {
+		return el( doc, 'ol', {}, steps.map( function ( step ) {
+			return el( doc, 'li', { text: step } );
+		} ) );
+	}
+
+	/**
+	 * The install instructions, one collapsed section per client, each
+	 * hidden until the domain typed selects it.
+	 *
+	 * @param {Document} doc     Document.
+	 * @param {Object}   strings The configuration's strings.
+	 * @return {{outlook: Element, gmail: Element}} The sections by client.
+	 */
+	function installSections( doc, strings ) {
+		var phone = el( doc, 'p', { class: 'esg-install-note', text: strings.howToPhone } );
+		return {
+			outlook: el( doc, 'details', { class: 'esg-install', 'data-esg-client': 'outlook', hidden: true }, [
+				el( doc, 'summary', { text: strings.installOutlook } ),
+				installSteps( doc, strings.outlookWeb, [ strings.outlookWebOpen, strings.outlookPaste, strings.outlookDefaults ] ),
+				installSteps( doc, strings.outlookNew, [ strings.outlookNewOpen, strings.outlookPaste, strings.outlookDefaults ] ),
+				installSteps( doc, strings.outlookClassic, [ strings.outlookClassicOpen, strings.outlookClassicNew, strings.outlookClassicSave ] ),
+				phone,
+			] ),
+			gmail: el( doc, 'details', { class: 'esg-install', 'data-esg-client': 'gmail', hidden: true }, [
+				el( doc, 'summary', { text: strings.installGmail } ),
+				stepList( doc, [ strings.gmailOpen, strings.gmailNew, strings.gmailPaste, strings.gmailDefaults, strings.gmailSave ] ),
+				phone.cloneNode( true ),
+			] ),
+		};
+	}
+
+	/**
 	 * What a person typed, kept in their own browser when the site allows
 	 * it, so updating a signature later does not mean typing it again.
 	 * Nothing is sent anywhere. Storage that is blocked or full is ignored.
@@ -613,9 +707,13 @@
 		var errorsBox = el( doc, 'ul', { class: 'esg-errors', role: 'alert' } );
 		form.appendChild( errorsBox );
 
-		var generateBtn = el( doc, 'button', { type: 'submit', class: 'esg-button esg-generate', text: strings.generate } );
-		var copyBtn = el( doc, 'button', { type: 'button', class: 'esg-button esg-copy', text: strings.copy } );
-		var downloadBtn = el( doc, 'button', { type: 'button', class: 'esg-button esg-download', text: strings.download } );
+		// The button family (buttons.css): the category says what the action
+		// does, and the last class is the hook the tests and themes read.
+		// Copying is the recommended way to deliver the signature, so it is
+		// filled like the form's own action; the image stays neutral.
+		var generateBtn = button( doc, { type: 'submit', category: 'primary', icon: 'edit', block: true, hook: 'esg-generate', text: strings.generate } );
+		var copyBtn = button( doc, { category: 'primary', icon: 'copy', hook: 'esg-copy', text: strings.copy } );
+		var downloadBtn = button( doc, { category: 'neutral', icon: 'download', hook: 'esg-download', text: strings.download } );
 		// The site chooses whether the image is offered at all, and how: a
 		// button (the default), the same inside a collapsed "More options",
 		// or a button with no note recommending Copy HTML afterwards.
@@ -637,15 +735,15 @@
 		}
 		form.appendChild( output );
 		output.appendChild( el( doc, 'p', { class: 'esg-hint', text: strings.copyHint } ) );
-		// Where to paste it: the step people most often get stuck on.
-		output.appendChild( el( doc, 'details', { class: 'esg-howto' }, [
-			el( doc, 'summary', { text: strings.howTo } ),
-			el( doc, 'ul', {}, [ strings.howToOutlookWeb, strings.howToOutlook, strings.howToGmail, strings.howToPhone ].filter( Boolean ).map( function ( text ) {
-				return el( doc, 'li', { text: text } );
-			} ) ),
-		] ) );
+		// Where to paste it, the step people most often get stuck on: the
+		// instructions of the client the address's domain uses, outside the
+		// result so they follow the domain before anything is generated.
+		var installs = installSections( doc, strings );
+		Object.keys( installs ).forEach( function ( client ) {
+			form.appendChild( installs[ client ] );
+		} );
 
-		var forgetBtn = el( doc, 'button', { type: 'button', class: 'esg-forget', text: strings.forget } );
+		var forgetBtn = button( doc, { category: 'danger', icon: 'eraser', hook: 'esg-forget', text: strings.forget } );
 		// Where what is typed goes: said always, and by the remember note
 		// when that is on, since it says the same and more.
 		if ( remember ) {
@@ -831,6 +929,37 @@
 		}
 
 		/**
+		 * The domain of the address in the email field: the one beside it,
+		 * even before anything is typed, or what follows the "@" typed. ''
+		 * when the model has no email field or nothing names a domain yet.
+		 *
+		 * @return {string} Lower-case domain.
+		 */
+		function typedDomain() {
+			var field = current.fields.filter( function ( f ) {
+				return 'email' === f.rule;
+			} )[ 0 ];
+			var input = field && fieldsBox.querySelector( '[name="' + field.key + '"]' );
+			var beside = input && input.parentNode.querySelector( '.esg-email-domain' );
+			if ( beside ) {
+				return ( 'SELECT' === beside.tagName ? beside.value : beside.textContent.slice( 1 ) ).toLowerCase();
+			}
+			var value = field ? String( field.locked ? field.default || '' : ( input ? input.value : '' ) ).trim() : '';
+			return -1 === value.indexOf( '@' ) ? '' : domainOf( value );
+		}
+
+		/**
+		 * Show the instructions of the client the typed domain uses, and
+		 * none when it uses neither.
+		 */
+		function updateInstall() {
+			var client = mailClientFor( config, typedDomain() );
+			Object.keys( installs ).forEach( function ( key ) {
+				installs[ key ].hidden = key !== client;
+			} );
+		}
+
+		/**
 		 * Mark each field in error and print its message under it; the box
 		 * above the buttons only says that something needs fixing, and the
 		 * first field in error takes the focus.
@@ -901,6 +1030,10 @@
 			return true;
 		}
 
+		// The domain may change by typing or by picking it from its list.
+		fieldsBox.addEventListener( 'input', updateInstall );
+		fieldsBox.addEventListener( 'change', updateInstall );
+
 		// A changed field makes the generated signature stale.
 		fieldsBox.addEventListener( 'input', function () {
 			if ( html ) {
@@ -917,6 +1050,7 @@
 			output.hidden = true;
 			showErrors( [] );
 			drawFields();
+			updateInstall();
 		} );
 
 		form.addEventListener( 'submit', function ( event ) {
@@ -997,10 +1131,12 @@
 			previewRoot.innerHTML = '';
 			output.hidden = true;
 			drawFields();
+			updateInstall();
 			setStatus( strings.forgotten );
 		} );
 
 		drawFields();
+		updateInstall();
 
 		return {
 			generate: generate,
@@ -1041,6 +1177,7 @@
 		imageOptions: imageOptions,
 		exportSize: exportSize,
 		findModel: findModel,
+		mailClientFor: mailClientFor,
 		mount: mount,
 		mountAll: mountAll,
 	};

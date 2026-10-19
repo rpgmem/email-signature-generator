@@ -69,6 +69,23 @@ final class Config {
 	public const LOGO_ALT = 'Prefeitura de São Paulo – Secretaria Municipal de Educação';
 
 	/**
+	 * The mail clients the form can explain how to install a signature in.
+	 * `none` is the choice of no instructions; it never reaches the form.
+	 */
+	public const MAIL_CLIENTS = array( 'none', 'outlook', 'gmail' );
+
+	/**
+	 * Which instructions an address's domain gets, domain => client. SME-SP's
+	 * staff addresses are on Microsoft 365 and its teachers' and students' on
+	 * Google Workspace. Matched exactly, so the "edu" subdomain never falls
+	 * under its parent. An administrator edits the list.
+	 */
+	public const MAIL_CLIENT_DOMAINS = array(
+		'sme.prefeitura.sp.gov.br'     => 'outlook',
+		'edu.sme.prefeitura.sp.gov.br' => 'gmail',
+	);
+
+	/**
 	 * Width, in pixels, at which the logo is drawn in the signature.
 	 */
 	public const LOGO_WIDTH = 120;
@@ -182,6 +199,7 @@ final class Config {
 			'downloadStyle'       => 'notice',
 			'emailDomains'        => array(),
 			'blockedEmailDomains' => self::BLOCKED_EMAIL_DOMAINS,
+			'mailClients'         => self::MAIL_CLIENT_DOMAINS,
 			'phonePattern'        => self::PHONE_PATTERN,
 			'regions'             => self::regions(),
 			'offices'             => Regions::defaults(),
@@ -398,10 +416,26 @@ final class Config {
 			'fixErrors'          => __( 'Check the marked fields.', 'email-signature-generator' ),
 			'forgotten'          => __( 'This browser no longer keeps what you typed.', 'email-signature-generator' ),
 			'darkPreview'        => __( 'See it in dark mode', 'email-signature-generator' ),
-			'howTo'              => __( 'How to add the signature to your email', 'email-signature-generator' ),
-			'howToOutlookWeb'    => __( 'Outlook on the web and the new Outlook for Windows: Settings (gear) → Account → Signatures. Create a signature, paste with Ctrl+V, choose it for new messages and replies, and save.', 'email-signature-generator' ),
-			'howToOutlook'       => __( 'Classic Outlook for Windows: File → Options → Mail → Signatures → New. Paste with Ctrl+V, choose it for new messages and replies, and select OK.', 'email-signature-generator' ),
-			'howToGmail'         => __( 'Gmail: Settings (gear) → See all settings → General → Signature → Create new. Paste with Ctrl+V, choose it in "Signature defaults", and select "Save changes" at the bottom of the page.', 'email-signature-generator' ),
+			// How to install the signature, for the client the address's
+			// domain uses (mailClients). The steps name menu paths, which
+			// stay put across versions, rather than exact button labels.
+			'installOutlook'     => __( 'How to add the signature in Outlook', 'email-signature-generator' ),
+			'installGmail'       => __( 'How to add the signature in Gmail', 'email-signature-generator' ),
+			'outlookWeb'         => __( 'Outlook on the web', 'email-signature-generator' ),
+			'outlookWebOpen'     => __( 'Sign in at outlook.office.com, open Settings (the gear icon) and go to Account → Signatures.', 'email-signature-generator' ),
+			'outlookNew'         => __( 'The new Outlook for Windows', 'email-signature-generator' ),
+			'outlookNewOpen'     => __( 'In the app, open Settings (the gear icon) and go to Account → Signatures.', 'email-signature-generator' ),
+			'outlookPaste'       => __( 'Create a new signature, give it a name, and paste the signature into the box with Ctrl+V (Cmd+V on a Mac).', 'email-signature-generator' ),
+			'outlookDefaults'    => __( 'Choose it as the default signature for new messages and for replies and forwards, then save.', 'email-signature-generator' ),
+			'outlookClassic'     => __( 'Classic Outlook for Windows', 'email-signature-generator' ),
+			'outlookClassicOpen' => __( 'Go to File → Options → Mail → Signatures.', 'email-signature-generator' ),
+			'outlookClassicNew'  => __( 'Create a new signature, give it a name, and paste the signature into the edit box with Ctrl+V.', 'email-signature-generator' ),
+			'outlookClassicSave' => __( 'Under the default signature choices, pick it for new messages and for replies and forwards, then confirm with OK.', 'email-signature-generator' ),
+			'gmailOpen'          => __( 'In Gmail on the web, open Settings (the gear icon) → See all settings.', 'email-signature-generator' ),
+			'gmailNew'           => __( 'On the General tab, go to Signature and create a new one, giving it a name.', 'email-signature-generator' ),
+			'gmailPaste'         => __( 'Paste the signature into the box with Ctrl+V (Cmd+V on a Mac).', 'email-signature-generator' ),
+			'gmailDefaults'      => __( 'Under the signature defaults, choose it for new emails and for replies and forwards.', 'email-signature-generator' ),
+			'gmailSave'          => __( 'Save the changes at the bottom of the page.', 'email-signature-generator' ),
 			'howToPhone'         => __( 'Phone apps: most accept only plain text. Set the signature on the web or on the computer; messages sent from there carry it.', 'email-signature-generator' ),
 			/* translators: %s: a field's label. */
 			'required'           => __( '%s is required.', 'email-signature-generator' ),

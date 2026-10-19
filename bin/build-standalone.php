@@ -7,7 +7,8 @@
  * With `-` as <out-file> it prints only the configuration, as JSON: the JS
  * tests read the real configuration that way rather than a copy.
  *
- * The output is one self-contained HTML file: the form's stylesheet, the
+ * The output is one self-contained HTML file: the button family's and the
+ * form's stylesheets, the
  * vendored html2canvas, the generator script and the dark-mode switch are
  * inlined (with no setting to read, the page follows the operating system,
  * as the setting's "auto" does), and the
@@ -105,7 +106,7 @@ function esg_inline_script( string $js ): string {
 	return str_ireplace( '</script', '<\/script', $js );
 }
 
-$esg_css   = esg_read( $esg_root . '/assets/css/signature-generator.css' );
+$esg_css   = esg_read( $esg_root . '/assets/css/buttons.css' ) . "\n" . esg_read( $esg_root . '/assets/css/signature-generator.css' );
 $esg_h2c   = esg_read( $esg_root . '/assets/vendor/html2canvas-' . \EmailSignatureGenerator\Shortcode::HTML2CANVAS_VERSION . '.min.js' );
 $esg_js    = esg_read( $esg_root . '/assets/js/signature-generator.js' );
 $esg_json  = json_encode( $esg_config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR );
