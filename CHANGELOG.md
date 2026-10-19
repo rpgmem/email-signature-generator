@@ -5,6 +5,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.5.0] (2026-10-19)
+
 ### Added
 
 - **Dark mode follows Free Form Certificate when it is active** (#106). Its `dark_mode` setting applies to the settings screen and the form; the local field is shown disabled with "Controlled by Free Form Certificate", and saving keeps its stored value. Without that plugin nothing changes.
