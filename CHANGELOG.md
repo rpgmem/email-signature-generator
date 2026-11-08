@@ -5,6 +5,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- CI: Dependabot PRs opened against `main` (security updates, which ignore `target-branch`) are moved to `develop` before auto-merge is turned on, so none merges into production unreleased (#124).
+
 ### Security
 
 - Dev toolchain: `minimatch` is forced to `^11.0.1` through `overrides` and `fast-uri` moves to 3.1.9, clearing four moderate Dependabot alerts; nothing that ships changes (#120).
