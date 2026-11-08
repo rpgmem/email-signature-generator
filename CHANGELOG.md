@@ -8,10 +8,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - CI: Dependabot PRs opened against `main` (security updates, which ignore `target-branch`) are moved to `develop` before auto-merge is turned on, so none merges into production unreleased (#124).
+- Tests: a snapshot freezes the signature markup each model renders, one tag per line, so a moved cell or a dropped inline style shows up as a diff (#122).
 
 ### Security
 
 - Dev toolchain: `minimatch` is forced to `^11.0.1` through `overrides` and `fast-uri` moves to 3.1.9, clearing four moderate Dependabot alerts; nothing that ships changes (#120).
+- Dev toolchain: `undici` moves to 8.12.3 (a moderate Dependabot alert); the update merged straight to `main` and was brought back to `develop`. Nothing that ships changes (#117).
 
 ## [1.5.0] (2026-10-19) — `cd89271`
 
