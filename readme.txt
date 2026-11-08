@@ -3,7 +3,7 @@ Contributors: rpgmem
 Tags: email signature, signature generator, outlook, shortcode
 Requires at least: 6.8
 Tested up to: 7.1.3
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 Requires PHP: 8.3
 License: AGPLv3 or later
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
@@ -105,5 +105,5 @@ The full history of every release is in [CHANGELOG.md](https://github.com/rpgmem
 
 == Upgrade Notice ==
 
-= 1.5.0 =
-The form shows install steps for the email program the address's domain uses (Outlook or Gmail), set per domain on the General tab. Where Free Form Certificate is active, its Dark Mode decides; buttons and icons follow its families. Details in CHANGELOG.md.
+= 1.5.1 =
+Maintenance release: no change to what the plugin shows or does. Development tooling security updates, a snapshot test of the signature markup, and Dependabot PRs kept off the production branch. Details in CHANGELOG.md.
