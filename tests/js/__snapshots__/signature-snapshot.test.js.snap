@@ -1,0 +1,119 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`signature markup per model > department 1`] = `
+"<table cellpadding="0" cellspacing="0" border="0" style="background: #ffffff; width: 100%; max-width: 450px; font-family: Arial, sans-serif;">
+<tr>
+<td colspan="2" height="4" style="height: 4px; padding: 0; font-size: 0; line-height: 0;">&nbsp;</td>
+</tr>
+<tr>
+<td valign="middle" style="padding: 10px 0 10px 10px; width: 133px; vertical-align: middle;">
+<table cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td valign="middle" style="padding: 0 10px 0 0; border-right: 3px solid #000000; vertical-align: middle;">
+<img src="https://example.org/logo.png" width="120" alt="Prefeitura de São Paulo – Secretaria Municipal de Educação" style="display: block; border: 0;" border="0">
+</td>
+</tr>
+</table>
+</td>
+<td valign="middle" style="padding-left: 7px; vertical-align: middle; line-height: 1; font-family: Arial, sans-serif; color: #000000;">
+<div style="margin: 0; padding: 0; font-size: 16px; line-height: 1.2;">
+<strong style="font-size: inherit; font-weight: bold;">Maria da Silva</strong>
+</div>
+<div style="margin: 0; padding: 0; font-size: 7px; line-height: 1.2; color: #ffffff;">_</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">
+<a href="mailto:maria.silva@sme.prefeitura.sp.gov.br" style="text-decoration: none; color: inherit;">maria.silva@sme.prefeitura.sp.gov.br</a>
+</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">Tel.: <a href="tel:+551133971234" style="text-decoration: none; color: inherit;">55 11 3397-1234</a> | <a href="tel:+5511933975678" style="text-decoration: none; color: inherit;">55 11 93397-5678</a>
+</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">Diretoria Regional de Educação São Miguel / DREMP</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">Av. Nordestina, 747</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">08021-000 | São Paulo | SP</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">
+<a href="https://educacao.sme.prefeitura.sp.gov.br" target="_blank" style="text-decoration: none; color: inherit;">educacao.sme.prefeitura.sp.gov.br</a>
+</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">
+<a href="https://www.example.org/agenda" target="_blank" style="text-decoration: none; color: inherit;">www.example.org</a>
+</div>
+</td>
+</tr>
+</table>"
+`;
+
+exports[`signature markup per model > staff_regional 1`] = `
+"<table cellpadding="0" cellspacing="0" border="0" style="background: #ffffff; width: 100%; max-width: 450px; font-family: Arial, sans-serif;">
+<tr>
+<td colspan="2" height="4" style="height: 4px; padding: 0; font-size: 0; line-height: 0;">&nbsp;</td>
+</tr>
+<tr>
+<td valign="middle" style="padding: 10px 0 10px 10px; width: 133px; vertical-align: middle;">
+<table cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td valign="middle" style="padding: 0 10px 0 0; border-right: 3px solid #000000; vertical-align: middle;">
+<img src="https://example.org/logo.png" width="120" alt="Prefeitura de São Paulo – Secretaria Municipal de Educação" style="display: block; border: 0;" border="0">
+</td>
+</tr>
+</table>
+</td>
+<td valign="middle" style="padding-left: 7px; vertical-align: middle; line-height: 1; font-family: Arial, sans-serif; color: #000000;">
+<div style="margin: 0; padding: 0; font-size: 16px; line-height: 1.2;">
+<strong style="font-size: inherit; font-weight: bold;">MARIA DA SILVA</strong>
+</div>
+<div style="margin: 0; padding: 0; font-size: 7px; line-height: 1.2;">NTIC / DREMP</div>
+<div style="margin: 0; padding: 0; font-size: 7px; line-height: 1.2; color: #ffffff;">_</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">
+<a href="mailto:maria.silva@sme.prefeitura.sp.gov.br" style="text-decoration: none; color: inherit;">maria.silva@sme.prefeitura.sp.gov.br</a>
+</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">Tel.: <a href="tel:+551133971234" style="text-decoration: none; color: inherit;">55 11 3397-1234</a> | <a href="tel:+5511933975678" style="text-decoration: none; color: inherit;">55 11 93397-5678</a>
+</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">Av. Nordestina, 747</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">08021-000 | São Paulo | SP</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">
+<a href="https://educacao.sme.prefeitura.sp.gov.br" target="_blank" style="text-decoration: none; color: inherit;">educacao.sme.prefeitura.sp.gov.br</a>
+</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">
+<a href="https://www.example.org/agenda" target="_blank" style="text-decoration: none; color: inherit;">www.example.org</a>
+</div>
+</td>
+</tr>
+</table>"
+`;
+
+exports[`signature markup per model > staff_school 1`] = `
+"<table cellpadding="0" cellspacing="0" border="0" style="background: #ffffff; width: 100%; max-width: 450px; font-family: Arial, sans-serif;">
+<tr>
+<td colspan="2" height="4" style="height: 4px; padding: 0; font-size: 0; line-height: 0;">&nbsp;</td>
+</tr>
+<tr>
+<td valign="middle" style="padding: 10px 0 10px 10px; width: 133px; vertical-align: middle;">
+<table cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td valign="middle" style="padding: 0 10px 0 0; border-right: 3px solid #000000; vertical-align: middle;">
+<img src="https://example.org/logo.png" width="120" alt="Prefeitura de São Paulo – Secretaria Municipal de Educação" style="display: block; border: 0;" border="0">
+</td>
+</tr>
+</table>
+</td>
+<td valign="middle" style="padding-left: 7px; vertical-align: middle; line-height: 1; font-family: Arial, sans-serif; color: #000000;">
+<div style="margin: 0; padding: 0; font-size: 16px; line-height: 1.2;">
+<strong style="font-size: inherit; font-weight: bold;">MARIA DA SILVA</strong>
+</div>
+<div style="margin: 0; padding: 0; font-size: 7px; line-height: 1.2;">PROFESSORA</div>
+<div style="margin: 0; padding: 0; font-size: 7px; line-height: 1.2; color: #ffffff;">_</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">
+<a href="mailto:maria.silva@sme.prefeitura.sp.gov.br" style="text-decoration: none; color: inherit;">maria.silva@sme.prefeitura.sp.gov.br</a>
+</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">Tel.: <a href="tel:+551133971234" style="text-decoration: none; color: inherit;">55 11 3397-1234</a> | <a href="tel:+5511933975678" style="text-decoration: none; color: inherit;">55 11 93397-5678</a>
+</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">EMEF Joaquim José da Silva Xavier / DREMP</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">Av. Nordestina, 747</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">08021-000 | São Paulo | SP</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">
+<a href="https://educacao.sme.prefeitura.sp.gov.br" target="_blank" style="text-decoration: none; color: inherit;">educacao.sme.prefeitura.sp.gov.br</a>
+</div>
+<div style="margin: 0; padding: 0; font-size: 8px; line-height: 1.2;">
+<a href="https://www.example.org/agenda" target="_blank" style="text-decoration: none; color: inherit;">www.example.org</a>
+</div>
+</td>
+</tr>
+</table>"
+`;
