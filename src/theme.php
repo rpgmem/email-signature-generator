@@ -23,6 +23,12 @@ namespace EmailSignatureGenerator;
  * never disagree on one site. It is detected at run time and never required:
  * without it, this plugin's setting applies as before. The standalone HTML has
  * no WordPress and no setting, so it always follows the operating system.
+ *
+ * Inside Site PWA's app the person can turn the app dark on their own device
+ * (site-pwa#23). The app then marks <html> with `data-site-pwa-scheme="dark"`
+ * and adds the classes plugins offered through `site_pwa_dark_root_classes`,
+ * before the first paint. This plugin offers its class there, and the script
+ * keeps the form dark while that mark is present, whatever the setting says.
  */
 final class Theme {
 
@@ -31,9 +37,38 @@ final class Theme {
 	public const CSS_CLASS = 'esg-dark-mode';
 
 	/**
+	 * Site PWA's filter for the classes its app adds to <html> when the
+	 * person turns it dark.
+	 */
+	public const APP_ROOT_CLASSES_FILTER = 'site_pwa_dark_root_classes';
+
+	/**
 	 * Free Form Certificate's settings option, read only, never written.
 	 */
 	public const FFC_OPTION = 'ffc_settings';
+
+	/**
+	 * Offer the class to Site PWA's app. Without the app the filter never
+	 * fires.
+	 */
+	public static function register(): void {
+		add_filter( self::APP_ROOT_CLASSES_FILTER, array( self::class, 'appRootClasses' ) );
+	}
+
+	/**
+	 * Add this plugin's dark class to the app's list, keeping what other
+	 * plugins offered.
+	 *
+	 * @param mixed $classes The list so far.
+	 * @return mixed
+	 */
+	public static function appRootClasses( $classes ) {
+		if ( ! is_array( $classes ) ) {
+			return $classes;
+		}
+		$classes[] = self::CSS_CLASS;
+		return $classes;
+	}
 
 	/**
 	 * Whether Free Form Certificate is active, so its Dark Mode decides.
@@ -85,6 +120,8 @@ final class Theme {
 	 * "on" and "off" are decided here; only "auto" asks the operating system,
 	 * and it keeps listening, so switching the system theme repaints the open
 	 * page. A saved change arrives as `esg:setting-saved` and repaints too.
+	 * The app's own dark mark on <html> wins over "off", so a footer script
+	 * never undoes the dark the app set before the first paint.
 	 * An unknown value is treated as "off", so only a known word is printed.
 	 *
 	 * @param string $mode The mode that applies.
@@ -96,7 +133,7 @@ final class Theme {
 		return '(function(mode){'
 			. 'var root=document.documentElement;'
 			. 'var query=window.matchMedia?window.matchMedia("(prefers-color-scheme: dark)"):null;'
-			. 'function apply(){root.classList.toggle("' . self::CSS_CLASS . '",mode==="on"||(mode==="auto"&&!!query&&query.matches));}'
+			. 'function apply(){root.classList.toggle("' . self::CSS_CLASS . '",root.getAttribute("data-site-pwa-scheme")==="dark"||mode==="on"||(mode==="auto"&&!!query&&query.matches));}'
 			. 'apply();'
 			. 'if(query&&query.addEventListener){query.addEventListener("change",apply);}'
 			. 'document.addEventListener("esg:setting-saved",function(e){if(e.detail&&e.detail.key==="dark_mode"){mode=String(e.detail.value);apply();}});'

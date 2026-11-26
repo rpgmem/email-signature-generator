@@ -58,6 +58,9 @@ final class Plugin {
 		// (both at the default priority, so registration order decides).
 		add_action( 'init', array( Shortcode::class, 'register' ) );
 
+		// The form's dark class, offered to Site PWA's app (site-pwa#23).
+		Theme::register();
+
 		if ( is_admin() ) {
 			Admin\SettingsPage::register();
 			Admin\Autosave::register();

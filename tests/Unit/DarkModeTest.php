@@ -243,6 +243,20 @@ final class DarkModeTest extends TestCase {
 		);
 	}
 
+	/**
+	 * Inside Site PWA's app, the dark the person chose on the device keeps
+	 * the form dark, and the class is offered to the app's list.
+	 */
+	public function test_the_app_dark_mark_keeps_the_form_dark(): void {
+		self::assertStringContainsString( 'root.getAttribute("data-site-pwa-scheme")==="dark"||mode==="on"', Theme::script( 'off' ) );
+
+		self::assertSame( array( 'ffc-dark-mode', Theme::CSS_CLASS ), Theme::appRootClasses( array( 'ffc-dark-mode' ) ), 'keeps what other plugins offered' );
+		self::assertFalse( Theme::appRootClasses( false ), 'a list another plugin broke is passed on as it came' );
+
+		Functions\expect( 'add_filter' )->once()->with( 'site_pwa_dark_root_classes', array( Theme::class, 'appRootClasses' ) );
+		Theme::register();
+	}
+
 	public function test_the_script_names_the_class_the_stylesheets_read(): void {
 		self::assertStringContainsString( '.' . Theme::CSS_CLASS . ' .esg-generator', self::formCss() );
 		self::assertStringContainsString( '"' . Theme::CSS_CLASS . '"', Theme::script( 'on' ) );
