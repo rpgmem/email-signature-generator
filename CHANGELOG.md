@@ -9,6 +9,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - The form turns dark inside Site PWA's app when the person turns the app dark on their device: the plugin offers its dark class to the app, and its theme script no longer removes the class while the app's dark mark is on the page (#143).
 - Inside Site PWA's app, a person's Light choice on their device keeps the form light even when the Dark Mode setting is on (#145).
+- Inside Site PWA's app, the form takes the app's accent and corners, as Free Form Certificate's screens do; the light theme's buttons, links and focus follow the app's colour over the Design tab's, and the dark theme keeps the form's own palette (#147).
 
 ## [1.5.1] (2026-11-08) — `77c9126`
 
