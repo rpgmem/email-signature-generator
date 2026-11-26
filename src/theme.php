@@ -120,8 +120,10 @@ final class Theme {
 	 * "on" and "off" are decided here; only "auto" asks the operating system,
 	 * and it keeps listening, so switching the system theme repaints the open
 	 * page. A saved change arrives as `esg:setting-saved` and repaints too.
-	 * The app's own dark mark on <html> wins over "off", so a footer script
-	 * never undoes the dark the app set before the first paint.
+	 * The app's own mark on <html> wins over the setting: "dark" keeps the
+	 * class, "light" (a person's choice on their device, site-pwa#62) keeps
+	 * it off, so a footer script never undoes what the app set before the
+	 * first paint.
 	 * An unknown value is treated as "off", so only a known word is printed.
 	 *
 	 * @param string $mode The mode that applies.
@@ -133,7 +135,7 @@ final class Theme {
 		return '(function(mode){'
 			. 'var root=document.documentElement;'
 			. 'var query=window.matchMedia?window.matchMedia("(prefers-color-scheme: dark)"):null;'
-			. 'function apply(){root.classList.toggle("' . self::CSS_CLASS . '",root.getAttribute("data-site-pwa-scheme")==="dark"||mode==="on"||(mode==="auto"&&!!query&&query.matches));}'
+			. 'function apply(){var app=root.getAttribute("data-site-pwa-scheme");root.classList.toggle("' . self::CSS_CLASS . '",app!=="light"&&(app==="dark"||mode==="on"||(mode==="auto"&&!!query&&query.matches)));}'
 			. 'apply();'
 			. 'if(query&&query.addEventListener){query.addEventListener("change",apply);}'
 			. 'document.addEventListener("esg:setting-saved",function(e){if(e.detail&&e.detail.key==="dark_mode"){mode=String(e.detail.value);apply();}});'

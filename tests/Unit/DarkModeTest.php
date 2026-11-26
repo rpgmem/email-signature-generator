@@ -248,7 +248,8 @@ final class DarkModeTest extends TestCase {
 	 * the form dark, and the class is offered to the app's list.
 	 */
 	public function test_the_app_dark_mark_keeps_the_form_dark(): void {
-		self::assertStringContainsString( 'root.getAttribute("data-site-pwa-scheme")==="dark"||mode==="on"', Theme::script( 'off' ) );
+		self::assertStringContainsString( 'var app=root.getAttribute("data-site-pwa-scheme");', Theme::script( 'off' ) );
+		self::assertStringContainsString( 'app!=="light"&&(app==="dark"||mode==="on"', Theme::script( 'on' ), 'the app\'s Light choice wins over "on"' );
 
 		self::assertSame( array( 'ffc-dark-mode', Theme::CSS_CLASS ), Theme::appRootClasses( array( 'ffc-dark-mode' ) ), 'keeps what other plugins offered' );
 		self::assertFalse( Theme::appRootClasses( false ), 'a list another plugin broke is passed on as it came' );
