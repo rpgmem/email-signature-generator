@@ -2,6 +2,8 @@
 
 Project conventions for Claude (Anthropic CLI / agent sessions) working on this repository. Sessions inherit nothing across cold starts, so the durable rules live here. The workflow mirrors `rpgmem/total-mail-queue` and `rpgmem/ffcertificate`; where this file is silent, theirs are the reference.
 
+**Where a section lives.** This file loads in every session. A section that only work on certain files needs can move to `.claude/rules/<topic>.md` with a `paths:` list: Claude Code loads that file when a session reads or edits a matching file, and this file keeps a short pointer that names it. A rule that must be known before code is written anywhere — a prohibition, a rule a push can break, a convention across the code — stays here. A rule file without `paths:` loads in every session like this one, so its text belongs here instead.
+
 ## What this repository ships
 
 **Email Signature Generator** has two deliverables, and both are attached to every GitHub release:
@@ -135,7 +137,7 @@ These run in CI on every PR and on pushes to `main` and `develop`:
 - `composer validate --strict` and `composer audit --locked`.
 - The release build against the newest tag.
 - Vitest over the generator (`tests/js`), against the real configuration that `bin/build-standalone.php - ` prints.
-- Coverage floors. The PHP floor is `COVERAGE_FLOOR_LINES` in `tests.yml`, checked against the merged line coverage of the unit and functional suites (`bin/coverage-merge.php`). The JS floor is `thresholds.lines` in `vitest.config.mjs`, which counts every file in `assets/js`. The rule is the same in the four plugins (Free Form Certificate, Total Mail Queue, Email Signature Generator, Institutional Email): **a floor is the highest of 90%, the measured figure minus 5 points, and its current value.** So it is never below 90%, never more than 5 points behind what is measured, and never lowered — the one exception is an honest re-measure after deleting covered product code, recorded beside the floor. Raise it in the PR that delivers the gain, and only once the measured figure is above it.
+- Coverage floors. The PHP floor is `COVERAGE_FLOOR_LINES` in `tests.yml`, checked against the merged line coverage of the unit and functional suites (`bin/coverage-merge.php`). The JS floor is `thresholds.lines` in `vitest.config.mjs`, which counts every file in `assets/js`. The rule is the same in the four plugins (Free Form Certificate, Total Mail Queue, Email Signature Generator, Institutional Email) and in Site PWA: **a floor is the highest of 90%, the measured figure minus 5 points, and its current value.** So it is never below 90%, never more than 5 points behind what is measured, and never lowered — the one exception is an honest re-measure after deleting covered product code, recorded beside the floor. Raise it in the PR that delivers the gain, and only once the measured figure is above it.
 
 Two guards read the code rather than test it:
 - `ReadmeUpgradeNoticeTest`: the Upgrade Notice holds one entry, for the Stable tag, at most 300 characters, pointing at `CHANGELOG.md`, and the updater's own parser returns it.
@@ -148,9 +150,10 @@ Locally:
 ```bash
 composer install && npm ci
 vendor/bin/phpunit --testsuite unit
-# The functional suite needs MySQL. A cloud session's container ships MariaDB stopped;
-# the environment's setup script starts it with the CI credentials (root / root).
-service mariadb start
+# The functional suite needs MySQL. A cloud session's container has MariaDB with no
+# service unit, so `service mariadb start` fails; the environment's setup script starts
+# it with mysqld_safe and the CI credentials (root / root). If it is down:
+(nohup mysqld_safe >/dev/null 2>&1 &)
 bash bin/install-wp-tests.sh wp_esg_tests root root 127.0.0.1 false latest
 vendor/bin/phpunit -c phpunit.functional.xml.dist
 vendor/bin/phpstan analyse --no-progress
