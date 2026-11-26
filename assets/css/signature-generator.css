@@ -402,3 +402,28 @@
 
 	color-scheme: dark;
 }
+
+/*
+ * Inside the installable app (Site PWA): the form takes the app's look, as
+ * Free Form Certificate's screens do (#147).
+ *
+ * Site PWA publishes its look as custom properties on `:root` and marks its
+ * frame `body.site-pwa-app`. It computes the contrast itself:
+ * `--site-pwa-on-accent` is the text that reads on the accent, and
+ * `--site-pwa-accent-text` the shade of the accent that reads on a light
+ * surface, which is why the hover and the focus ring take that one.
+ *
+ * The colours apply in the light theme only, like the app's accent; the dark
+ * theme keeps the palette above. One class more than the Design tab's rule,
+ * so the app wins inside it. Outside the app `.site-pwa-app` never matches.
+ */
+:root:not(.esg-dark-mode) .site-pwa-app .esg-generator {
+	--esg-accent: var(--site-pwa-accent);
+	--esg-accent-hover: var(--site-pwa-accent-text);
+	--esg-accent-text: var(--site-pwa-on-accent);
+	--esg-focus-ring: color-mix(in srgb, var(--site-pwa-accent-text) 75%, transparent);
+}
+
+.site-pwa-app .esg-generator {
+	--esg-radius: var(--site-pwa-control-radius);
+}
